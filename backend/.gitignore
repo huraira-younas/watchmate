@@ -1,0 +1,11 @@
+/node_modules
+*env
+/uploads
+
+/clients/apns/pushPackage/*
+/clients/firebase/service.json
+server.log
+
+/methods/logger/logs/*
+/methods/logger/logger_logs/*
+/system_routes/extracted

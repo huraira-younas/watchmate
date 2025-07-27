@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your one time code</title>
+    <!--[if mso]>
+      <style type="text/css">
+        body,
+        table,
+        td,
+        a {
+          font-family: Arial, Helvetica, sans-serif !important;
+        }
+      </style>
+    <![endif]-->
+  </head>
+  <body
+    style="
+      font-family: Helvetica, Arial, sans-serif;
+      margin: 0px;
+      padding: 0px;
+      background-color: #ffffff;
+    "
+  >
+    <table
+      role="presentation"
+      style="
+        width: 100%;
+        border-collapse: collapse;
+        border: 0px;
+        border-spacing: 0px;
+        font-family: Arial, Helvetica, sans-serif;
+      "
+    >
+      <tbody>
+        <tr>
+          <td
+            align="left"
+            style="padding: 1rem 2rem; vertical-align: top; width: 100%"
+          >
+            <table
+              role="presentation"
+              style="
+                max-width: 600px;
+                border-collapse: collapse;
+                border: 0px;
+                border-spacing: 0px;
+                text-align: left;
+              "
+            >
+              <tbody>
+                <tr>
+                  <td style="padding: 0px 0px 0px">
+                    <div
+                      style="
+                        padding: 0px;
+                        background-color: rgb(255, 255, 255);
+                        border: 2px;
+                        border-radius: 20px 20px;
+                      "
+                    >
+                      <div style="color: rgb(0, 0, 0); text-align: left">
+                        <p style="padding-bottom: 16px">Dear ${username},</p>
+                        <p style="padding-bottom: 16px">
+                          Click the button below on the same device the passcode
+                          was requested from:
+                        </p>
+                        <p style="padding-bottom: 16px">
+                          <a
+                            href="${signin_link}"
+                            style="
+                              display: inline-block;
+                              padding: 12px 20px;
+                              color: white;
+                              background-color: #f48e53;
+                              text-decoration: none;
+                              border-radius: 5px;
+                              font-size: 16px;
+                            "
+                            >Verify Code</a
+                          >
+                        </p>
+                        <p style="padding-bottom: 16px">
+                          Enter this code to finish verification - it will
+                          expire in 5 minutes:
+                        </p>
+                        <h1 style="font-size: 24px; font-weight: bold">
+                          ${code}
+                        </h1>
+                        <p style="padding-bottom: 16px">
+                          You're seeing this because of a recent requested OTP
+                          attempt. If that wasn't you, please reset your
+                          password.
+                        </p>
+                        <p style="padding-bottom: 16px">
+                          Download the latest version of the app for the most
+                          recent security updates.
+                        </p>
+                        <p style="padding-bottom: 16px">
+                          <a
+                            href="${help_center}"
+                            style="color: #6d53f4; text-decoration: none"
+                            >Help Center</a
+                          >
+                        </p>
+                        <p style="padding-bottom: 16px">- ${signature}</p>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

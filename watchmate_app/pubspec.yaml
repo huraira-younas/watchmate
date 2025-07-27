@@ -1,0 +1,48 @@
+name: watchmate_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  cached_network_image: ^3.4.1
+  country_picker: ^2.0.27
+  flutter_bloc: ^9.1.1
+  shared_preferences: ^2.5.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/illustrations/
+    - assets/
+
+  fonts:
+    - family: Bold
+      fonts:
+        - asset: assets/fonts/bold.woff
+    - family: SemiBold
+      fonts:
+        - asset: assets/fonts/semibold.woff
+    - family: Medium
+      fonts:
+        - asset: assets/fonts/medium.woff
+    - family: Regular
+      fonts:
+        - asset: assets/fonts/regular.woff
+    - family: ExtraBold
+      fonts:
+        - asset: assets/fonts/extrabold.woff2
+  
