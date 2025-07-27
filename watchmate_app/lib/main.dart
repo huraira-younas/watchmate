@@ -1,7 +1,7 @@
-import 'package:watchmate_app/screens/auth_screens/login_screen.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/services/shared_prefs.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
+import 'package:watchmate_app/router/route_config.dart';
 import 'package:watchmate_app/cubits/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +18,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeData>(
       builder: (context, theme) {
-        return MaterialApp(
+        return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: AppConstants.appname,
-          home: const LoginScreen(),
+          routerConfig: appRouter,
           theme: theme,
         );
       },

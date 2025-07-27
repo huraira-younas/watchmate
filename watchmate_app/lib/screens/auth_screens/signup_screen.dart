@@ -8,6 +8,7 @@ import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/cubits/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -54,12 +55,13 @@ class _SignupScreenState extends State<SignupScreen> {
               MyText(
                 size: size.width * 0.08,
                 family: AppFonts.bold,
-                text: "Welcome Back!",
+                text: "Create Account",
                 isCenter: true,
               ),
               5.h,
               MyText(
-                text: "Please login to your account",
+                text:
+                    "Feel free to create new account on ${AppConstants.appname.capitalize}",
                 size: AppConstants.subtitle,
                 color: theme.hintColor,
                 isCenter: true,
@@ -94,34 +96,22 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: MyText(
-                    color: theme.colorScheme.primary,
-                    size: AppConstants.subtitle,
-                    family: AppFonts.semibold,
-                    text: "Forgot password?",
-                  ),
-                ),
-              ),
               20.h,
-              CustomButton(text: "Login", onPressed: () {}),
+              CustomButton(text: "Sign up", onPressed: () {}),
               20.h,
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   MyText(
-                    text: "Don't have an account?",
+                    text: "Already have account?",
                     size: AppConstants.subtitle,
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () => context.pop(),
                     child: MyText(
                       color: theme.colorScheme.primary,
                       size: AppConstants.subtitle,
-                      text: "Sign up",
+                      text: "Login",
                     ),
                   ),
                 ],
