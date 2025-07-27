@@ -93,16 +93,37 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {},
+                  child: MyText(
+                    color: theme.colorScheme.primary,
+                    size: AppConstants.subtitle,
+                    family: AppFonts.semibold,
+                    text: "Forgot password?",
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               CustomButton(text: "Login", onPressed: () {}),
               const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {},
-                child: MyText(
-                  color: theme.colorScheme.primary,
-                  text: "Forgot Password?",
-                  family: AppFonts.medium,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  MyText(
+                    text: "Don't have an account?",
+                    size: AppConstants.subtitle,
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: MyText(
+                      color: theme.colorScheme.primary,
+                      size: AppConstants.subtitle,
+                      text: "Sign up",
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 60),
             ],
