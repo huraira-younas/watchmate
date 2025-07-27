@@ -17,7 +17,7 @@ class CustomButton extends StatelessWidget {
   final String text;
 
   const CustomButton({
-    this.padding = (20, 14),
+    this.padding = (20, 13),
     this.isLoading = false,
     required this.text,
     this.radius = 30,
