@@ -7,7 +7,9 @@ import 'package:watchmate_app/services/pre_loader.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/cubits/theme_cubit.dart';
+import 'package:watchmate_app/router/route_paths.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -74,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   hint: "Email",
                 ),
               ),
-              20.h,
+              10.h,
               Form(
                 key: _keys[1],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -117,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     size: AppConstants.subtitle,
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () => context.push(RoutePaths.signup),
                     child: MyText(
                       color: theme.colorScheme.primary,
                       size: AppConstants.subtitle,

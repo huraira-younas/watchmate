@@ -21,13 +21,12 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   late final themeCubit = context.read<ThemeCubit>();
 
-  final _controllers = List.generate(2, (index) => TextEditingController());
-  final _keys = List.generate(2, (index) => GlobalKey<FormState>());
+  final _controllers = List.generate(4, (index) => TextEditingController());
+  final _keys = List.generate(4, (index) => GlobalKey<FormState>());
   bool _obsecure = true;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = themeCubit.isDark;
     final size = context.screenSize;
     final theme = context.theme;
 
@@ -39,17 +38,6 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             children: [
               20.h,
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  onPressed: () => themeCubit.toggleTheme(),
-                  icon: Icon(
-                    isDark ? Icons.wb_sunny_rounded : Icons.dark_mode_rounded,
-                    color: theme.colorScheme.primary,
-                    size: 26,
-                  ),
-                ),
-              ),
               Image.asset(AppAssets.illustrations.login),
               20.h,
               MyText(
@@ -68,6 +56,16 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               40.h,
               Form(
+                key: _keys[1],
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: CustomTextField(
+                  prefixIcon: const Icon(Icons.person_outline),
+                  controller: _controllers[1],
+                  hint: "Name",
+                ),
+              ),
+              10.h,
+              Form(
                 key: _keys[0],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: CustomTextField(
@@ -76,13 +74,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   hint: "Email",
                 ),
               ),
-              20.h,
+              10.h,
               Form(
-                key: _keys[1],
+                key: _keys[2],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: CustomTextField(
                   prefixIcon: const Icon(Icons.lock_outline),
-                  controller: _controllers[1],
+                  controller: _controllers[2],
                   obsecure: _obsecure,
                   hint: "Password",
                   suffixIcon: IconButton(
