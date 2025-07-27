@@ -1,9 +1,9 @@
 # 🎬 WatchMate – Self-Hosted Movie Sync App
 
-**WatchMate** is a modern, self-hosted (local) movie streaming app built for **watching together**, perfectly in sync — whether you're long-distance couples, friends, or movie buffs.
+**WatchMate** is a modern, self-hosted (local) movie streaming app built for **watching together**, perfectly in sync whether you're long-distance couples, friends, or movie buffs.
 
 Inspired by Rave. Built with ❤️ using **Flutter** (Frontend) + **Node.js** (Backend).  
-No ads. No noise. Just movies — together.
+No ads. No noise. Just movies together.
 
 ---
 
