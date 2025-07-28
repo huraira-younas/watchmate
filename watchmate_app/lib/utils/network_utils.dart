@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 class NetworkUtils {
   static const _defaultLocalUrl = 'http://192.168.1.11:$_defaultPort';
