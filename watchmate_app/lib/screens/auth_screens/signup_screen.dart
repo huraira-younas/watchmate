@@ -31,7 +31,6 @@ class _SignupScreenState extends State<SignupScreen> {
     final theme = context.theme;
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),

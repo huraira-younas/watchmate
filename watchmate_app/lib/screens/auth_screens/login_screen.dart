@@ -33,7 +33,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final theme = context.theme;
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
