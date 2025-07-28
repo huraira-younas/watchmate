@@ -38,10 +38,8 @@ class Logger {
     final emoji = _getEmoji(level);
     final color = _getColor(level);
 
-    final output =
-        '$color$levelTag $timestamp$emoji [${tag.toUpperCase()}] $formattedMessage\x1B[0m';
-
-    log(output);
+    final fullText = '[${tag.toUpperCase()}] $formattedMessage';
+    log('$color$levelTag $timestamp$emoji $fullText\x1B[0m');
   }
 
   static String _formatMessage(dynamic message) {

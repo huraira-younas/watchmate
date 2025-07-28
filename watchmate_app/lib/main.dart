@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
 
 Future<void> _initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPrefs.instance.init();
+
+  await Future.wait([SharedPrefs.instance.init()]);
   AppAssets.registerPreloads();
 }

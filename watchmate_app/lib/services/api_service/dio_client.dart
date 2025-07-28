@@ -1,3 +1,4 @@
+import 'package:watchmate_app/utils/network_utils.dart';
 import 'package:watchmate_app/services/logger.dart';
 import 'package:dio/dio.dart';
 
@@ -19,7 +20,7 @@ class ApiService {
       BaseOptions(
         connectTimeout: const Duration(seconds: 15),
         receiveTimeout: const Duration(seconds: 15),
-        baseUrl: 'http://localhost:5000',
+        baseUrl: NetworkUtils.baseUrl,
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -29,35 +30,43 @@ class ApiService {
 
     _dio.interceptors.add(
       InterceptorsWrapper(
-        onResponse: (response, handler) {
-          final tag = "[${response.requestOptions.method}] RESPONSE";
-          Logger.success(
-            message: "${response.statusCode} ${response.requestOptions.uri}",
-            tag: tag,
-          );
-
-          Logger.success(tag: tag, message: response.data);
-          return handler.next(response);
-        },
         onRequest: (options, handler) {
           final tag = "${options.method} REQUEST";
-          Logger.info(tag: tag, message: options.uri);
-          Logger.info(tag: tag, message: options.headers);
-          Logger.info(tag: tag, message: options.data);
+          Logger.info(
+            tag: tag,
+            message: {
+              "uri": options.uri.toString(),
+              "headers": options.headers,
+              "params": options.queryParameters,
+            },
+          );
           return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          final tag = "${response.requestOptions.method} RESPONSE";
+          Logger.success(
+            tag: tag,
+            message: {
+              "uri": response.requestOptions.uri.toString(),
+              "statusCode": response.statusCode,
+              "body": response.data,
+            },
+          );
+          return handler.next(response);
         },
         onError: (DioException e, handler) {
           final req = e.requestOptions;
-          final tag = "[${req.method}] ERROR";
-          Logger.error(
-            message: "${e.response?.statusCode} ${req.uri}",
-            tag: tag,
-          );
+          final tag = "${req.method} ERROR";
 
-          Logger.error(tag: tag, message: e.message);
-          if (e.response != null) {
-            Logger.error(tag: tag, message: e.response?.data);
-          }
+          Logger.error(
+            tag: tag,
+            message: {
+              "uri": req.uri.toString(),
+              "statusCode": e.response?.statusCode,
+              "error": e.response?.data,
+              "message": e.message,
+            },
+          );
           return handler.next(e);
         },
       ),

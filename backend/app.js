@@ -33,6 +33,7 @@ const corsOptions = {
   origin: "*",
 };
 
+app.get("/", (_, res) => res.json("Welcome to WatchMate!"));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(limiter);
