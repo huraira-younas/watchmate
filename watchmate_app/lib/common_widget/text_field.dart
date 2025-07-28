@@ -108,11 +108,16 @@ InputDecoration customInputDecoration({
     borderRadius: BorderRadius.circular(30),
   );
 
+  final activeBorderStyle = OutlineInputBorder(
+    borderSide: BorderSide(color: theme.primaryColor),
+    borderRadius: BorderRadius.circular(30),
+  );
+
   return InputDecoration(
     contentPadding: const EdgeInsets.only(top: 14, bottom: 12, right: 16),
     disabledBorder: border ?? defaultBorderStyle,
     enabledBorder: border ?? defaultBorderStyle,
-    focusedBorder: border ?? defaultBorderStyle,
+    focusedBorder: border ?? activeBorderStyle,
     errorBorder: border ?? defaultBorderStyle,
     labelStyle: TextStyle(color: textColor),
     hintStyle: TextStyle(color: hintColor),

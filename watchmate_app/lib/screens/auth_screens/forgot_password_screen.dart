@@ -1,3 +1,4 @@
+import 'package:watchmate_app/common_widget/custom_appbar.dart';
 import 'package:watchmate_app/common_widget/custom_button.dart';
 import 'package:watchmate_app/common_widget/text_widget.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
@@ -30,12 +31,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final theme = context.theme;
 
     return Scaffold(
+      appBar: customAppBar(context: context),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             children: [
-              40.h,
+              30.h,
               Image.asset(
                 AppAssets.icons.codeIcon,
                 width: size.width * 0.5,

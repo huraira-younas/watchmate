@@ -11,6 +11,7 @@ import 'package:watchmate_app/cubits/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:watchmate_app/utils/validator_builder.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -76,6 +77,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   prefixIcon: const Icon(Icons.email_outlined),
                   controller: _controllers[0],
                   hint: "Email",
+                  validator: ValidatorBuilder.chain()
+                      .required()
+                      .email()
+                      .min(6)
+                      .build(),
                 ),
               ),
               10.h,
@@ -83,6 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 key: _keys[1],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: CustomTextField(
+                  validator: ValidatorBuilder.chain().required().min(8).build(),
                   prefixIcon: const Icon(Icons.lock_outline),
                   controller: _controllers[1],
                   obsecure: _obsecure,

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 AppBar customAppBar({
   List<Widget> actions = const [],
   required BuildContext context,
-  bool blackStatusIcons = true,
+  bool? blackStatusIcons,
   bool centerTitle = true,
   Function()? onBackPress,
   String title = "",
@@ -18,9 +18,10 @@ AppBar customAppBar({
 }) {
   final theme = Theme.of(context);
   final color = iconColor ?? theme.iconTheme.color ?? Colors.black;
+  final isDark = theme.brightness == Brightness.dark;
 
   return AppBar(
-    systemOverlayStyle: blackStatusIcons
+    systemOverlayStyle: (blackStatusIcons ?? !isDark)
         ? SystemUiOverlayStyle.dark
         : SystemUiOverlayStyle.light,
     surfaceTintColor: bgColor ?? theme.appBarTheme.backgroundColor,
@@ -65,14 +66,11 @@ class BackIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Container(
       constraints: const BoxConstraints(maxWidth: 40, maxHeight: 40),
       margin: isMargin ? const EdgeInsets.all(8.0) : null,
       decoration: BoxDecoration(
         border: Border.all(color: color.withValues(alpha: 0.1)),
-        color: bgColor ?? theme.cardColor,
         shape: BoxShape.circle,
       ),
       child: MaterialButton(
