@@ -135,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-    );
+    ).onTap(() => FocusScope.of(context).unfocus());
   }
 
   @override
