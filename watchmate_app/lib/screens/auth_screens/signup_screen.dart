@@ -3,11 +3,8 @@ import 'package:watchmate_app/common_widget/text_widget.dart';
 import 'package:watchmate_app/common_widget/text_field.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
-import 'package:watchmate_app/services/pre_loader.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
-import 'package:watchmate_app/cubits/theme_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +16,6 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  late final themeCubit = context.read<ThemeCubit>();
-
   final _controllers = List.generate(4, (index) => TextEditingController());
   final _keys = List.generate(4, (index) => GlobalKey<FormState>());
   bool _obsecure = true;
@@ -128,15 +123,5 @@ class _SignupScreenState extends State<SignupScreen> {
   void dispose() {
     _controllers.asMap().forEach((i, c) => c.dispose());
     super.dispose();
-  }
-
-  bool _isLoaded = false;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isLoaded) return;
-
-    Preloader.preloadForRoute(context, 'login');
-    _isLoaded = true;
   }
 }

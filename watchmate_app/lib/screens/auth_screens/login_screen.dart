@@ -1,4 +1,5 @@
 import 'package:watchmate_app/common_widget/custom_button.dart';
+import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/common_widget/text_widget.dart';
 import 'package:watchmate_app/common_widget/text_field.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
@@ -7,7 +8,6 @@ import 'package:watchmate_app/services/pre_loader.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/cubits/theme_cubit.dart';
-import 'package:watchmate_app/router/route_paths.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () => context.push(AuthRoutes.forgotPassword.path),
                   child: MyText(
                     color: theme.colorScheme.primary,
                     size: AppConstants.subtitle,
@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     size: AppConstants.subtitle,
                   ),
                   TextButton(
-                    onPressed: () => context.push(RoutePaths.signup),
+                    onPressed: () => context.push(AuthRoutes.signup.path),
                     child: MyText(
                       color: theme.colorScheme.primary,
                       size: AppConstants.subtitle,
@@ -150,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.didChangeDependencies();
     if (_isLoaded) return;
 
-    Preloader.preloadForRoute(context, 'login');
+    Preloader.preloadForRoute(context, AuthRoutes.login.name);
     _isLoaded = true;
   }
 }

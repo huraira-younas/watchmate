@@ -1,8 +1,8 @@
-class AuthRoutes {
+class AuthApi {
   static const _name = "auth";
   late final String _endpoint;
 
-  AuthRoutes({required String pre}) {
+  AuthApi({required String pre}) {
     _endpoint = '$pre/$_name';
   }
 

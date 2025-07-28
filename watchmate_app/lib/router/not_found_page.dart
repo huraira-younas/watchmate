@@ -1,9 +1,9 @@
 import 'package:watchmate_app/common_widget/custom_button.dart';
+import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/common_widget/text_widget.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_themes.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
-import 'package:watchmate_app/router/route_paths.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
@@ -45,7 +45,7 @@ class NotFoundPage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               CustomButton(
-                onPressed: () => context.go(RoutePaths.login),
+                onPressed: () => context.go(AuthRoutes.login.path),
                 bgColor: theme.primaryColor,
                 icon: Icons.home_rounded,
                 text: 'Go to Home',

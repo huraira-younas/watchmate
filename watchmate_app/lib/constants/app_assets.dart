@@ -1,5 +1,5 @@
+import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/services/pre_loader.dart';
-import 'package:watchmate_app/router/route_paths.dart';
 
 class AppIcons {
   late final String _base;
@@ -8,8 +8,12 @@ class AppIcons {
     _base = '$pre/icons';
   }
 
+  String get passwordIcon => '$_base/password.png';
   String get appIcon => '$_base/app_icon.png';
-  List<String> get preloadList => [appIcon];
+  String get emailIcon => '$_base/email.png';
+  String get codeIcon => '$_base/code.png';
+
+  List<String> get preloadList => [appIcon, codeIcon, emailIcon, passwordIcon];
 }
 
 class AppAssets {
@@ -21,7 +25,6 @@ class AppAssets {
   static void registerPreloads() {
     Preloader.register('global', [...icons.preloadList]);
 
-    Preloader.register(RoutePaths.splash, [icons.appIcon]);
-    Preloader.register(RoutePaths.login, [icons.appIcon]);
+    Preloader.register(AuthRoutes.login.name, [...icons.preloadList]);
   }
 }

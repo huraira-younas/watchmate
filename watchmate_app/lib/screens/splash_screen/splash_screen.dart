@@ -1,10 +1,10 @@
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:watchmate_app/common_widget/text_widget.dart';
+import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
-import 'package:watchmate_app/router/route_paths.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _getUser() async {
     Future.delayed(4.secs, () {
       if (!mounted) return;
-      context.pushReplacement(RoutePaths.login);
+      context.pushReplacement(AuthRoutes.login.path);
     });
   }
 

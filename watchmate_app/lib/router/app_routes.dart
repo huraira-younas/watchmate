@@ -1,11 +1,7 @@
-import 'package:watchmate_app/screens/splash_screen/splash_screen.dart';
-import 'package:watchmate_app/screens/auth_screens/signup_screen.dart';
-import 'package:watchmate_app/screens/auth_screens/login_screen.dart';
-import 'package:go_router/go_router.dart';
-import 'route_paths.dart';
+import 'package:watchmate_app/router/routes/auth_routes.dart';
 
-final routes = <GoRoute>[
-  GoRoute(path: RoutePaths.splash, builder: (_, _) => const SplashScreen()),
-  GoRoute(path: RoutePaths.signup, builder: (_, _) => const SignupScreen()),
-  GoRoute(path: RoutePaths.login, builder: (_, _) => const LoginScreen()),
-];
+abstract class AppRoutes {
+  static const auth = AuthRoutes.all;
+
+  static const all = [...auth];
+}
