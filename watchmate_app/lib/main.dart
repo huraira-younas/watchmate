@@ -4,6 +4,7 @@ import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/router/route_config.dart';
 import 'package:watchmate_app/cubits/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:watchmate_app/di/locator.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
 
 Future<void> _initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setupLocator();
 
   await Future.wait([SharedPrefs.instance.init()]);
   AppAssets.registerPreloads();
