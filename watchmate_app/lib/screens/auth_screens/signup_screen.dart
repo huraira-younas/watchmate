@@ -50,7 +50,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 size: AppConstants.subtitle,
                 color: theme.hintColor,
                 isCenter: true,
-              ),
+              ).padSym(h: 30),
               40.h,
               Form(
                 key: _keys[1],

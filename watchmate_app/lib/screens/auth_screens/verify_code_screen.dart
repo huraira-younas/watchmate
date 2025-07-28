@@ -1,10 +1,6 @@
-import 'package:flutter/services.dart'
-    show
-        LengthLimitingTextInputFormatter,
-        FilteringTextInputFormatter,
-        LogicalKeyboardKey;
 import 'package:watchmate_app/common_widget/custom_appbar.dart';
 import 'package:watchmate_app/common_widget/custom_button.dart';
+import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/common_widget/text_widget.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
@@ -12,7 +8,13 @@ import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/cubits/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'
+    show
+        LengthLimitingTextInputFormatter,
+        FilteringTextInputFormatter,
+        LogicalKeyboardKey;
 
 class VerifyCodeScreen extends StatefulWidget {
   const VerifyCodeScreen({super.key});
@@ -43,7 +45,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
             children: [
               30.h,
               Image.asset(
-                AppAssets.icons.passwordIcon,
+                AppAssets.icons.emailIcon,
                 width: size.width * 0.5,
               ).hero(AppConstants.appname),
               20.h,
@@ -110,7 +112,12 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                 }),
               ),
               30.h,
-              CustomButton(text: "Verify", onPressed: () {}),
+              CustomButton(
+                text: "Verify",
+                onPressed: () {
+                  context.pushReplacement(AuthRoutes.newPassword.path);
+                },
+              ),
             ],
           ),
         ),

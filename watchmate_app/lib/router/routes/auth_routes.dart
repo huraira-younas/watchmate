@@ -1,4 +1,5 @@
 import 'package:watchmate_app/screens/auth_screens/forgot_password_screen.dart';
+import 'package:watchmate_app/screens/auth_screens/new_password_screen.dart';
 import 'package:watchmate_app/screens/auth_screens/verify_code_screen.dart';
 import 'package:watchmate_app/screens/splash_screen/splash_screen.dart';
 import 'package:watchmate_app/screens/auth_screens/signup_screen.dart';
@@ -36,5 +37,18 @@ abstract class AuthRoutes {
     name: 'verify_code',
   );
 
-  static const all = [splash, login, signup, forgotPassword, verifyCode];
+  static const newPassword = AppRoute(
+    page: NewPasswordScreen(),
+    path: '/new_password',
+    name: 'new_password',
+  );
+
+  static const all = [
+    forgotPassword,
+    newPassword,
+    verifyCode,
+    splash,
+    signup,
+    login,
+  ];
 }
