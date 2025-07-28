@@ -49,11 +49,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               5.h,
               MyText(
-                text: "Enter registered email address to get one time code",
+                text: "Enter registered email address to get one time code.",
                 size: AppConstants.subtitle,
                 color: theme.hintColor,
                 isCenter: true,
-              ),
+              ).padSym(h: 30),
               40.h,
               Form(
                 key: _keys[0],
