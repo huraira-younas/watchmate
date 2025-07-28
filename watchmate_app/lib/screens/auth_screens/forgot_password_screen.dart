@@ -4,6 +4,7 @@ import 'package:watchmate_app/common_widget/text_widget.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/common_widget/text_field.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
+import 'package:watchmate_app/utils/validator_builder.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
@@ -46,7 +47,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               MyText(
                 size: size.width * 0.08,
                 family: AppFonts.bold,
-                text: "Enter Code",
+                text: "Get Code",
                 isCenter: true,
               ),
               5.h,
@@ -64,6 +65,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   prefixIcon: const Icon(Icons.email_outlined),
                   controller: _controllers[0],
                   hint: "Email",
+                  validator: ValidatorBuilder.chain()
+                      .required()
+                      .email()
+                      .min(6)
+                      .build(),
                 ),
               ),
               20.h,

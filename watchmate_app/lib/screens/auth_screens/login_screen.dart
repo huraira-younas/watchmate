@@ -3,6 +3,7 @@ import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/common_widget/text_widget.dart';
 import 'package:watchmate_app/common_widget/text_field.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
+import 'package:watchmate_app/utils/validator_builder.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/services/pre_loader.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
@@ -11,7 +12,6 @@ import 'package:watchmate_app/cubits/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'package:watchmate_app/utils/validator_builder.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

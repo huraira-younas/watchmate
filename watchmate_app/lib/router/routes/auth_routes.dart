@@ -1,4 +1,5 @@
 import 'package:watchmate_app/screens/auth_screens/forgot_password_screen.dart';
+import 'package:watchmate_app/screens/auth_screens/verify_code_screen.dart';
 import 'package:watchmate_app/screens/splash_screen/splash_screen.dart';
 import 'package:watchmate_app/screens/auth_screens/signup_screen.dart';
 import 'package:watchmate_app/screens/auth_screens/login_screen.dart';
@@ -30,7 +31,7 @@ abstract class AuthRoutes {
   );
 
   static const verifyCode = AppRoute(
-    page: ForgotPasswordScreen(),
+    page: VerifyCodeScreen(),
     path: '/verify_code',
     name: 'verify_code',
   );
