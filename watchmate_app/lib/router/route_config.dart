@@ -6,7 +6,7 @@ import 'not_found_page.dart';
 
 final GoRouter appRouter = GoRouter(
   errorBuilder: (_, __) => const NotFoundPage(),
-  initialLocation: RoutePaths.login,
+  initialLocation: RoutePaths.splash,
   observers: [GoRouterObserver()],
   routes: routes,
   // redirect: (context, state) {
