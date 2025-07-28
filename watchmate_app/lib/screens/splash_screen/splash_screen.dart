@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(5.secs, () {
       if (!mounted) return;
-      context.go(RoutePaths.login);
+      context.pushReplacement(RoutePaths.login);
     });
   }
 
@@ -37,10 +37,10 @@ class _SplashScreenState extends State<SplashScreen> {
         fit: StackFit.expand,
         children: [
           Center(
-            child: Hero(
-              tag: appname,
-              child: Image.asset(AppAssets.icons.appIcon, width: w * 0.5),
-            ).fadeIn(),
+            child: Image.asset(
+              AppAssets.icons.appIcon,
+              width: w * 0.5,
+            ).hero(AppConstants.appname).fadeIn(),
           ),
           Positioned(
             bottom: 100,

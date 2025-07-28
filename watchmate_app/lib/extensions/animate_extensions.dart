@@ -37,6 +37,15 @@ class _DelayedWidgetState extends State<_DelayedWidget>
 }
 
 extension ProAnimate on Widget {
+  Widget hero(Object tag, {Key? key, bool transitionOnUserGestures = false}) {
+    return Hero(
+      transitionOnUserGestures: transitionOnUserGestures,
+      tag: tag,
+      key: key,
+      child: this,
+    );
+  }
+
   Widget fadeIn({
     Duration duration = const Duration(milliseconds: AppConstants.animDur),
     Curve curve = Curves.easeInOut,
