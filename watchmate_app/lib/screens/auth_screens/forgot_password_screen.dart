@@ -35,7 +35,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             children: [
-              20.h,
+              40.h,
               Image.asset(
                 AppAssets.icons.codeIcon,
                 width: size.width * 0.5,

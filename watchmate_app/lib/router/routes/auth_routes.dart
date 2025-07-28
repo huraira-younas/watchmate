@@ -11,18 +11,6 @@ abstract class AuthRoutes {
     path: '/',
   );
 
-  static const forgotPassword = AppRoute(
-    page: ForgotPasswordScreen(),
-    path: '/forgot_password',
-    name: 'forgot_password',
-  );
-
-  static const verifyCode = AppRoute(
-    page: ForgotPasswordScreen(),
-    path: '/verify_code',
-    name: 'verify_code',
-  );
-
   static const login = AppRoute(
     page: LoginScreen(),
     path: '/login',
@@ -35,5 +23,17 @@ abstract class AuthRoutes {
     name: 'signup',
   );
 
-  static const all = [splash, login, signup];
+  static const forgotPassword = AppRoute(
+    page: ForgotPasswordScreen(),
+    path: '/forgot_password',
+    name: 'forgot_password',
+  );
+
+  static const verifyCode = AppRoute(
+    page: ForgotPasswordScreen(),
+    path: '/verify_code',
+    name: 'verify_code',
+  );
+
+  static const all = [splash, login, signup, forgotPassword, verifyCode];
 }

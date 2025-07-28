@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   final appname = AppConstants.appname;
 
   Future<void> _getUser() async {
-    Future.delayed(4.secs, () {
+    Future.delayed(2.secs, () {
       if (!mounted) return;
       context.pushReplacement(AuthRoutes.login.path);
     });
