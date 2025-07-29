@@ -1,7 +1,7 @@
 import 'package:watchmate_app/router/routes/exports.dart';
 
 abstract class AppRoutes {
-  static const auth = AuthRoutes.all;
+  static final auth = AuthRoutes.all;
 
-  static const all = [...auth];
+  static final all = [...auth];
 }

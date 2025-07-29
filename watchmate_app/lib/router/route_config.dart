@@ -10,9 +10,12 @@ final GoRouter appRouter = GoRouter(
   observers: [GoRouterObserver()],
   routes: AppRoutes.all.map((route) {
     return GoRoute(
-      builder: (context, state) => route.page,
-      name: route.name,
       path: route.path,
+      name: route.name,
+      builder: (context, state) {
+        if (route.builder == null) return route.page!;
+        return route.builder!(context, state);
+      },
     );
   }).toList(),
   // redirect: (context, state) {

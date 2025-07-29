@@ -31,19 +31,25 @@ abstract class AuthRoutes {
     name: 'forgot_password',
   );
 
-  static const verifyCode = AppRoute(
-    page: VerifyCodeScreen(),
+  static final verifyCode = AppRoute(
     path: '/verify_code',
     name: 'verify_code',
+    builder: (context, state) {
+      final email = state.extra as String;
+      return VerifyCodeScreen(email: email);
+    },
   );
 
-  static const newPassword = AppRoute(
-    page: NewPasswordScreen(),
+  static final newPassword = AppRoute(
     path: '/new_password',
     name: 'new_password',
+    builder: (context, state) {
+      final email = state.extra as String;
+      return NewPasswordScreen(email: email);
+    },
   );
 
-  static const all = [
+  static final all = [
     forgotPassword,
     newPassword,
     verifyCode,

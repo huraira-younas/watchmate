@@ -26,6 +26,18 @@ class AuthRepository {
     return user;
   }
 
+  Future<String> sendCode(Map<String, dynamic> data) async {
+    final response = await _api.post(ApiRoutes.auth.sendCode, data: data);
+    if (response.error != null) throw response.error!;
+    return response.body.toString();
+  }
+
+  Future<String> verifyCode(Map<String, dynamic> data) async {
+    final response = await _api.post(ApiRoutes.auth.verifyCode, data: data);
+    if (response.error != null) throw response.error!;
+    return response.body.toString();
+  }
+
   Future<void> logout() async {
     await Future.delayed(const Duration(milliseconds: 200));
     SharedPrefs.instance.removeLoggedUser();

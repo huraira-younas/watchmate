@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _keys = List.generate(2, (index) => GlobalKey<FormState>());
   bool _obsecure = true;
 
-  Future<void> _login() async {
+  void _login() {
     if (_keys.any((e) => !e.currentState!.validate())) {
       return;
     }

@@ -9,7 +9,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   UserModel? user;
 
   AuthBloc(this.repo) : super(AuthState()) {
+    on<AuthVerifyCode>(_onVerifyCode);
     on<AuthRegister>(_onRegister);
+    on<AuthGetCode>(_onGetCode);
     on<AuthLogout>(_onLogout);
     on<AuthLogin>(_onLogin);
   }
@@ -28,7 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onRegister(AuthRegister event, Emitter<AuthState> emit) async {
-    final loading = CustomState(message: "Please wait...", title: "Register");
+    final loading = CustomState(message: "Please wait...", title: "Signing up");
     _emit(loading: loading, emit);
 
     try {
@@ -36,6 +38,38 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       _emit(emit);
     } catch (e) {
       final error = CustomState(message: e.toString(), title: "Register Error");
+      _emit(error: error, emit);
+    }
+  }
+
+  Future<void> _onGetCode(AuthGetCode event, Emitter<AuthState> emit) async {
+    final loading = CustomState(
+      message: "Please check your email app...",
+      title: "Requesting Code",
+    );
+    _emit(loading: loading, emit);
+
+    try {
+      await repo.sendCode(event.toJson());
+      _emit(emit);
+    } catch (e) {
+      final error = CustomState(title: "Get Code Error", message: e.toString());
+      _emit(error: error, emit);
+    }
+  }
+
+  Future<void> _onVerifyCode(AuthVerifyCode event, Emitter<AuthState> emit) async {
+    final loading = CustomState(
+      message: "Please wait...",
+      title: "Verifying Code",
+    );
+    _emit(loading: loading, emit);
+
+    try {
+      await repo.verifyCode(event.toJson());
+      _emit(emit);
+    } catch (e) {
+      final error = CustomState(title: "Verify Code Error", message: e.toString());
       _emit(error: error, emit);
     }
   }
