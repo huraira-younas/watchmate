@@ -1,4 +1,4 @@
-import 'package:watchmate_app/common_widget/text_field.dart';
+import 'package:watchmate_app/common/widgets/text_field.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 

@@ -1,5 +1,5 @@
-import 'package:watchmate_app/common_widget/loading/loading_screen_controller.dart';
-import 'package:watchmate_app/common_widget/text_widget.dart';
+import 'package:watchmate_app/common/widgets/loading/loading_screen_controller.dart';
+import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'dart:async' show StreamController;

@@ -9,17 +9,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   UserModel? user;
 
   AuthBloc(this.repo) : super(AuthState()) {
+    on<AuthRegister>(_onRegister);
     on<AuthLogout>(_onLogout);
     on<AuthLogin>(_onLogin);
   }
 
   Future<void> _onLogin(AuthLogin event, Emitter<AuthState> emit) async {
-    _emit(emit, loading: true);
+    final loading = CustomState(message: "Please wait...", title: "Login");
+    _emit(loading: loading, emit);
+
     try {
-      user = await repo.login(event.email, event.password);
-      _emit(emit, loading: false);
+      user = await repo.login(event.toJson());
+      _emit(emit);
     } catch (e) {
-      _emit(emit, loading: false, error: e.toString());
+      final error = CustomState(message: e.toString(), title: "Login Error");
+      _emit(error: error, emit);
+    }
+  }
+
+  Future<void> _onRegister(AuthRegister event, Emitter<AuthState> emit) async {
+    final loading = CustomState(message: "Please wait...", title: "Register");
+    _emit(loading: loading, emit);
+
+    try {
+      user = await repo.register(event.toJson());
+      _emit(emit);
+    } catch (e) {
+      final error = CustomState(message: e.toString(), title: "Register Error");
+      _emit(error: error, emit);
     }
   }
 
@@ -29,7 +46,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _emit(emit);
   }
 
-  void _emit(Emitter emit, {bool loading = false, String? error}) => emit(
-    AuthState(error: error ?? state.error, loading: loading, user: user),
-  );
+  void _emit(Emitter emit, {CustomState? loading, CustomState? error}) =>
+      emit(AuthState(error: error, loading: loading, user: user));
 }

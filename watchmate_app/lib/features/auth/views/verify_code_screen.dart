@@ -1,12 +1,12 @@
-import 'package:watchmate_app/common_widget/custom_appbar.dart';
-import 'package:watchmate_app/common_widget/custom_button.dart';
+import 'package:watchmate_app/common/widgets/custom_appbar.dart';
+import 'package:watchmate_app/common/widgets/custom_button.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
-import 'package:watchmate_app/common_widget/text_widget.dart';
+import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
-import 'package:watchmate_app/cubits/theme_cubit.dart';
+import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';

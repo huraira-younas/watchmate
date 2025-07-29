@@ -1,4 +1,4 @@
-import 'package:watchmate_app/common_widget/cache_image.dart';
+import 'package:watchmate_app/common/widgets/cache_image.dart';
 import 'package:flutter/material.dart';
 
 class ProfileAvt extends StatelessWidget {

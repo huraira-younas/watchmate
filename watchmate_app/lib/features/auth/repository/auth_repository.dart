@@ -6,9 +6,19 @@ import '../model/user_model.dart';
 class AuthRepository {
   final _api = ApiService();
 
-  Future<UserModel> login(String email, String password) async {
-    final data = {"email": email, "password": password};
+  Future<UserModel> login(Map<String, dynamic> data) async {
     final response = await _api.post(ApiRoutes.auth.login, data: data);
+    if (response.error != null) throw response.error!;
+
+    final user = UserModel.fromJson(response.body);
+    SharedPrefs.instance.setLoggedUser(user.id);
+
+    return user;
+  }
+
+  Future<UserModel> register(Map<String, dynamic> data) async {
+    final response = await _api.post(ApiRoutes.auth.register, data: data);
+    if (response.error != null) throw response.error!;
 
     final user = UserModel.fromJson(response.body);
     SharedPrefs.instance.setLoggedUser(user.id);

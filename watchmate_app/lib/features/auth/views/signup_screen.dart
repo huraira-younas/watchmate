@@ -1,10 +1,14 @@
-import 'package:watchmate_app/common_widget/custom_button.dart';
-import 'package:watchmate_app/common_widget/text_widget.dart';
-import 'package:watchmate_app/common_widget/text_field.dart';
+import 'package:watchmate_app/common/widgets/custom_button.dart';
+import 'package:watchmate_app/common/widgets/text_widget.dart';
+import 'package:watchmate_app/features/auth/bloc/events.dart';
+import 'package:watchmate_app/common/widgets/text_field.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
+import 'package:watchmate_app/features/auth/bloc/bloc.dart';
+import 'package:watchmate_app/utils/validator_builder.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
+import 'package:watchmate_app/di/locator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
@@ -16,9 +20,23 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  late final _userBloc = getIt<AuthBloc>();
+
   final _controllers = List.generate(4, (index) => TextEditingController());
   final _keys = List.generate(4, (index) => GlobalKey<FormState>());
-  bool _obsecure = true;
+  final _obsecures = List.generate(2, (_) => true);
+
+  void _signup() {
+    if (_keys.any((e) => !e.currentState!.validate())) {
+      return;
+    }
+
+    final password = _controllers[2].text.trim();
+    final email = _controllers[1].text.trim();
+    final name = _controllers[0].text.trim();
+
+    _userBloc.add(AuthRegister(password: password, email: email, name: name));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,21 +71,27 @@ class _SignupScreenState extends State<SignupScreen> {
               ).padSym(h: 30),
               40.h,
               Form(
-                key: _keys[1],
+                key: _keys[0],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: CustomTextField(
+                  validator: ValidatorBuilder.chain().required().min(3).build(),
                   prefixIcon: const Icon(Icons.person_outline),
-                  controller: _controllers[1],
+                  controller: _controllers[0],
                   hint: "Name",
                 ),
               ),
               10.h,
               Form(
-                key: _keys[0],
+                key: _keys[1],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: CustomTextField(
                   prefixIcon: const Icon(Icons.email_outlined),
-                  controller: _controllers[0],
+                  controller: _controllers[1],
+                  validator: ValidatorBuilder.chain()
+                      .required()
+                      .email()
+                      .min(6)
+                      .build(),
                   hint: "Email",
                 ),
               ),
@@ -76,14 +100,41 @@ class _SignupScreenState extends State<SignupScreen> {
                 key: _keys[2],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: CustomTextField(
+                  validator: ValidatorBuilder.chain().required().min(8).build(),
                   prefixIcon: const Icon(Icons.lock_outline),
                   controller: _controllers[2],
-                  obsecure: _obsecure,
+                  obsecure: _obsecures[0],
                   hint: "Password",
                   suffixIcon: IconButton(
-                    onPressed: () => setState(() => _obsecure = !_obsecure),
+                    onPressed: () =>
+                        setState(() => _obsecures[0] = !_obsecures[0]),
                     icon: Icon(
-                      _obsecure
+                      _obsecures[0]
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      color: theme.hintColor,
+                    ),
+                  ),
+                ),
+              ),
+              10.h,
+              Form(
+                key: _keys[3],
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: CustomTextField(
+                  validator: ValidatorBuilder.chain()
+                      .required()
+                      .oneOf(() => _controllers[2].text, "Passwords must match")
+                      .build(),
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  controller: _controllers[3],
+                  obsecure: _obsecures[1],
+                  hint: "Confirm Password",
+                  suffixIcon: IconButton(
+                    onPressed: () =>
+                        setState(() => _obsecures[1] = !_obsecures[1]),
+                    icon: Icon(
+                      _obsecures[1]
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
                       color: theme.hintColor,
@@ -92,7 +143,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
               20.h,
-              CustomButton(text: "Sign up", onPressed: () {}),
+              CustomButton(text: "Sign up", onPressed: _signup),
               20.h,
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -115,7 +166,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ],
           ),
         ),
-      ),
+      ).onTap(() => context.unfocus()),
     );
   }
 

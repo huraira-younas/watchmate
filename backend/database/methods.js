@@ -1,5 +1,4 @@
 const { flushRedis } = require("../redis/redis_methods");
-const User = require("./models/user_model");
 const logger = require("../methods/logger");
 const mysqldump = require("mysqldump");
 const { v4: uuidv4 } = require("uuid");
@@ -59,16 +58,15 @@ async function insertAdmin() {
   try {
     await trx("users")
       .insert({
-        fullName: process.env.ADMIN_NAME,
-        phone: process.env.ADMIN_PHONE,
         email: process.env.ADMIN_EMAIL,
+        name: process.env.ADMIN_NAME,
         password: hashedPassword,
         role: "owner",
         username,
         id,
       })
       .onConflict("email")
-      .merge(["fullName", "password", "phone", "role"]);
+      .merge(["name", "password", "role"]);
 
     await trx.commit();
   } catch (err) {

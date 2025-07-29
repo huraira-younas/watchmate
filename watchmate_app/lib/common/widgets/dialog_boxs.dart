@@ -1,5 +1,5 @@
-import 'package:watchmate_app/common_widget/custom_button.dart';
-import 'package:watchmate_app/common_widget/text_widget.dart';
+import 'package:watchmate_app/common/widgets/custom_button.dart';
+import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:flutter/material.dart';

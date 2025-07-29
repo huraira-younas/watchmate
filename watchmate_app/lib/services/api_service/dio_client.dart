@@ -4,9 +4,15 @@ import 'package:dio/dio.dart';
 
 class ApiResponse<T> {
   final int? statusCode;
+  final String? error;
   final T? body;
 
-  ApiResponse({this.statusCode, this.body});
+  ApiResponse({this.statusCode, this.body, this.error});
+
+  @override
+  String toString() {
+    return "ApiResponse(statusCode: $statusCode, error: $error, body: $body)";
+  }
 }
 
 class ApiService {
@@ -18,8 +24,8 @@ class ApiService {
   ApiService._internal() {
     _dio = Dio(
       BaseOptions(
-        connectTimeout: const Duration(seconds: 15),
-        receiveTimeout: const Duration(seconds: 15),
+        connectTimeout: const Duration(seconds: 8),
+        receiveTimeout: const Duration(seconds: 8),
         baseUrl: NetworkUtils.baseUrl,
         headers: {
           'Content-Type': 'application/json',
@@ -36,8 +42,9 @@ class ApiService {
             tag: tag,
             message: {
               "uri": options.uri.toString(),
-              "headers": options.headers,
               "params": options.queryParameters,
+              "headers": options.headers,
+              "body": options.data,
             },
           );
           return handler.next(options);
@@ -105,6 +112,7 @@ class ApiService {
         queryParameters: query,
         options: Options(headers: headers),
       );
+
       return ApiResponse<T>(statusCode: res.statusCode, body: res.data);
     } catch (e) {
       return _handleError<T>(e);
@@ -132,16 +140,40 @@ class ApiService {
 
   ApiResponse<T> _handleError<T>(Object e) {
     if (e is DioException) {
-      final res = e.response;
-      final dynamic errorBody = res?.data is Map && res?.data['message'] != null
-          ? res?.data['message']
-          : res?.data ?? e.message;
-      return ApiResponse<T>(statusCode: res?.statusCode, body: errorBody);
+      final message = switch (e.type) {
+        DioExceptionType.unknown => "Network error, please try again later",
+        DioExceptionType.badCertificate => "Service unavailable (bad cert)",
+        DioExceptionType.connectionError => "Couldn't connect to server",
+        DioExceptionType.badResponse => _extractServerError(e.response),
+        DioExceptionType.connectionTimeout => "Connection timeout",
+        DioExceptionType.receiveTimeout => "Server response timeout",
+        DioExceptionType.sendTimeout => "Client send timeout",
+        DioExceptionType.cancel => "Request was cancelled",
+      };
+
+      return _prepareError(message);
+    }
+    return _prepareError(e.toString());
+  }
+
+  String _extractServerError(Response? response) {
+    if (response?.statusCode == 404) {
+      return "404 - Route Not Found";
     }
 
-    return ApiResponse<T>(
-      body: ('Unexpected error occurred: ${e.toString()}') as T?,
-      statusCode: 500,
-    );
+    final data = response?.data;
+    if (data == null) return "Unexpected server error";
+
+    if (data is String) return data;
+    if (data is Map && data['error'] != null) return data['error'].toString();
+    if (data is Map && data['message'] != null) {
+      return data['message'].toString();
+    }
+
+    return "Unknown error occurred";
+  }
+
+  ApiResponse<T> _prepareError<T>(String error, {int statusCode = 500}) {
+    return ApiResponse<T>(statusCode: statusCode, error: error);
   }
 }

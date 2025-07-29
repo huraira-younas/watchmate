@@ -1,5 +1,5 @@
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:watchmate_app/common_widget/text_widget.dart';
+import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_assets.dart';

@@ -1,4 +1,4 @@
-const logger = require("..//methods/logger");
+const logger = require("../methods/logger");
 const redis = require("./redis_client.js");
 
 const parseJson = (data) => (data ? JSON.parse(data) : null);

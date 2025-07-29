@@ -1,11 +1,10 @@
 const { asyncHandler } = require("../../methods/utils");
-const admin = require("./admin_controller");
 const auth = require("./controller");
 const express = require("express");
 const router = express.Router();
 
 //? -- User Routes
-// router
+router
 //   .post("/reset_password", asyncHandler(auth.resetPassword))
 //   .post("/delete_account", asyncHandler(auth.deleteAccount))
 //   .post("/verify_code", asyncHandler(auth.verifyCode))
@@ -13,8 +12,8 @@ const router = express.Router();
 //   .post("/send_code", asyncHandler(auth.sendCode))
 //   .post("/update", asyncHandler(auth.updateUser))
 //   .post("/fetch", asyncHandler(auth.fetchUsers))
-//   .post("/sign_up", asyncHandler(auth.signUp))
-//   .post("/login", asyncHandler(auth.login))
+  .post("/sign_up", asyncHandler(auth.signUp))
+  .post("/login", asyncHandler(auth.login))
 //   .post("/get", asyncHandler(auth.getUser));
 
 module.exports = router;

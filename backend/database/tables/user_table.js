@@ -13,9 +13,9 @@ async function createTable() {
           table.string("password").notNullable();
           table.string("profileURL").nullable();
           table.string("ipAddress").nullable();
-          table.string("fullName").nullable();
           table.string("coverURL").nullable();
           table.string("gender").nullable();
+          table.string("name").nullable();
           table.string("bio").nullable();
           table.uuid("id").primary();
 
