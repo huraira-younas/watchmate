@@ -15,11 +15,7 @@ async function createTable() {
           table.string("ipAddress").nullable();
           table.string("fullName").nullable();
           table.string("coverURL").nullable();
-          table.string("pronouns").nullable();
-          table.string("website").nullable();
           table.string("gender").nullable();
-          table.string("phone").nullable();
-          table.dateTime("dob").nullable();
           table.string("bio").nullable();
           table.uuid("id").primary();
 

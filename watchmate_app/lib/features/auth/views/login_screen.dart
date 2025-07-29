@@ -27,6 +27,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final _keys = List.generate(2, (index) => GlobalKey<FormState>());
   bool _obsecure = true;
 
+  Future<void> _login() async {
+    if(_keys.any((e) => !e.currentState!.validate())) {
+      return;
+    }
+
+    final email = _controllers[0].text.trim();
+    final pass = _controllers[1].text.trim();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = themeCubit.isDark;

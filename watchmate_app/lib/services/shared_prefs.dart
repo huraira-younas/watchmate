@@ -20,6 +20,19 @@ class SharedPrefs {
     await _prefs.setBool(_keyIsDarkMode, value);
   }
 
+  // ------------------ User ------------------
+  static const _keyUser = 'logged_user';
+
+  String? getLoggedUser() => _prefs.getString(_keyUser);
+
+  Future<void> setLoggedUser(String id) async {
+    await _prefs.setString(_keyUser, id);
+  }
+
+  Future<void> removeLoggedUser() async {
+    await _prefs.remove(_keyUser);
+  }
+
   // ------------------ Generic Methods ------------------
 
   Future<void> setString(String key, String value) async {

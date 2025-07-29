@@ -7,4 +7,5 @@ class AuthApi {
   }
 
   String get getUser => '$_endpoint/get_user';
+  String get login => '$_endpoint/login';
 }
