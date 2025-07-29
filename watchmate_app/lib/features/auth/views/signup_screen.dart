@@ -35,7 +35,14 @@ class _SignupScreenState extends State<SignupScreen> {
     final email = _controllers[1].text.trim();
     final name = _controllers[0].text.trim();
 
-    _userBloc.add(AuthRegister(password: password, email: email, name: name));
+    _userBloc.add(
+      AuthRegister(
+        onSuccess: () => context.pop(),
+        password: password,
+        email: email,
+        name: name,
+      ),
+    );
   }
 
   @override

@@ -55,7 +55,7 @@ const sendEmailCode = async (data) => {
     .replace(/\$\{code\}/g, code);
 
   const msg = `Your verification code is: ${code}`;
-  await useNodeMailer("Envato Admin", {
+  await useNodeMailer(process.env.APP_NAME, {
     html: emailHtml,
     subject: msg,
     text: msg,
@@ -80,7 +80,7 @@ const sendPassResetEmail = async (data) => {
     .replace(/\$\{help_center\}/g, help_center)
     .replace(/\$\{signature\}/g, signature);
 
-  await useNodeMailer("Envato Admin", {
+  await useNodeMailer(process.env.APP_NAME, {
     text: "Your password has been reset",
     subject: `Reset Password`,
     html: emailHtml,

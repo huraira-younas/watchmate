@@ -1,6 +1,7 @@
 const { initFirebase } = require("./clients/firebase/firebase_client.js");
 const { createAdapter } = require("@socket.io/redis-adapter");
 const { initializeDB } = require("./database/methods");
+const initializeQueues = require("./bullmq/index.js");
 const limiter = require("./clients/rate_limiter");
 const redis = require("./redis/redis_client.js");
 const loadModules = require("./module_loader");
@@ -44,6 +45,7 @@ const runApp = () => {
       server.listen(PORT, "0.0.0.0", () =>
         logger.info(`🚀 Server running: ${PORT}`)
       );
+      await initializeQueues();
       await initializeDB();
       initFirebase().then((r) => {
         if (r.success) logger.info("✅ Firebase initialized");

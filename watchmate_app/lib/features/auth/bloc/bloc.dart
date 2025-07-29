@@ -9,6 +9,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   UserModel? user;
 
   AuthBloc(this.repo) : super(AuthState()) {
+    on<AuthUpdatePassword>(_onUpdatePassword);
     on<AuthVerifyCode>(_onVerifyCode);
     on<AuthRegister>(_onRegister);
     on<AuthGetCode>(_onGetCode);
@@ -22,10 +23,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       user = await repo.login(event.toJson());
+      event.onSuccess?.call();
       _emit(emit);
     } catch (e) {
       final error = CustomState(message: e.toString(), title: "Login Error");
       _emit(error: error, emit);
+      event.onError?.call();
     }
   }
 
@@ -35,10 +38,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       user = await repo.register(event.toJson());
+      event.onSuccess?.call();
       _emit(emit);
     } catch (e) {
       final error = CustomState(message: e.toString(), title: "Register Error");
       _emit(error: error, emit);
+      event.onError?.call();
     }
   }
 
@@ -51,14 +56,43 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       await repo.sendCode(event.toJson());
+      event.onSuccess?.call();
       _emit(emit);
     } catch (e) {
       final error = CustomState(title: "Get Code Error", message: e.toString());
       _emit(error: error, emit);
+      event.onError?.call();
     }
   }
 
-  Future<void> _onVerifyCode(AuthVerifyCode event, Emitter<AuthState> emit) async {
+  Future<void> _onUpdatePassword(
+    AuthUpdatePassword event,
+    Emitter<AuthState> emit,
+  ) async {
+    final loading = CustomState(
+      title: "Updating Password",
+      message: "Please wait...",
+    );
+    _emit(loading: loading, emit);
+
+    try {
+      await repo.updatePassword(event.toJson());
+      event.onSuccess?.call();
+      _emit(emit);
+    } catch (e) {
+      final error = CustomState(
+        title: "Update Password Error",
+        message: e.toString(),
+      );
+      _emit(error: error, emit);
+      event.onError?.call();
+    }
+  }
+
+  Future<void> _onVerifyCode(
+    AuthVerifyCode event,
+    Emitter<AuthState> emit,
+  ) async {
     final loading = CustomState(
       message: "Please wait...",
       title: "Verifying Code",
@@ -67,10 +101,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       await repo.verifyCode(event.toJson());
+      event.onSuccess?.call();
       _emit(emit);
     } catch (e) {
-      final error = CustomState(title: "Verify Code Error", message: e.toString());
+      final error = CustomState(
+        title: "Verify Code Error",
+        message: e.toString(),
+      );
       _emit(error: error, emit);
+      event.onError?.call();
     }
   }
 

@@ -8,6 +8,7 @@ const { getMemberFromHash } = require("../../redis/redis_methods");
 const { methods } = require("../../bullmq/queues/emails/producer");
 const User = require("../../database/models/user_model");
 const bcrypt = require("bcryptjs");
+const logger = require("../../methods/logger");
 
 const login = async (req, res) => {
   validateReq(req.body, ["email", "password"]);
@@ -93,7 +94,7 @@ const resetPassword = async (req, res) => {
 
   methods.sendResetMail({
     baseURL: getBaseURL(req),
-    name: user.fullName,
+    name: user.name,
     email,
   });
 
@@ -128,6 +129,8 @@ const sendCode = async (req, res) => {
 
   const code = Math.floor(100000 + Math.random() * 900000);
   const baseURL = getBaseURL(req);
+
+  logger.info(`Code: ${code}`);
 
   await methods.sendCode({ email, code, name: user?.name || "User", baseURL });
   res.json({ message: "Code sent successfully" });

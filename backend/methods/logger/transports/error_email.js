@@ -15,10 +15,9 @@ const transporter = nodemailer.createTransport({
 class EmailOnErrorTransport extends Transport {
   log(info, callback) {
     const env = process.env.NODE_ENV.toLowerCase();
-    if (env === "both" || env === "development") return;
-
     const APPNAME = process.env.APP_NAME;
-    if (info.level === "error") {
+
+    if (info.level === "error" && env === "production") {
       const html = `
         <div style="font-family:Arial,sans-serif;padding:20px;">
           <h2 style="color:#e74c3c;">🚨 Error Notification</h2>

@@ -7,7 +7,6 @@ const init = async (que) => {
 };
 
 const _withConfig = async (name, data) => {
-  // const config = await getJobConfig();
   queue?.add(name, data);
 };
 

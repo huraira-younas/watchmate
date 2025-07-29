@@ -1,10 +1,21 @@
-abstract class AuthEvent {}
+abstract class AuthEvent {
+  final Function()? onSuccess;
+  final Function()? onError;
+
+  AuthEvent({required this.onSuccess, required this.onError});
+}
 
 class AuthLogin extends AuthEvent {
   final String password;
   final String email;
 
-  AuthLogin({required this.email, required this.password});
+  AuthLogin({
+    required this.password,
+    required this.email,
+    super.onSuccess,
+    super.onError,
+  });
+
   Map<String, dynamic> toJson() => {"email": email, "password": password};
 }
 
@@ -17,6 +28,8 @@ class AuthRegister extends AuthEvent {
     required this.password,
     required this.email,
     required this.name,
+    super.onSuccess,
+    super.onError,
   });
 
   Map<String, dynamic> toJson() => {
@@ -29,7 +42,7 @@ class AuthRegister extends AuthEvent {
 class AuthGetCode extends AuthEvent {
   final String email;
 
-  AuthGetCode({required this.email});
+  AuthGetCode({required this.email, super.onSuccess, super.onError});
   Map<String, dynamic> toJson() => {"email": email};
 }
 
@@ -37,7 +50,12 @@ class AuthVerifyCode extends AuthEvent {
   final String email;
   final String code;
 
-  AuthVerifyCode({required this.email, required this.code});
+  AuthVerifyCode({
+    required this.email,
+    required this.code,
+    super.onSuccess,
+    super.onError,
+  });
   Map<String, dynamic> toJson() => {"email": email, "code": code};
 }
 
@@ -52,6 +70,8 @@ class AuthUpdatePassword extends AuthEvent {
     required this.method,
     required this.email,
     this.oldPassword,
+    super.onSuccess,
+    super.onError,
   });
 
   Map<String, dynamic> toJson() => {
@@ -62,4 +82,6 @@ class AuthUpdatePassword extends AuthEvent {
   };
 }
 
-class AuthLogout extends AuthEvent {}
+class AuthLogout extends AuthEvent {
+  AuthLogout({super.onSuccess, super.onError});
+}

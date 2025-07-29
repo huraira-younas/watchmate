@@ -2,7 +2,6 @@ import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/features/auth/bloc/events.dart';
-import 'package:watchmate_app/features/auth/bloc/states.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/common/widgets/text_field.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
@@ -11,7 +10,6 @@ import 'package:watchmate_app/utils/validator_builder.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +33,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
 
     final email = _controllers[0].text.trim();
-    _userBloc.add(AuthGetCode(email: email));
+    _userBloc.add(
+      AuthGetCode(
+        onSuccess: () => context.push(AuthRoutes.verifyCode.path, extra: email),
+        email: email,
+      ),
+    );
   }
 
   @override
@@ -85,17 +88,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ),
               20.h,
-              BlocListener<AuthBloc, AuthState>(
-                listener: (context, state) {
-                  if (state.loading == null && state.error == null) {
-                    context.push(
-                      AuthRoutes.verifyCode.path,
-                      extra: _controllers[0].text.trim(),
-                    );
-                  }
-                },
-                child: CustomButton(onPressed: _sendCode, text: "Get Code"),
-              ),
+              CustomButton(onPressed: _sendCode, text: "Get Code"),
               60.h,
             ],
           ),

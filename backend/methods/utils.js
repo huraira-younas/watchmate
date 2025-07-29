@@ -14,7 +14,7 @@ class AppError extends Error {
   }
 }
 
-const asyncHandler = (fn) => (req, res) => {
+const asyncHandler = (fn) => (req, res, next) => {
   requestCount++;
   logger.info(`Request Count: ${requestCount}`);
 
@@ -31,7 +31,7 @@ const asyncHandler = (fn) => (req, res) => {
 
   console.info(chalk.white.bold(l));
 
-  Promise.resolve(fn(req, res)).catch((err) => {
+  Promise.resolve(fn(req, res, next)).catch((err) => {
     const code = err instanceof AppError ? err.statusCode : 500;
     const isAppError = err instanceof AppError;
 

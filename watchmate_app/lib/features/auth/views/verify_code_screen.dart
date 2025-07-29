@@ -2,7 +2,6 @@ import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/features/auth/bloc/events.dart';
-import 'package:watchmate_app/features/auth/bloc/states.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/utils/validator_builder.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
@@ -10,7 +9,6 @@ import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +40,15 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
     if (validator(code) != null) return;
 
     final email = widget.email;
-    _userBloc.add(AuthVerifyCode(email: email, code: code));
+    _userBloc.add(
+      AuthVerifyCode(
+        code: code,
+        email: email,
+        onSuccess: () {
+          context.push(AuthRoutes.newPassword.path, extra: email);
+        },
+      ),
+    );
   }
 
   @override
@@ -126,17 +132,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                 }),
               ),
               30.h,
-              BlocListener<AuthBloc, AuthState>(
-                listener: (context, state) {
-                  if (state.loading == null && state.error == null) {
-                    context.push(
-                      AuthRoutes.newPassword.path,
-                      extra: widget.email,
-                    );
-                  }
-                },
-                child: CustomButton(onPressed: _verify, text: "Verify"),
-              ),
+              CustomButton(onPressed: _verify, text: "Verify"),
             ],
           ),
         ),
