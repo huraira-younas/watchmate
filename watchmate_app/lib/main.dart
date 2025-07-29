@@ -1,9 +1,9 @@
+import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/services/shared_prefs.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/router/route_config.dart';
-import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:flutter/material.dart';
