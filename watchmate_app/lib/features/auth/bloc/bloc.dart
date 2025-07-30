@@ -12,9 +12,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthUpdatePassword>(_onUpdatePassword);
     on<AuthVerifyCode>(_onVerifyCode);
     on<AuthRegister>(_onRegister);
+    on<AuthGetUser>(_onGetUser);
     on<AuthGetCode>(_onGetCode);
     on<AuthLogout>(_onLogout);
     on<AuthLogin>(_onLogin);
+  }
+
+  Future<void> _onGetUser(AuthGetUser event, Emitter<AuthState> emit) async {
+    try {
+      user = await repo.getUser();
+      event.onSuccess?.call();
+      _emit(emit);
+    } catch (e) {
+      final error = CustomState(message: e.toString(), title: "Login Error");
+      _emit(error: error, emit);
+      event.onError?.call(error);
+    }
   }
 
   Future<void> _onLogin(AuthLogin event, Emitter<AuthState> emit) async {
@@ -28,7 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       final error = CustomState(message: e.toString(), title: "Login Error");
       _emit(error: error, emit);
-      event.onError?.call();
+      event.onError?.call(error);
     }
   }
 
@@ -43,7 +56,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       final error = CustomState(message: e.toString(), title: "Register Error");
       _emit(error: error, emit);
-      event.onError?.call();
+      event.onError?.call(error);
     }
   }
 
@@ -61,7 +74,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       final error = CustomState(title: "Get Code Error", message: e.toString());
       _emit(error: error, emit);
-      event.onError?.call();
+      event.onError?.call(error);
     }
   }
 
@@ -85,7 +98,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         message: e.toString(),
       );
       _emit(error: error, emit);
-      event.onError?.call();
+      event.onError?.call(error);
     }
   }
 
@@ -109,7 +122,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         message: e.toString(),
       );
       _emit(error: error, emit);
-      event.onError?.call();
+      event.onError?.call(error);
     }
   }
 

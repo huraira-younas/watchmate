@@ -7,13 +7,13 @@ import 'package:flutter/material.dart';
 AppBar customAppBar({
   List<Widget> actions = const [],
   required BuildContext context,
-  bool? blackStatusIcons,
   bool centerTitle = true,
+  bool showLeading = true,
   Function()? onBackPress,
+  bool? blackStatusIcons,
+  Widget? leadingIcon,
   String title = "",
-  Widget? titleIcon,
   Color? iconColor,
-  bool back = true,
   Color? bgColor,
 }) {
   final theme = Theme.of(context);
@@ -29,8 +29,8 @@ AppBar customAppBar({
     automaticallyImplyLeading: false,
     centerTitle: centerTitle,
     leading: Visibility(
-      visible: back,
-      child: BackIcon(onBackPress: onBackPress, color: color),
+      visible: showLeading,
+      child: leadingIcon ?? BackIcon(onBackPress: onBackPress, color: color),
     ),
     actions: actions,
     title: Row(
@@ -42,7 +42,6 @@ AppBar customAppBar({
           family: AppFonts.semibold,
           text: title,
         ),
-        if (titleIcon != null) titleIcon,
       ],
     ),
   );

@@ -1,5 +1,7 @@
 import 'package:watchmate_app/common/widgets/custom_bottom_nav_bar.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
+import 'package:watchmate_app/constants/app_assets.dart';
+import 'package:watchmate_app/constants/app_constants.dart';
 import "package:watchmate_app/router/routes/layout_routes.dart";
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:go_router/go_router.dart';
@@ -19,8 +21,16 @@ class HomeLayout extends StatelessWidget {
     final navItem = LayoutRoutes.getByPath(loc);
 
     return Scaffold(
-      appBar: customAppBar(context: context, title: navItem.name, back: false),
-      body: child.fadeIn(key: ValueKey(navItem.path), duration: 100.millis),
+      appBar: customAppBar(
+        leadingIcon: Image.asset(
+          AppAssets.icons.appIcon,
+          height: 40,
+        ).hero(AppConstants.appname).padOnly(l: 10),
+        title: navItem.name,
+        centerTitle: false,
+        context: context,
+      ),
+      body: child.fadeIn(key: ValueKey(navItem.path), duration: 500.millis),
       bottomNavigationBar: const CustomBottomNavBar(),
     );
   }

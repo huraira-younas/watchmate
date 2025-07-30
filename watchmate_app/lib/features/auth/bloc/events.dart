@@ -1,6 +1,8 @@
+import 'package:watchmate_app/features/auth/bloc/states.dart';
+
 abstract class AuthEvent {
+  final Function(CustomState error)? onError;
   final Function()? onSuccess;
-  final Function()? onError;
 
   AuthEvent({required this.onSuccess, required this.onError});
 }
@@ -80,6 +82,10 @@ class AuthUpdatePassword extends AuthEvent {
     "method": method,
     "email": email,
   };
+}
+
+class AuthGetUser extends AuthEvent {
+  AuthGetUser({super.onSuccess, super.onError});
 }
 
 class AuthLogout extends AuthEvent {
