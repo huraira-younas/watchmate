@@ -1,5 +1,6 @@
 import 'package:watchmate_app/features/downloads/views/downloads_screen.dart';
 import 'package:watchmate_app/features/my_list/views/my_list_screen.dart';
+import 'package:watchmate_app/features/profile/views/profile_screen.dart';
 import 'package:watchmate_app/features/home/views/home_screen.dart';
 import 'package:watchmate_app/router/routes/app_route_model.dart';
 import 'package:flutter/material.dart' show Icons;
@@ -27,7 +28,7 @@ abstract class LayoutRoutes {
   );
 
   static const profile = AppRoute(
-    page: DownloadsScreen(),
+    page: ProfileScreen(),
     icon: Icons.person,
     path: '/profile',
     name: 'Profile',
