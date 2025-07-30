@@ -19,7 +19,7 @@ class CustomBottomNavBar extends StatelessWidget {
     final theme = context.theme;
 
     return Container(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 18),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         color: theme.scaffoldBackgroundColor,
@@ -39,10 +39,10 @@ class CustomBottomNavBar extends StatelessWidget {
           final color = isSelected
               ? theme.colorScheme.primary
               : theme.iconTheme.color?.withValues(alpha: 0.6);
-    
+
           return AnimatedContainer(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             width: 90,
             decoration: BoxDecoration(
               color: isSelected
