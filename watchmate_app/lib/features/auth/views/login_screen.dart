@@ -1,10 +1,11 @@
-import 'package:watchmate_app/common/widgets/dialog_boxs.dart';
 import 'package:watchmate_app/common/widgets/loading/loading_screen.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
+import 'package:watchmate_app/router/routes/layout_routes.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
+import 'package:watchmate_app/common/widgets/dialog_boxs.dart';
+import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/features/auth/bloc/events.dart';
 import 'package:watchmate_app/features/auth/bloc/states.dart';
-import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/common/widgets/text_field.dart';
 import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
@@ -42,7 +43,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final email = _controllers[0].text.trim();
     final pass = _controllers[1].text.trim();
-    _userBloc.add(AuthLogin(email: email, password: pass));
+    _userBloc.add(
+      AuthLogin(
+        onSuccess: () => context.go(LayoutRoutes.home.path),
+        password: pass,
+        email: email,
+      ),
+    );
   }
 
   @override

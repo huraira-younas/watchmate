@@ -1,29 +1,26 @@
+import 'package:flutter/widgets.dart' show GlobalKey, NavigatorState;
 import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/router/app_routes.dart';
 import 'package:go_router/go_router.dart';
 import 'route_observer.dart';
 import 'not_found_page.dart';
 
+Iterable<RouteBase> _getRoutes() => AppRoutes.all.map((route) {
+  return GoRoute(
+    path: route.path,
+    name: route.name,
+    builder: (context, state) {
+      if (route.builder == null) return route.page!;
+      return route.builder!(context, state);
+    },
+  );
+});
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final GoRouter appRouter = GoRouter(
+  routes: [...AppRoutes.shells, ..._getRoutes()],
   errorBuilder: (_, __) => const NotFoundPage(),
   initialLocation: AuthRoutes.splash.path,
   observers: [GoRouterObserver()],
-  routes: AppRoutes.all.map((route) {
-    return GoRoute(
-      path: route.path,
-      name: route.name,
-      builder: (context, state) {
-        if (route.builder == null) return route.page!;
-        return route.builder!(context, state);
-      },
-    );
-  }).toList(),
-  // redirect: (context, state) {
-  //   final isLoggedIn = state.uri.toString() == "/login";
-  //   final isLogin = true;
-
-  //   if (!isLoggedIn && !isLogin) return RoutePaths.login;
-  //   if (isLoggedIn && isLogin) return RoutePaths.home;
-  //   return null;
-  // },
+  navigatorKey: _rootNavigatorKey,
 );
