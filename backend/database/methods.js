@@ -27,7 +27,7 @@ async function dropTables(tables = []) {
       logger.warn(`🗑️  Dropping tables: ${tablesToDrop.join(", ")}`);
 
       for (const table of tablesToDrop) {
-        await trx.schema.dropTableIfExists(table);
+        await trx.raw(`DROP TABLE IF EXISTS "${table}" CASCADE`);
         logger.info(`✅ Dropped table: ${table}`);
       }
     });
