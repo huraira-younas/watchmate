@@ -1,13 +1,17 @@
+import 'package:watchmate_app/services/api_service/api_routes.dart';
+import 'package:watchmate_app/utils/network_utils.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 
 class HlsVideoPlayer extends StatefulWidget {
   final String resolution;
+  final String filename;
   final String folder;
 
   const HlsVideoPlayer({
-    this.resolution = "f_720",
+    this.filename = "index.m3u8",
+    this.resolution = "f_320",
     required this.folder,
     super.key,
   });
@@ -25,7 +29,7 @@ class _HlsVideoPlayerState extends State<HlsVideoPlayer> {
     super.initState();
 
     final url =
-        "http://yourdomain.com/video/${widget.folder}/${widget.resolution}/index.m3u8";
+        "${NetworkUtils.baseUrl}${ApiRoutes.stream.getStreamVideo(resolution: widget.resolution, filename: widget.filename, folder: widget.folder)}";
 
     _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url))
       ..initialize().then((_) {
@@ -50,7 +54,8 @@ class _HlsVideoPlayerState extends State<HlsVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    if (_chewieController != null && _chewieController!.videoPlayerController.value.isInitialized) {
+    if (_chewieController != null &&
+        _chewieController!.videoPlayerController.value.isInitialized) {
       return AspectRatio(
         aspectRatio: 16 / 9,
         child: Chewie(controller: _chewieController!),

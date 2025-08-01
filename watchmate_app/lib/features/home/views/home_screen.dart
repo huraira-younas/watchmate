@@ -1,7 +1,4 @@
-import 'package:watchmate_app/common/widgets/text_widget.dart';
-import 'package:watchmate_app/constants/app_constants.dart';
-import 'package:watchmate_app/constants/app_themes.dart';
-import 'package:watchmate_app/constants/app_fonts.dart';
+import 'package:watchmate_app/common/widgets/hls_player.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -9,41 +6,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.emoji_emotions,
-                color: isDark ? AppColors.darkHint : AppColors.lightHint,
-                size: 100,
-              ),
-              const SizedBox(height: 24),
-              MyText(
-                color: theme.textTheme.bodyLarge?.color ?? Colors.white,
-                size: AppConstants.title,
-                family: AppFonts.bold,
-                text: 'Hey Babe',
-                isCenter: true,
-              ),
-              const SizedBox(height: 12),
-              MyText(
-                text: 'Dhoom Machale Dhoom Machale Dhoom',
-                color: theme.textTheme.bodyMedium?.color,
-                size: AppConstants.subtitle,
-                isCenter: true,
-              ),
-              const SizedBox(height: 30),
-            ],
-          ),
-        ),
-      ),
+      body: Center(child: HlsVideoPlayer(folder: "test_video")),
     );
   }
 }
