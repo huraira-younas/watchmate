@@ -1,4 +1,5 @@
 import subprocess
+import shutil
 import os
 
 def check_ffmpeg_installed():
@@ -10,16 +11,20 @@ def check_ffmpeg_installed():
         print("❌ FFmpeg not found. Please install it and add it to your system's PATH.")
         return False
 
-def create_out_directories(base_output_dir, filename_base):
+def create_out_directories(base_output_dir, filename_base, selected_resolutions):
     output_path = os.path.join(base_output_dir, filename_base)
-    resolutions = ["f_320", "f_480", "f_720", "f_1080"]
+
+    if os.path.exists(output_path):
+        shutil.rmtree(output_path)
+
     os.makedirs(output_path, exist_ok=True)
 
     dirs = {}
-    for res in resolutions:
+    for res in selected_resolutions:
         path = os.path.join(output_path, res)
         os.makedirs(path, exist_ok=True)
         dirs[res] = path
+
     return dirs
 
 def get_video_info(input_file):
