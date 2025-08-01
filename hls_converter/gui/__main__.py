@@ -3,7 +3,8 @@ import os
 import threading
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
-    QListWidget, QListWidgetItem, QTextEdit, QGroupBox, QMessageBox
+    QListWidget, QListWidgetItem, QTextEdit, QGroupBox, QMessageBox,    
+    QSizePolicy
 )
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QFont, QPalette, QColor
@@ -12,7 +13,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from constants import INPUT_DIR, VIDEO_EXTENSIONS, RESOLUTIONS, OUTPUT_DIR
 from core.convert import convert_to_hls
 from core.helpers import check_ffmpeg_installed
-
 
 class ConversionThread(QThread):
     conversion_finished = pyqtSignal(str)
@@ -31,7 +31,7 @@ class ConversionThread(QThread):
     def run(self):
         self.process_started.emit()
         try:
-            self.log_message.emit(f"\n➡️ Starting: {os.path.basename(self.input_path)}")
+            self.log_message.emit(f"➡️ Starting: {os.path.basename(self.input_path)}")
             convert_to_hls(
                 self.input_path,
                 self.output_dir,
@@ -50,7 +50,6 @@ class ConversionThread(QThread):
 
     def stop(self):
         self.stop_event.set()
-
 
 class HLSConverterGUI(QWidget):
     def __init__(self):
@@ -82,6 +81,23 @@ class HLSConverterGUI(QWidget):
                 background-color: #1a202c;
                 font-family: 'Roboto';
                 color: #e2e8f0;
+            }
+            QGroupBox {
+                padding: 10px 6px 6px 6px;
+                border: 1px solid #4a5568;
+                border-radius: 8px;
+                margin-top: 20px;
+            }
+            
+            QGroupBox::title {
+                subcontrol-position: top;
+                subcontrol-origin: margin;
+                background-color: #1a202c;
+                border-radius: 4px;
+                font-weight: bold;
+                margin-top: 10px;
+                padding: 0 6px;
+                color: #63b3ed;
             }
             QPushButton {
                 background-color: #4299e1;
@@ -133,36 +149,52 @@ class HLSConverterGUI(QWidget):
 
     def init_ui(self):
         main_layout = QHBoxLayout(self)
+        main_layout.setContentsMargins(15, 15, 15, 15)
+        main_layout.setSpacing(15)
 
         left_panel = QVBoxLayout()
+        left_panel.setSpacing(15)
 
-        video_group = QGroupBox("🎞️ Input Videos")
+        video_group = QGroupBox("Input Videos")
         vbox_videos = QVBoxLayout(video_group)
+        vbox_videos.setContentsMargins(10, 10, 10, 10)
         self.video_list_widget = QListWidget()
         self.video_list_widget.setSelectionMode(QListWidget.NoSelection)
         vbox_videos.addWidget(self.video_list_widget)
-        left_panel.addWidget(video_group)
+        left_panel.addWidget(video_group, 1)
 
-        res_group = QGroupBox("📐 Resolutions")
+        res_group = QGroupBox("Resolutions")
+        res_group.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
         vbox_res = QVBoxLayout(res_group)
+        vbox_res.setContentsMargins(10, 10, 10, 10)
         self.resolution_list_widget = QListWidget()
-        self.resolution_list_widget.setSelectionMode(QListWidget.NoSelection)
+        
+        row_height = 34
+        row_count = len(RESOLUTIONS)
+        self.resolution_list_widget.setFixedHeight(row_count * row_height + 8)
+
         vbox_res.addWidget(self.resolution_list_widget)
-        left_panel.addWidget(res_group)
+        left_panel.addWidget(res_group, 0)
 
         right_panel = QVBoxLayout()
+        right_panel.setSpacing(15)
+
         button_layout = QHBoxLayout()
-        self.convert_button = QPushButton("🚀 Convert Selected")
+        button_layout.setContentsMargins(0, 0, 0, 0)
+        button_layout.setSpacing(10)
+
+        self.convert_button = QPushButton("Convert Selected")
         self.convert_button.clicked.connect(self.start_conversion)
-        self.stop_button = QPushButton("🛑 Stop All")
+        self.stop_button = QPushButton("Stop All")
         self.stop_button.clicked.connect(self.stop_all_conversions)
         self.stop_button.setEnabled(False)
         button_layout.addWidget(self.convert_button)
         button_layout.addWidget(self.stop_button)
         right_panel.addLayout(button_layout)
 
-        log_group = QGroupBox("📋 Conversion Log")
+        log_group = QGroupBox("Conversion Log")
         vbox_log = QVBoxLayout(log_group)
+        vbox_log.setContentsMargins(10, 10, 10, 10)
         self.log_text_edit = QTextEdit()
         self.log_text_edit.setReadOnly(True)
         vbox_log.addWidget(self.log_text_edit)
@@ -247,13 +279,11 @@ class HLSConverterGUI(QWidget):
         self.log_text_edit.append(msg)
         self.log_text_edit.moveCursor(self.log_text_edit.textCursor().End)
 
-
 def main():
     app = QApplication(sys.argv)
     gui = HLSConverterGUI()
     gui.show()
     sys.exit(app.exec_())
-
 
 if __name__ == "__main__":
     main()
