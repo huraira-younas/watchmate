@@ -1,67 +1,102 @@
-# HLS Packaging Script
+# HLS Converter GUI
 
-This project provides a Python script for converting video files into HLS (HTTP Live Streaming) format at multiple resolutions.
+A modern Python-based GUI application to convert videos into HLS (HTTP Live Streaming) format at multiple resolutions using FFmpeg.
 
-## Features
+## ✨ Features
 
-- Converts video to HLS at 320p, 480p, 720p, and 1080p (if applicable).
-- Organizes HLS output into a structured folder hierarchy.
+- Beautiful dark-themed user interface built with PyQt5.
+- Select multiple input videos for batch HLS conversion.
+- Choose desired output resolutions (320p, 480p, 720p, 1080p).
+- Real-time conversion logs with progress updates.
+- Option to stop all conversions mid-process.
+- Easy to use – no command line required.
 
-## Requirements
+## 🛠 Requirements
 
 - Python 3.7+
-- FFmpeg installed and added to your system's PATH.
+- FFmpeg must be installed and accessible via system PATH.
 
-### How to Install FFmpeg
+## 📦 How to Install FFmpeg
 
-**Windows:**
-1. Download the latest FFmpeg build from [ffmpeg.org/download.html](https://ffmpeg.org/download.html).
-2. Extract the downloaded archive to a directory (e.g., `C:\ffmpeg`).
-3. Add the `bin` directory (e.g., `C:\ffmpeg\bin`) to your system's PATH environment variable.
+### Windows
 
-**macOS:**
+**Manual:**
+1. Download the latest build from [ffmpeg.org/download.html](https://ffmpeg.org/download.html)
+2. Extract it to a directory (e.g., `C:\ffmpeg`)
+3. Add `C:\ffmpeg\bin` to your system's PATH environment variable
+
+**Winget:**
+```bash
+winget install ffmpeg
+```
+
+### macOS
 ```bash
 brew install ffmpeg
 ```
 
-**Linux (Ubuntu/Debian):**
+### Ubuntu/Debian Linux
 ```bash
 sudo apt update
 sudo apt install ffmpeg
 ```
 
-## Usage
+## 🚀 How to Use
 
-1.  **Clone the repository (or download the files):**
+1. Clone or download this repository:
+```bash
+git clone <repository_url>
+cd hls_converter
+```
 
-    ```bash
-    git clone <repository_url>
-    cd hls_converter
-    ```
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-2.  **Run the script:**
+3. Run the app:
+```bash
+python -m gui
+```
 
-    ```bash
-    python main.py <input_video_file> <output_directory>
-    ```
+### GUI Instructions
 
-    - `<input_video_file>`: The path to your source video file (e.g., `video.mp4`).
-    - `<output_directory>`: The directory where the HLS output will be saved (e.g., `output`).
+- Input videos are loaded from the `input/` directory.
+- Select one or more videos using the checkboxes.
+- Select desired output resolutions.
+- Click **Convert Selected** to begin HLS conversion.
+- The converted HLS files will appear in the `output/` directory.
 
-    **Example:**
-    ```bash
-    python main.py my_video.mp4 output/
-    ```
+## 📂 Output Folder Structure
 
-    This will create a directory structure like:
-    ```
-    output/
-      my_video/
-        f_320/
-          index.m3u8
-          segment0.ts
-          ...
-        f_480/
-        f_720/
-        f_1080/
-    ```
+```
+output/
+  my_video/
+    f_320/
+      index.m3u8
+      segment0.ts
+      ...
+    f_480/
+    f_720/
+    f_1080/
+```
+
+## 📁 Project Structure
+
+```
+hls_converter/
+├── core/
+│   └── convert.py
+├── gui/
+│   └── __main__.py
+├── input/
+│   └── (Place your source videos here)
+├── output/
+│   └── (Converted HLS files will be saved here)
+├── constants.py
+└── requirements.txt
+```
+
+## 📃 License
+
+MIT License – do whatever you want with proper credit.
