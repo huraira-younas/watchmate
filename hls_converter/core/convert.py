@@ -2,6 +2,7 @@ from core.helpers import create_out_directories, get_video_info
 import subprocess
 import time
 import os
+import re
 
 def convert_to_hls(input_file, base_output_dir, selected_resolutions, log_callback=None, stop_event=None):
     def log(msg):
@@ -13,6 +14,8 @@ def convert_to_hls(input_file, base_output_dir, selected_resolutions, log_callba
         return
     
     filename_base = os.path.splitext(os.path.basename(input_file))[0]
+    filename_base = re.sub(r'[^\w\-]+', '_', filename_base)
+
     output_dirs = create_out_directories(base_output_dir, filename_base, selected_resolutions)
 
     width, height = get_video_info(input_file)
