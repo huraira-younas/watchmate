@@ -21,7 +21,7 @@ class Logger {
   static void warn({required String tag, required dynamic message}) =>
       _log(LogLevel.warn, tag, message);
 
-  static String _formatPadding(message) {
+  static String _formatPadding(int message) {
     return message.toString().padLeft(2, '0');
   }
 
