@@ -45,7 +45,7 @@ sudo apt install ffmpeg
 
 1. Clone or download this repository:
 ```bash
-git clone <repository_url>
+git clone https://github.com/huraira-younas/watchmate
 cd hls_converter
 ```
 
