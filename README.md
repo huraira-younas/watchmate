@@ -13,23 +13,22 @@ Inspired by **Rave**. Built with ❤️ using **Flutter** & **Node.js**.
 - 🎥 **HLS Video Streaming** with `better_player`
 - 🔐 Secure Authentication (Login, Signup, OTP)
 - 🔄 **Real-time Sync** powered by WebSockets
-- 💑 Couple-Friendly, Modern & Minimal UI
 - 🎛️ Create & Join Private **Watch Rooms**
-- 🌙 **Dark Mode Only** – for cozy late-night sessions
+- 💑 Couple-Friendly, Modern & Minimal UI
 
 ---
 
 ## 🧰 Tech Stack
 
-| Layer      | Tech Stack                            |
-|------------|----------------------------------------|
-| Frontend   | Flutter (Dart)                         |
-| Backend    | Node.js + Express                      |
-| Sync       | WebSocket (Socket.IO)                  |
-| Streaming  | HLS / M3U8 via `better_player`         |
-| State Mgmt | BLoC / Cubit (Clean Architecture)      |
-| Auth       | Firebase (can be swapped)              |
-| Database   | MySQL                                  |
+| Layer            | Tech Stack                             |
+|------------------|----------------------------------------|
+| Frontend         | Flutter (Dart)                         |
+| Backend          | Node.js + Express                      |
+| Sync             | WebSocket (Socket.IO)                  |
+| Streaming        | HLS / M3U8 via `better_player`         |
+| State Management | BLoC / Cubit (Clean Architecture)      |
+| Auth             | Nodejs (can be swapped)                |
+| Database         | MySQL                                  |
 
 ---
 
