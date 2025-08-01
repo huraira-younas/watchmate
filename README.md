@@ -1,46 +1,77 @@
 # 🎬 WatchMate – Self-Hosted Movie Sync App
 
-**WatchMate** is a modern, self-hosted (local) movie streaming app built for **watching together**, perfectly in sync whether you're long-distance couples, friends, or movie buffs.
+**WatchMate** is a self-hosted, real-time movie streaming and sync app designed for watching movies **together**, no matter the distance — perfect for long-distance couples, close friends, or remote movie nights.
 
-Inspired by Rave. Built with ❤️ using **Flutter** (Frontend) + **Node.js** (Backend).  
-No ads. No noise. Just movies together.
+Inspired by **Rave**. Built with ❤️ using **Flutter** & **Node.js**.  
+**No ads. No distractions. Just movies. Together.**
 
 ---
 
 ## 🚀 Features
 
-- 🛠️ 100% Self-hosted (your server, your rules)
-- 🎥 HLS Video Streaming with `better_player`
-- 🔒 Secure Auth Flow (Login, Signup, OTP)
-- 📡 Real-time Sync via WebSockets
-- 🖥️ Beautiful, Couple-Friendly UI
-- 🎛️ Create & Join Watch Rooms
-- 🌑 Fully Dark Mode (only)
+- 🛠️ 100% **Self-Hosted** – You control the server and data
+- 🎥 **HLS Video Streaming** with `better_player`
+- 🔐 Secure Authentication (Login, Signup, OTP)
+- 🔄 **Real-time Sync** powered by WebSockets
+- 💑 Couple-Friendly, Modern & Minimal UI
+- 🎛️ Create & Join Private **Watch Rooms**
+- 🌙 **Dark Mode Only** – for cozy late-night sessions
 
 ---
 
-## 🧑‍💻 Tech Stack
+## 🧰 Tech Stack
 
-- **Frontend:** Flutter (Dart)
-- **Backend:** Node.js + Express
-- **Sync:** WebSocket (Socket.IO)
-- **Streaming:** HLS / M3U8 via `better_player`
-- **State Management:** BLoC / Cubit (clean architecture)
-- **Auth & Storage:** Firebase, MySQL (can be replaced)
+| Layer      | Tech Stack                            |
+|------------|----------------------------------------|
+| Frontend   | Flutter (Dart)                         |
+| Backend    | Node.js + Express                      |
+| Sync       | WebSocket (Socket.IO)                  |
+| Streaming  | HLS / M3U8 via `better_player`         |
+| State Mgmt | BLoC / Cubit (Clean Architecture)      |
+| Auth       | Firebase (can be swapped)              |
+| Database   | MySQL                                  |
 
 ---
 
-## 📦 Installation (Dev Mode)
+## ⚙️ Installation (Development Mode)
 
-> Make sure you have Flutter, MySQL and Node.js installed.
+> Prerequisites: Flutter SDK, Node.js, MySQL installed and configured.
 
 ```bash
-# Backend Setup
+# 1. Backend Setup
 cd backend
 npm install
 npm run dev
 
-# Frontend Setup
+# 2. Frontend Setup
 cd ../watchmate_app
 flutter pub get
 flutter run
+```
+
+---
+
+## 📸 Screenshots
+
+> Coming soon...
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for improvements, features, or fixes.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 🙌 Credits
+
+Built with passion by movie lovers, for movie lovers.  
+Special thanks to the open-source community & inspiration from Rave.
+
+---
