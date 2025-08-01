@@ -4,8 +4,8 @@ import fs from "fs";
 const BASE = path.join(process.cwd(), "uploads");
 
 export const streamVideo = async (req, res) => {
-  const { resolution, filename } = req.params;
-  const filePath = path.join(BASE, resolution, filename, "index.m3u8");
+  const { folder, resolution, filename } = req.params;
+  const filePath = path.join(BASE, folder, resolution, filename);
 
   if (!fs.existsSync(filePath)) {
     return res.status(404).send("❌ File not found");
@@ -29,6 +29,9 @@ export const streamVideo = async (req, res) => {
 
   if (ext === ".m3u8") {
     res.writeHead(200, {
+      "Access-Control-Allow-Headers": "Origin, Range",
+      "Access-Control-Allow-Origin": "*",
+      "Cache-Control": "no-cache",
       "Content-Type": contentType,
       "Content-Length": fileSize,
     });
@@ -38,14 +41,16 @@ export const streamVideo = async (req, res) => {
   if (ext === ".ts" && range) {
     const parts = range.replace(/bytes=/, "").split("-");
 
-    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
     const start = parseInt(parts[0], 10);
-    const chunkSize = end - start + 1;
-
+    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    
     const file = fs.createReadStream(filePath, { start, end });
+    const chunkSize = end - start + 1;
 
     res.writeHead(206, {
       "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+      "Access-Control-Allow-Headers": "Origin, Range",
+      "Access-Control-Allow-Origin": "*",
       "Content-Length": chunkSize,
       "Content-Type": contentType,
       "Accept-Ranges": "bytes",
@@ -55,6 +60,8 @@ export const streamVideo = async (req, res) => {
   }
 
   res.writeHead(200, {
+    "Access-Control-Allow-Origin": "*",
+    "Cache-Control": "no-cache",
     "Content-Type": contentType,
     "Content-Length": fileSize,
   });
