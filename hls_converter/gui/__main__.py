@@ -54,12 +54,12 @@ class ConversionThread(QThread):
 class HLSConverterGUI(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("🎥 HLS Converter")
+        self.setWindowTitle("WM-HLS Converter")
         self.setFont(QFont("Roboto", 10))
         self.conversion_threads = []
         self.active_conversions = 0
         self.set_dark_theme()
-        self.resize(960, 720)
+        self.resize(1080, 720)
         self.init_ui()
         self.load_videos()
         self.load_resolutions()
@@ -168,7 +168,7 @@ class HLSConverterGUI(QWidget):
         vbox_res = QVBoxLayout(res_group)
         vbox_res.setContentsMargins(10, 10, 10, 10)
         self.resolution_list_widget = QListWidget()
-        
+
         row_height = 34
         row_count = len(RESOLUTIONS)
         self.resolution_list_widget.setFixedHeight(row_count * row_height + 8)
@@ -176,21 +176,26 @@ class HLSConverterGUI(QWidget):
         vbox_res.addWidget(self.resolution_list_widget)
         left_panel.addWidget(res_group, 0)
 
-        right_panel = QVBoxLayout()
-        right_panel.setSpacing(15)
-
         button_layout = QHBoxLayout()
         button_layout.setContentsMargins(0, 0, 0, 0)
         button_layout.setSpacing(10)
 
         self.convert_button = QPushButton("Convert Selected")
         self.convert_button.clicked.connect(self.start_conversion)
+
         self.stop_button = QPushButton("Stop All")
         self.stop_button.clicked.connect(self.stop_all_conversions)
         self.stop_button.setEnabled(False)
+
         button_layout.addWidget(self.convert_button)
         button_layout.addWidget(self.stop_button)
-        right_panel.addLayout(button_layout)
+
+        button_container = QWidget()
+        button_container.setLayout(button_layout)
+        left_panel.addWidget(button_container, 0)
+
+        right_panel = QVBoxLayout()
+        right_panel.setSpacing(15)
 
         log_group = QGroupBox("Conversion Log")
         vbox_log = QVBoxLayout(log_group)
@@ -202,6 +207,7 @@ class HLSConverterGUI(QWidget):
 
         main_layout.addLayout(left_panel, 2)
         main_layout.addLayout(right_panel, 3)
+
 
     def load_videos(self):
         self.video_list_widget.clear()
