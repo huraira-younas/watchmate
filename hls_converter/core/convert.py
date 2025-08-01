@@ -12,8 +12,6 @@ def convert_to_hls(input_file, base_output_dir, selected_resolutions, log_callba
         log(f"❌ Input file not found: {input_file}")
         return
     
-    print(selected_resolutions)
-
     filename_base = os.path.splitext(os.path.basename(input_file))[0]
     output_dirs = create_out_directories(base_output_dir, filename_base, selected_resolutions)
 
