@@ -21,4 +21,7 @@ extension WidgetX on Widget {
   }) {
     return GestureDetector(onTap: onTap, behavior: behavior, child: this);
   }
+
+  Widget expanded({int flex = 1, Key? key}) =>
+      Expanded(flex: flex, key: key, child: this);
 }
