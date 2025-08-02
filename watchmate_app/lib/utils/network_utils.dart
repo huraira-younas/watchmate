@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 
 class NetworkUtils {
-  static const _defaultLocalUrl = 'http://192.168.1.8:$_defaultPort';
+  static const _defaultLocalUrl = 'http://192.168.1.9:$_defaultPort';
   static const _defaultPort = 5000;
 
   static String get prodUrl => "https://actively-welcome-haddock.ngrok-free.app";

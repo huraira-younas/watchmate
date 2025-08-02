@@ -14,14 +14,15 @@ ensureDir(migrationsDir);
 ensureDir(seedsDir);
 
 const baseConfig = {
-  client: "pg",
+  client: "mysql2",
   connection: {
-    ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
-    port: process.env.DB_PORT?.trim() || 5432,
+    port: process.env.DB_PORT?.trim() || 3306,
     password: process.env.DB_PASSWORD?.trim(),
     database: process.env.DB_DATABASE?.trim(),
     user: process.env.DB_USERNAME?.trim(),
     host: process.env.DB_HOST?.trim(),
+    charset: "utf8mb4",
+    timezone: "Z",
   },
   seeds: { directory: seedsDir },
   pool: { max: 10, min: 2 },

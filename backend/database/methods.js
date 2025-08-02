@@ -1,4 +1,4 @@
-const { flushRedis } = require("../redis/redis_methods");
+// const { flushRedis } = require("../redis/redis_methods");
 const logger = require("../methods/logger");
 const { v4: uuidv4 } = require("uuid");
 const db = require("./knex_client");
@@ -14,25 +14,32 @@ async function dropTables(tables = []) {
     }
 
     await db.transaction(async (trx) => {
+      await trx.raw("SET FOREIGN_KEY_CHECKS = 0");
+
       let tablesToDrop = tables;
       if (tables.length === 1 && tables[0].toLowerCase() === "all") {
-        const res = await trx.raw(`
-          SELECT table_name FROM information_schema.tables 
-          WHERE table_schema = 'public' AND table_type='BASE TABLE';
-        `);
-        flushRedis({ exclude: [] });
-        tablesToDrop = res.rows.map((t) => t.table_name);
+        const res = await trx("information_schema.tables")
+          .select("table_name")
+          .where("table_schema", trx.raw("DATABASE()"));
+        // flushRedis({ exclude: [] });
+        tablesToDrop = res.map((t) => t.TABLE_NAME || t.table_name);
       }
 
       logger.warn(`🗑️  Dropping tables: ${tablesToDrop.join(", ")}`);
 
-      for (const table of tablesToDrop) {
-        await trx.raw(`DROP TABLE IF EXISTS "${table}" CASCADE`);
-        logger.info(`✅ Dropped table: ${table}`);
-      }
+      await Promise.all(
+        tablesToDrop.map((table) =>
+          trx.schema.dropTableIfExists(table).then(() => {
+            logger.info(`✅ Dropped table: ${table}`);
+          })
+        )
+      );
+
+      await trx.raw("SET FOREIGN_KEY_CHECKS = 1");
     });
   } catch (error) {
-    logger.error(`❌ Error dropping tables: ${error.message}`);
+    const query = `❌ Error dropping tables: ${tables.join(", ")}`;
+    logger.error(`${query} - ${error.message}`);
   }
 }
 
@@ -69,63 +76,82 @@ async function insertAdmin() {
 
 async function initializeDB() {
   try {
+    await _createDatabase();
+
     const resetTables = process.env.RESET?.split(",") || [];
-    if (resetTables.length > 0) await dropTables(resetTables);
+    if (resetTables.length !== 0) {
+      await dropTables(resetTables);
+    }
 
     await _initializeTables();
     await db.migrate.latest();
     await insertAdmin();
-    await db.seed.run();
+    db.seed.run();
 
-    logger.info("🚀 PostgreSQL is running and connected!");
+    logger.info("🚀 MySQL is running and connected!");
     return true;
   } catch (error) {
-    logger.error(`❌ PostgreSQL setup failed: ${error.message}`);
+    logger.error(`❌ MySQL connection failed: ${error.message}`);
     return false;
   }
 }
 
-async function _initializeTables() {
-  const tablesDir = path.join(__dirname, "tables");
+async function _createDatabase() {
+  try {
+    await db.raw(`CREATE DATABASE IF NOT EXISTS ??`, [process.env.DB_DATABASE]);
+    await db.raw(
+      `ALTER DATABASE ?? CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`,
+      [process.env.DB_DATABASE]
+    );
 
+    logger.info(`✅ Database ${process.env.DB_DATABASE} is ready!`);
+  } catch (error) {
+    logger.error(`❌ Error creating database: ${error.message}`);
+  }
+}
+
+const _initializeTables = async () => {
+  const tablesDir = path.join(__dirname, "tables");
   try {
     logger.info("🚀 Scanning tables directory...");
     const tableFiles = fs.readdirSync(tablesDir);
+    const tables = [];
 
-    const tables = tableFiles
-      .map((file) => {
-        const tableModule = require(path.join(tablesDir, file));
-        if (typeof tableModule.createTable === "function") {
-          return {
-            dependencies: tableModule.dependencies || [],
-            module: tableModule,
-            name: file,
-          };
-        }
-        logger.warn(`⚠️  Skipping ${file} (No createTable function)`);
-        return null;
-      })
-      .filter(Boolean);
+    for (const file of tableFiles) {
+      const tableModule = require(path.join(tablesDir, file));
+
+      if (typeof tableModule.createTable === "function") {
+        tables.push({
+          dependencies: tableModule.dependencies || [],
+          module: tableModule,
+          name: file,
+        });
+      } else {
+        logger.warn(`⚠️  Skipping ${file} (No createTable function found)`);
+      }
+    }
 
     const sortedTables = topologicalSort(tables);
-    console.table(sortedTables.map((e) => e.name));
+    const tSorted = sortedTables.map((e) => e.name);
+    console.table(tSorted);
 
+    logger.info("📌 Creating tables in proper order...");
     for (const table of sortedTables) {
       await table.module.createTable();
       logger.info(`💊 Table setup completed for ${table.name}`);
     }
 
-    logger.info("🎉 All tables initialized successfully!");
+    logger.info("🎉 All required tables have been initialized!");
   } catch (error) {
     logger.error(`❌ Error initializing tables: ${error.message}`);
   }
-}
+};
 
-function topologicalSort(tables) {
+const topologicalSort = (tables) => {
   const visited = new Set();
   const sorted = [];
 
-  function visit(table) {
+  const visit = (table) => {
     if (visited.has(table.name)) return;
     visited.add(table.name);
 
@@ -135,11 +161,11 @@ function topologicalSort(tables) {
     });
 
     sorted.push(table);
-  }
+  };
 
   tables.forEach(visit);
   return sorted;
-}
+};
 
 async function dumpDB() {
   logger.warn("⚠️ pg_dump is not supported via Node. Run it via CLI or CI.");
