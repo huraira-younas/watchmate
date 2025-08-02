@@ -4,8 +4,8 @@ import 'package:watchmate_app/constants/app_themes.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:flutter/material.dart';
 
-class DownloadsScreen extends StatelessWidget {
-  const DownloadsScreen({super.key});
+class ChatScreen extends StatelessWidget {
+  const ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

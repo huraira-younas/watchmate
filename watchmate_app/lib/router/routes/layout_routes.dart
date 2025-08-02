@@ -1,6 +1,6 @@
-import 'package:watchmate_app/features/downloads/views/downloads_screen.dart';
 import 'package:watchmate_app/features/my_list/views/my_list_screen.dart';
 import 'package:watchmate_app/features/profile/views/profile_screen.dart';
+import 'package:watchmate_app/features/chats/views/chat_screen.dart';
 import 'package:watchmate_app/features/home/views/home_screen.dart';
 import 'package:watchmate_app/router/routes/app_route_model.dart';
 import 'package:flutter/material.dart' show Icons;
@@ -15,16 +15,16 @@ abstract class LayoutRoutes {
 
   static const myList = AppRoute(
     page: MyListScreen(),
-    icon: Icons.list,
+    icon: Icons.view_list,
     path: '/my_list',
     name: 'My List',
   );
 
   static const downloads = AppRoute(
-    page: DownloadsScreen(),
-    icon: Icons.download,
-    path: '/downloads',
-    name: 'Downloads',
+    icon: Icons.chat_rounded,
+    page: ChatScreen(),
+    path: '/chats',
+    name: 'Chats',
   );
 
   static const profile = AppRoute(
