@@ -14,8 +14,8 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Scaffold(
-      body: Center(child: HlsVideoPlayer(folder: "test_video")),
+    return Column(
+      children: <Widget>[Center(child: HlsVideoPlayer(folder: "test_video"))],
     );
   }
 
