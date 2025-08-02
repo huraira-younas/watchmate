@@ -28,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen>
 
     return Column(
       children: <Widget>[
-        6.h,
         CustomTabBar(tabs: keys, controller: _tabController),
         TabBarView(controller: _tabController, children: widgets).expanded(),
       ],
