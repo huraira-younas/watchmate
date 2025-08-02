@@ -1,4 +1,3 @@
-import 'package:watchmate_app/common/widgets/hls_player.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,8 +13,9 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Column(
-      children: <Widget>[Center(child: HlsVideoPlayer(folder: "test_video"))],
+    return Column(children: <Widget>[
+        
+      ],
     );
   }
 

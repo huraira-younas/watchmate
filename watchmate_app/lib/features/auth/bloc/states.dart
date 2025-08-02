@@ -1,4 +1,4 @@
-import 'package:watchmate_app/common/models/custom_state.dart';
+import 'package:watchmate_app/common/models/custom_state_model.dart';
 import '../model/user_model.dart';
 
 class AuthState {
