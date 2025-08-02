@@ -5,7 +5,7 @@ import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/features/auth/bloc/events.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
-// import 'package:flutter/services.dart' show SystemNavigator;
+import 'package:flutter/services.dart' show SystemNavigator;
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
@@ -57,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
             title: error.title,
             context: context,
           );
-          // SystemNavigator.pop();
+          SystemNavigator.pop();
         },
       ),
     );
