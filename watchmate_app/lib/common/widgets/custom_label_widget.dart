@@ -24,7 +24,7 @@ class CustomLabelWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, color: theme.hintColor, size: iconSize),
+        Icon(icon, color: theme.highlightColor, size: iconSize),
         const SizedBox(height: 24),
         MyText(
           color: theme.textTheme.bodyLarge?.color ?? Colors.white,

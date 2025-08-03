@@ -1,3 +1,4 @@
+import 'package:watchmate_app/router/routes/layout_routes.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/services/pre_loader.dart';
 
@@ -16,15 +17,31 @@ class AppIcons {
   List<String> get preloadList => [appIcon, codeIcon, emailIcon, passwordIcon];
 }
 
+class AppBackgrounds {
+  late final String _base;
+
+  AppBackgrounds({required String pre}) {
+    _base = '$pre/backgrounds';
+  }
+
+  String get streamBg => '$_base/stream.jpg';
+  List<String> get preloadList => [streamBg];
+}
+
 class AppAssets {
   static const _pre = "assets";
   static const _images = "$_pre/images";
 
+  static final backgrounds = AppBackgrounds(pre: _images);
   static final icons = AppIcons(pre: _images);
 
   static void registerPreloads() {
-    Preloader.register('global', [...icons.preloadList]);
+    Preloader.register('global', [
+      ...backgrounds.preloadList,
+      ...icons.preloadList,
+    ]);
 
+    Preloader.register(LayoutRoutes.stream.name, [...backgrounds.preloadList]);
     Preloader.register(AuthRoutes.login.name, [...icons.preloadList]);
   }
 }

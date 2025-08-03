@@ -19,9 +19,9 @@ class CustomChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(icon, color: theme.primaryColor, size: 15),
+          Icon(icon, color: theme.primaryColor, size: 18),
           const SizedBox(width: 6),
-          MyText(text: text, size: 10),
+          MyText(text: text, size: 12),
         ],
       ),
     );

@@ -36,6 +36,14 @@ class HomeLayout extends StatelessWidget {
         context: context,
         actions: [
           IconButton(
+            onPressed: () => context.push(LayoutRoutes.stream.path),
+            icon: Icon(
+              color: theme.colorScheme.primary,
+              LayoutRoutes.stream.icon,
+              size: 26,
+            ),
+          ),
+          IconButton(
             onPressed: () => getIt<ThemeCubit>().toggleTheme(),
             icon: Icon(
               isDark ? Icons.wb_sunny_rounded : Icons.dark_mode_rounded,

@@ -32,4 +32,11 @@ extension WidgetX on Widget {
         key: key,
         child: this,
       );
+
+  Widget safeArea({
+    bool l = true,
+    bool r = true,
+    bool b = true,
+    bool t = true,
+  }) => SafeArea(left: l, right: r, top: t, bottom: b, child: this);
 }
