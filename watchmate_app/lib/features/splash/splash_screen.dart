@@ -1,16 +1,16 @@
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:watchmate_app/router/routes/layout_routes.dart';
-// import 'package:watchmate_app/common/widgets/dialog_boxs.dart';
+import 'package:watchmate_app/common/widgets/dialog_boxs.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
-// import 'package:watchmate_app/features/auth/bloc/events.dart';
-// import 'package:watchmate_app/router/routes/auth_routes.dart';
+import 'package:watchmate_app/features/auth/bloc/events.dart';
+import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
-// import 'package:flutter/services.dart' show SystemNavigator;
-// import 'package:watchmate_app/features/auth/bloc/bloc.dart';
+import 'package:flutter/services.dart' show SystemNavigator;
+import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
-// import 'package:watchmate_app/di/locator.dart';
+import 'package:watchmate_app/di/locator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +23,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final appname = AppConstants.appname;
-  // final _authBloc = getIt<AuthBloc>();
+  final _authBloc = getIt<AuthBloc>();
 
   Future<void> _delay(Duration elapsed) async {
     final remaining = 3.secs - elapsed;
@@ -36,35 +36,32 @@ class _SplashScreenState extends State<SplashScreen> {
     final stopwatch = Stopwatch()..start();
     await _delay(stopwatch.elapsed);
 
-    if (!mounted) return;
-    context.pushReplacement(LayoutRoutes.home.path);
+    _authBloc.add(
+      AuthGetUser(
+        onSuccess: () async {
+          await _delay(stopwatch.elapsed);
 
-    // _authBloc.add(
-    //   AuthGetUser(
-    //     onSuccess: () async {
-    //       await _delay(stopwatch.elapsed);
+          if (!mounted) return;
+          context.pushReplacement(LayoutRoutes.home.path);
+        },
+        onError: (error) async {
+          await _delay(stopwatch.elapsed);
 
-    //       if (!mounted) return;
-    //       context.pushReplacement(LayoutRoutes.home.path);
-    //     },
-    //     onError: (error) async {
-    //       await _delay(stopwatch.elapsed);
+          if (!mounted) return;
+          if (error.message.contains("User")) {
+            context.pushReplacement(AuthRoutes.login.path);
+            return;
+          }
 
-    //       if (!mounted) return;
-    //       if (error.message.contains("User")) {
-    //         context.pushReplacement(AuthRoutes.login.path);
-    //         return;
-    //       }
-
-    //       await errorDialogue(
-    //         message: error.message,
-    //         title: error.title,
-    //         context: context,
-    //       );
-    //       SystemNavigator.pop();
-    //     },
-    //   ),
-    // );
+          await errorDialogue(
+            message: error.message,
+            title: error.title,
+            context: context,
+          );
+          SystemNavigator.pop();
+        },
+      ),
+    );
   }
 
   @override
