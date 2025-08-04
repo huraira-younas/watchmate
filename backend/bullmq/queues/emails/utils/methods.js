@@ -23,6 +23,7 @@ const useNodeMailer = async (from, mailData) => {
   const host = process.env.MAILER_HOST;
   const port = process.env.MAILER_PORT;
 
+  if (!process.env.MAILER_USER) return;
   if (!node_client) {
     node_client = nodemailer.createTransport({
       auth: { user, pass },
