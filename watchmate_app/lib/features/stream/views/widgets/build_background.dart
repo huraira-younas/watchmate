@@ -1,8 +1,7 @@
-import 'dart:ui';
-
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui' show ImageFilter;
 
 class BuildBackground extends StatelessWidget {
   const BuildBackground({super.key});
@@ -19,11 +18,11 @@ class BuildBackground extends StatelessWidget {
             return LinearGradient(
               colors: [
                 Colors.white,
-                Colors.transparent,
+                Colors.white,
                 Colors.transparent,
                 Colors.transparent,
               ],
-              stops: const [0.6, 0.8, 0.9, 1.0],
+              stops: const [0.0, 0.5, 0.75, 1.0],
               end: Alignment.bottomCenter,
               begin: Alignment.topCenter,
             ).createShader(bounds);
@@ -41,14 +40,14 @@ class BuildBackground extends StatelessWidget {
         Positioned(
           top: size.height * 0.18,
           bottom: 0,
-          left: 0,
           right: 0,
+          left: 0,
           child: ClipRRect(
             child: SizedBox(
               height: 100,
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-                child: ColoredBox(color: scb.withValues(alpha: 0.1)),
+                child: ColoredBox(color: scb.withValues(alpha: 0.2)),
               ),
             ),
           ),

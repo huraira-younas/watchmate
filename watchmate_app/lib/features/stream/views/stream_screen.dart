@@ -24,7 +24,7 @@ class StreamScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                10.h,
+                30.h,
                 BuildTitle(
                   title: "Start streaming with your link.",
                   s1: "You can",
