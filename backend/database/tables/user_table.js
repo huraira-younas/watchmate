@@ -20,8 +20,8 @@ async function createTable() {
           table.uuid("id").primary();
 
           table.boolean("disabled").defaultTo(false).notNullable().index();
-          table.timestamp("createdAt", { useTz: true }).defaultTo(trx.fn.now()).index();
-          table.timestamp("updatedAt", { useTz: true }).defaultTo(trx.fn.now());
+          table.timestamp("createdAt").defaultTo(trx.fn.now()).index();
+          table.timestamp("updatedAt").defaultTo(trx.fn.now());
         });
         logger.warn("✅ Users table created!");
       }
