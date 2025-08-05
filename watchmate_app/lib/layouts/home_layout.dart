@@ -31,6 +31,10 @@ class _HomeLayoutState extends State<HomeLayout> {
       query: {"userId": _authBloc.user?.id},
       type: NamespaceType.auth,
     );
+    _socketService.connect(
+      query: {"userId": _authBloc.user?.id},
+      type: NamespaceType.stream,
+    );
   }
 
   String _getLocation(BuildContext ctx) {

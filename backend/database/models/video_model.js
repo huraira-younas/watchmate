@@ -75,15 +75,14 @@ const Video = {
   },
 
   async find({ params = {}, search, deleted, fields = ["videos.*"] }) {
-    let query = db(this._videos)
-      .where(`${this._videos}.deleted`, deleted)
-      .select(fields);
+    let query = db(this._videos).select(fields);
 
     if (search) {
     }
 
-    if (params.offset) query = query.offset(params.offset);
-    if (params.limit) query = query.limit(params.limit);
+    if (deleted) query.where(`${this._videos}.deleted`, deleted);
+    if (params.offset) query.offset(params.offset);
+    if (params.limit) query.limit(params.limit);
 
     return await query;
   },

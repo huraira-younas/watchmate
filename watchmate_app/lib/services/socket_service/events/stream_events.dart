@@ -5,4 +5,5 @@ class StreamEvents {
   }
 
   String get downloadYT => '$_namespace:download_yt';
+  String get getAll => '$_namespace:get_all';
 }

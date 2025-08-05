@@ -7,7 +7,8 @@ import 'dart:async' show Timer;
 enum NamespaceType { stream, notifications, chat, auth }
 
 class SocketNamespaceService {
-  final _eventStreams = <NamespaceType, BehaviorSubject<Map<String, dynamic>>>{};
+  final _eventStreams =
+      <NamespaceType, BehaviorSubject<Map<String, dynamic>>>{};
   final _emitQueue = <NamespaceType, List<_EmitQueueItem>>{};
   final _pingWatchers = <NamespaceType, Timer>{};
   final _sockets = <NamespaceType, io.Socket>{};
@@ -58,7 +59,10 @@ class SocketNamespaceService {
       });
   }
 
-  Stream<dynamic> onEvent(NamespaceType type, String event) {
+  Stream<dynamic> onEvent({
+    required NamespaceType type,
+    required String event,
+  }) {
     return _eventStreams[type]!
         .where((e) => e['event'] == event)
         .map((e) => e['data']);

@@ -14,6 +14,13 @@ const events = (io) => {
         new SocketParams({ event: event.DOWNLOAD_YT, socket, data, io })
       )
     );
+
+    socket.on(event.GET_ALL, (data) =>
+      socketHandler(
+        methods.getAll,
+        new SocketParams({ event: event.GET_ALL, socket, data, io })
+      )
+    );
   });
 };
 
