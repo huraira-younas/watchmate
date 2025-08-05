@@ -4,7 +4,7 @@ import 'package:watchmate_app/utils/network_utils.dart';
 import 'package:watchmate_app/services/logger.dart';
 import 'dart:async' show Timer;
 
-enum NamespaceType { download, notifications, chat, auth }
+enum NamespaceType { stream, notifications, chat, auth }
 
 class SocketNamespaceService {
   final _eventStreams = <NamespaceType, BehaviorSubject<Map<String, dynamic>>>{};

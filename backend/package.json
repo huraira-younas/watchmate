@@ -11,6 +11,7 @@
   "author": "Bodustry INC",
   "license": "ISC",
   "dependencies": {
+    "@distube/ytdl-core": "^4.16.12",
     "@socket.io/redis-adapter": "^8.3.0",
     "adm-zip": "^0.5.16",
     "archiver": "^7.0.1",
@@ -35,8 +36,7 @@
     "socket.io": "^4.8.1",
     "uuid": "^11.1.0",
     "winston": "^3.17.0",
-    "winston-daily-rotate-file": "^5.0.0",
-    "ytdl-core": "^4.11.5"
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

@@ -1,3 +1,4 @@
+import 'package:watchmate_app/services/socket_service/socket_service.dart';
 import 'package:watchmate_app/common/widgets/custom_bottom_nav_bar.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/router/routes/stream_routes.dart';
@@ -5,7 +6,6 @@ import "package:watchmate_app/router/routes/layout_routes.dart";
 import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
-import 'package:watchmate_app/services/socket_service.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/di/locator.dart';

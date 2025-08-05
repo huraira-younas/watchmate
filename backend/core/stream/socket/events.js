@@ -8,7 +8,7 @@ const events = (io) => {
   io.on(event.CONNECTION, (socket) => {
     logger.info(`[SOCKET:${namespace.toUpperCase()}]: Connected: ${socket.id}`);
 
-    socket.on(event.DISCONNECT_USER, (data) =>
+    socket.on(event.DOWNLOAD_YT, (data) =>
       socketHandler(
         methods.downloadYT,
         new SocketParams({ event: event.DOWNLOAD_YT, socket, data, io })
