@@ -4,12 +4,19 @@ import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
 import 'package:watchmate_app/features/stream/views/widgets/custom_chip.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
+import 'package:watchmate_app/router/routes/exports.dart';
+import 'package:watchmate_app/services/pre_loader.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter/material.dart';
 
-class StreamScreen extends StatelessWidget {
+class StreamScreen extends StatefulWidget {
   const StreamScreen({super.key});
 
+  @override
+  State<StreamScreen> createState() => _StreamScreenState();
+}
+
+class _StreamScreenState extends State<StreamScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -80,5 +87,15 @@ class StreamScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool _isLoaded = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isLoaded) return;
+
+    Preloader.preloadForRoute(context, LayoutRoutes.stream.name);
+    _isLoaded = true;
   }
 }
