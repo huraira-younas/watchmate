@@ -29,7 +29,7 @@ class CustomTabBar extends StatelessWidget {
       controller: controller,
       onTap: onChange,
       indicator: UnderlineTabIndicator(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
         borderSide: BorderSide(color: primaryColor, width: 3),
       ),
       labelStyle: myStyle(

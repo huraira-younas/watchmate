@@ -5,14 +5,17 @@ const methods = require("./methods");
 const event = require("./enums");
 
 const events = (io) => {
-  io.on(event.CONNECTION, (socket) => {
-    logger.info(`Socket connected: ${socket.id}`);
-    socket.on(event.CONNECT_USER, (data) =>
-      socketHandler(
-        methods.connectUser,
-        new SocketParams({ event: event.CONNECT_USER, socket, data, io })
-      )
+  const _connect = (data, socket) =>
+    socketHandler(
+      methods.connectUser,
+      new SocketParams({ event: event.CONNECT_USER, socket, data, io })
     );
+
+  io.on(event.CONNECTION, (socket) => {
+    logger.info(`[Auth NameSpace]: Connected: ${socket.id}`);
+
+    _connect({ userId: socket.handshake.query.userId }, socket);
+    socket.on(event.CONNECT_USER, (d) => _connect(d, socket));
 
     socket.on("disconnect", () =>
       socketHandler(

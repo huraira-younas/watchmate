@@ -1,4 +1,4 @@
-import 'package:watchmate_app/router/routes/layout_routes.dart';
+import 'package:watchmate_app/router/routes/stream_routes.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/services/pre_loader.dart';
 
@@ -41,7 +41,7 @@ class AppAssets {
       ...icons.preloadList,
     ]);
 
-    Preloader.register(LayoutRoutes.stream.name, [...backgrounds.preloadList]);
+    Preloader.register(StreamRoutes.stream.name, [...backgrounds.preloadList]);
     Preloader.register(AuthRoutes.login.name, [...icons.preloadList]);
   }
 }

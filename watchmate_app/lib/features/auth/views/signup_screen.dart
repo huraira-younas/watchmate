@@ -155,7 +155,7 @@ class _SignupScreenState extends State<SignupScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  MyText(
+                  const MyText(
                     text: "Already have account?",
                     size: AppConstants.subtitle,
                   ),

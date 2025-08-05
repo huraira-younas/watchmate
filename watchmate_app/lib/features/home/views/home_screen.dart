@@ -14,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return CustomLabelWidget(
+    return const CustomLabelWidget(
       text: "The page you're looking for is under development",
       title: "Senpai is working",
       icon: Icons.wash_outlined,

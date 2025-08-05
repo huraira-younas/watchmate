@@ -14,13 +14,13 @@ class HistoryBuilder extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            MyText(family: AppFonts.semibold, text: "History"),
+            const MyText(family: AppFonts.semibold, text: "History"),
             10.w,
-            Icon(Icons.delete_outline),
+            const Icon(Icons.delete_outline),
           ],
         ),
         40.h,
-        CustomLabelWidget(
+        const CustomLabelWidget(
           text: "Upload file or stream link to get history.",
           icon: Icons.nearby_error_outlined,
           title: "No History Found",

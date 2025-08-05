@@ -56,8 +56,9 @@ async function loadEvents(moduleName, eventsPath, io) {
     const eventStat = await fs.exists(eventsPath);
     if (!eventStat) throw new Error(`Events not found`);
 
+    const namespace = io.of(`/${moduleName}`);
     const event = require(eventsPath);
-    event(io);
+    event(namespace);
 
     logger.info(`🦋 Events Loaded for Module: ${moduleName}`);
   } catch (err) {
@@ -71,9 +72,6 @@ async function loadModules(app, io) {
 
   const corePath = path.join(BASE, "core");
   await readModules(corePath, app, io);
-
-  // const modulesPath = path.join(BASE, "modules");
-  // await readModules(modulesPath, app, io);
 }
 
 module.exports = loadModules;

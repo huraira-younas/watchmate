@@ -1,12 +1,14 @@
 import 'package:go_router/go_router.dart'
     show GoRoute, GoRouterState, ShellRoute, NoTransitionPage;
 
+import 'package:watchmate_app/router/routes/stream_routes.dart';
 import 'package:watchmate_app/router/routes/exports.dart';
 import 'package:watchmate_app/services/shared_prefs.dart';
 import 'package:flutter/material.dart' show BuildContext;
 import 'package:watchmate_app/layouts/home_layout.dart';
 
 abstract class AppRoutes {
+  static final stream = StreamRoutes.all;
   static final layout = LayoutRoutes.all;
   static final auth = AuthRoutes.all;
 
@@ -17,7 +19,7 @@ abstract class AppRoutes {
     return null;
   }
 
-  static final all = [...auth, LayoutRoutes.stream];
+  static final all = [...auth, ...stream];
 
   static final shells = [
     ShellRoute(

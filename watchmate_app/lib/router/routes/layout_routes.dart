@@ -1,19 +1,11 @@
 import 'package:watchmate_app/features/my_list/views/my_list_screen.dart';
 import 'package:watchmate_app/features/profile/views/profile_screen.dart';
-import 'package:watchmate_app/features/stream/views/stream_screen.dart';
 import 'package:watchmate_app/features/chats/views/chat_screen.dart';
 import 'package:watchmate_app/features/home/views/home_screen.dart';
 import 'package:watchmate_app/router/routes/app_route_model.dart';
 import 'package:flutter/material.dart' show Icons;
 
 abstract class LayoutRoutes {
-  static const stream = AppRoute(
-    icon: Icons.settings_input_antenna_rounded,
-    page: StreamScreen(),
-    path: '/stream',
-    name: 'Stream',
-  );
-
   static const home = AppRoute(
     page: HomeScreen(),
     icon: Icons.home,

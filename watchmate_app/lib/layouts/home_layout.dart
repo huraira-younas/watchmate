@@ -1,17 +1,37 @@
 import 'package:watchmate_app/common/widgets/custom_bottom_nav_bar.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
+import 'package:watchmate_app/router/routes/stream_routes.dart';
 import "package:watchmate_app/router/routes/layout_routes.dart";
 import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
+import 'package:watchmate_app/features/auth/bloc/bloc.dart';
+import 'package:watchmate_app/services/socket_service.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
-class HomeLayout extends StatelessWidget {
+class HomeLayout extends StatefulWidget {
   const HomeLayout({super.key, required this.child});
   final Widget child;
+
+  @override
+  State<HomeLayout> createState() => _HomeLayoutState();
+}
+
+class _HomeLayoutState extends State<HomeLayout> {
+  final _socketService = getIt<SocketNamespaceService>();
+  final _authBloc = getIt<AuthBloc>();
+
+  @override
+  void initState() {
+    super.initState();
+    _socketService.connect(
+      query: {"userId": _authBloc.user?.id},
+      type: NamespaceType.auth,
+    );
+  }
 
   String _getLocation(BuildContext ctx) {
     return GoRouterState.of(ctx).uri.toString();
@@ -36,10 +56,10 @@ class HomeLayout extends StatelessWidget {
         context: context,
         actions: [
           IconButton(
-            onPressed: () => context.push(LayoutRoutes.stream.path),
+            onPressed: () => context.push(StreamRoutes.stream.path),
             icon: Icon(
               color: theme.colorScheme.primary,
-              LayoutRoutes.stream.icon,
+              StreamRoutes.stream.icon,
               size: 26,
             ),
           ),
@@ -54,7 +74,10 @@ class HomeLayout extends StatelessWidget {
           8.w,
         ],
       ),
-      body: child.fadeIn(key: ValueKey(navItem.path), duration: 500.millis),
+      body: widget.child.fadeIn(
+        key: ValueKey(navItem.path),
+        duration: 500.millis,
+      ),
       bottomNavigationBar: const CustomBottomNavBar(),
     );
   }

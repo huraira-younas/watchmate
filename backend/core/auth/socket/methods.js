@@ -4,13 +4,13 @@ const {
   removeFromSet,
   deleteFromHash,
 } = require("../../../redis/redis_methods.js");
-const User = require("../../../database/models/user_model.js");
-const logger = require("../../..//methods/logger");
 const {
   SocketError,
   validateEvent,
   SocketResponse,
 } = require("../../../methods/socket/socket_methods.js");
+const User = require("../../../database/models/user_model.js");
+const logger = require("../../..//methods/logger");
 
 const onDisconnect = async ({ socket }) => {
   logger.info("From auto disconnect");

@@ -15,14 +15,14 @@ class BuildBackground extends StatelessWidget {
       children: <Widget>[
         ShaderMask(
           shaderCallback: (Rect bounds) {
-            return LinearGradient(
+            return const LinearGradient(
               colors: [
                 Colors.white,
                 Colors.white,
                 Colors.transparent,
                 Colors.transparent,
               ],
-              stops: const [0.0, 0.5, 0.75, 1.0],
+              stops: [0.0, 0.5, 0.75, 1.0],
               end: Alignment.bottomCenter,
               begin: Alignment.topCenter,
             ).createShader(bounds);

@@ -168,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  MyText(
+                  const MyText(
                     text: "Don't have an account?",
                     size: AppConstants.subtitle,
                   ),
