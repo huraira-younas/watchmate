@@ -3,6 +3,10 @@ const logger = require("./logger");
 const fs = require("fs-extra");
 const path = require("path");
 
+const getDirectoryName = (filePath) => {
+  return path.dirname(filePath);
+};
+
 async function copyDirectory(sourceDir, destinationDir) {
   try {
     await fs.copy(sourceDir, destinationDir);
@@ -176,6 +180,7 @@ module.exports = {
   getVersionAndChangelogs,
   updateOrCreateConfig,
   walkAndUpdateFiles,
+  getDirectoryName,
   getServerConfig,
   updateManifest,
   updateEnvFile,

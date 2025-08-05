@@ -1,8 +1,8 @@
 const { SocketParams } = require("../../../methods/socket/socket_methods");
 const socketHandler = require("../../../methods/socket/socket_handler");
 const logger = require("../../../methods/logger");
+const { event, namespace } = require("./enums");
 const methods = require("./methods");
-const event = require("./enums");
 
 const events = (io) => {
   const _connect = (data, socket) =>
@@ -12,7 +12,7 @@ const events = (io) => {
     );
 
   io.on(event.CONNECTION, (socket) => {
-    logger.info(`[Auth NameSpace]: Connected: ${socket.id}`);
+    logger.info(`[SOCKET:${namespace.toUpperCase()}]: Connected: ${socket.id}`);
 
     _connect({ userId: socket.handshake.query.userId }, socket);
     socket.on(event.CONNECT_USER, (d) => _connect(d, socket));

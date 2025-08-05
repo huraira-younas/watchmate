@@ -1,12 +1,12 @@
 const { initFirebase } = require("./clients/firebase/firebase_client.js");
 const { createAdapter } = require("@socket.io/redis-adapter");
+const { initSocket } = require("./clients/socket_client.js");
 const { initializeDB } = require("./database/methods");
 const initializeQueues = require("./bullmq/index.js");
 const limiter = require("./clients/rate_limiter");
 const redis = require("./redis/redis_client.js");
 const loadModules = require("./module_loader");
 const logger = require("./methods/logger");
-const { Server } = require("socket.io");
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
@@ -18,10 +18,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: "*" },
-  path: "/v1/socket",
-});
+const io = initSocket(server);
 
 io.adapter(createAdapter(pubClient, subClient));
 app.use(express.urlencoded({ extended: true }));

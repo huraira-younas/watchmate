@@ -1,11 +1,7 @@
-const { validateReq, AppError } = require("../../methods/utils");
-const logger = require("../../methods/logger");
-const sanitize = require("sanitize-filename");
-const ytdl = require("ytdl-core");
 const fs = require("fs-extra");
 const path = require("path");
 
-const BASE = path.join(process.cwd(), "uploads");
+const BASE = path.join(process.cwd(), "app_data");
 
 const streamVideo = async (req, res) => {
   const { folder, resolution, filename } = req.params;
@@ -73,31 +69,4 @@ const streamVideo = async (req, res) => {
   return fs.createReadStream(filePath).pipe(res);
 };
 
-const downloadYT = async (req, res) => {
-  validateReq(req.body, ["url", "userId"]);
-  const { url, userId } = req.body;
-
-  if (!ytdl.validateURL(url)) throw new AppError("Invalid YouTube URL", 400);
-
-  const info = await ytdl.getInfo(url);
-  const title = sanitize(info.videoDetails.title);
-  const filename = `${title}-${Date.now()}.mp4`;
-  const filePath = path.resolve(__dirname, "downloads", filename);
-
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-
-  const videoStream = ytdl(url, { quality: "highestvideo" });
-  const writeStream = fs.createWriteStream(filePath);
-  videoStream.pipe(writeStream);
-
-  videoStream.on("end", () => {
-    return res.json({ message: "Download complete", file: filename });
-  });
-
-  videoStream.on("error", (err) => {
-    logger.error("Download error:", err);
-    return res.status(500).json({ error: "Failed to download video" });
-  });
-};
-
-module.exports = { streamVideo, downloadYT };
+module.exports = { streamVideo };

@@ -19,10 +19,10 @@ class SocketError extends Error {
 }
 
 class SocketResponse {
-  constructor({ message, data }) {
+  constructor({ message, data, code = 200 }) {
     this.message = message;
     this.data = data;
-    this.code = 200;
+    this.code = code;
   }
 }
 

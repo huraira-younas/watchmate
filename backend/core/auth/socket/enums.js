@@ -1,9 +1,9 @@
-const prefix = "auth";
+const namespace = "auth";
 
-const events = {
-  DISCONNECT_USER: `${prefix}:disconnect_user`,
-  CONNECT_USER: `${prefix}:connect_user`,
+const event = {
+  DISCONNECT_USER: `${namespace}:disconnect_user`,
+  CONNECT_USER: `${namespace}:connect_user`,
   CONNECTION: "connection",
 };
 
-module.exports = events;
+module.exports = { event, namespace };
