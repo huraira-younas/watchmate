@@ -73,7 +73,7 @@ const downloadYT = async ({ event, socket, data }) => {
     socket.emit(
       event,
       new SocketResponse({
-        message: err.message,
+        message: `File download error: ${err.message}`,
         code: 500,
       })
     );
@@ -84,7 +84,7 @@ const downloadYT = async ({ event, socket, data }) => {
     socket.emit(
       event,
       new SocketResponse({
-        message: "File saving error",
+        message: `File saving error: ${err.message}`,
         code: 500,
       })
     );
