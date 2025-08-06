@@ -5,6 +5,7 @@ const {
 const Video = require("../../../database/models/video_model");
 const logger = require("../../../methods/logger");
 const sanitize = require("sanitize-filename");
+const DownloadManager = require("./manager");
 const ytdl = require("@distube/ytdl-core");
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs-extra");

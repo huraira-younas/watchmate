@@ -32,4 +32,4 @@ class DownloadManager {
   }
 }
 
-module.exports = DownloadManager.getInstance();
+module.exports = DownloadManager;
