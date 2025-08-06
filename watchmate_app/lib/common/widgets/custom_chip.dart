@@ -25,7 +25,7 @@ class CustomChip extends StatelessWidget {
       onPressed: onPressed,
       color: color,
       minWidth: 0,
-      height: 30,
+      height: 26,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadiusGeometry.circular(7),
       ),

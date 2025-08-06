@@ -1,3 +1,4 @@
+import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/common/widgets/custom_player.dart';
@@ -14,9 +15,12 @@ class PlayerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.theme;
+
     return Scaffold(
       appBar: customAppBar(context: context, title: "Player"),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           CustomVideoPlayer(url: video.videoURL),
           Column(
@@ -33,7 +37,7 @@ class PlayerScreen extends StatelessWidget {
                 text: video.title,
               ),
             ],
-          ).padAll(AppConstants.padding - 10),
+          ).padAll(AppConstants.padding - 6),
           Row(
             children: <Widget>[
               const CustomChip(icon: Icons.thumb_up_alt_outlined, text: "1.2k"),
@@ -47,7 +51,21 @@ class PlayerScreen extends StatelessWidget {
               4.w,
               const CustomChip(icon: Icons.download_outlined, text: "Download"),
             ],
-          ).padSym(h: AppConstants.padding - 10),
+          ).padSym(h: AppConstants.padding - 6),
+          Container(
+            margin: const EdgeInsets.all(AppConstants.padding - 6),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: theme.hintColor, width: 1),
+              color: theme.cardColor,
+            ),
+            child: const CustomLabelWidget(
+              text: "Senpai is building this. Please have a seat",
+              title: "RealTime Chat Area",
+              icon: Icons.chair,
+            ),
+          ).expanded(),
         ],
       ),
     );
