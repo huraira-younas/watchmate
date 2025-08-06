@@ -15,10 +15,31 @@ const events = (io) => {
       )
     );
 
-    socket.on(event.GET_ALL, (data) =>
+    socket.on(event.DOWNLOAD_DIR, (data) =>
       socketHandler(
-        methods.getAll,
-        new SocketParams({ event: event.GET_ALL, socket, data, io })
+        methods.downloadDirect,
+        new SocketParams({ event: event.DOWNLOAD_DIR, socket, data, io })
+      )
+    );
+
+    socket.on(event.PAUSE_DOWNLOAD, (data) =>
+      socketHandler(
+        methods.pauseDownload,
+        new SocketParams({ event: event.PAUSE_DOWNLOAD, socket, data, io })
+      )
+    );
+
+    socket.on(event.RESUME_DOWNLOAD, (data) =>
+      socketHandler(
+        methods.resumeDownload,
+        new SocketParams({ event: event.RESUME_DOWNLOAD, socket, data, io })
+      )
+    );
+
+    socket.on(event.STOP_DOWNLOAD, (data) =>
+      socketHandler(
+        methods.stopDownload,
+        new SocketParams({ event: event.STOP_DOWNLOAD, socket, data, io })
       )
     );
   });

@@ -5,7 +5,7 @@ const Video = {
   _videos: "videos",
 
   async insert({ data, returnNew = true, fields = ["*"] }) {
-    const id = uuidv4();
+    const id = data.id || uuidv4();
     delete data.createdAt;
     delete data.updatedAt;
 
