@@ -53,6 +53,13 @@ class _HomeScreenState extends State<HomeScreen>
         }
 
         final videos = state.videos;
+        if (videos.isEmpty) {
+          return const CustomLabelWidget(
+            text: "Looks like there are no videos yet on the platform. Please upload one.",
+            icon: Icons.insert_emoticon_sharp,
+            title: "Oppss.. No Video Found",
+          );
+        }
         return ListView.separated(
           itemCount: videos.length,
           padding: const EdgeInsets.symmetric(

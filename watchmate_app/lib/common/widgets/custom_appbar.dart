@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 AppBar customAppBar({
   List<Widget> actions = const [],
   required BuildContext context,
-  bool centerTitle = true,
+  bool centerTitle = false,
   bool showLeading = true,
   Function()? onBackPress,
   bool? blackStatusIcons,

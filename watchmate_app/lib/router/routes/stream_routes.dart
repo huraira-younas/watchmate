@@ -1,5 +1,7 @@
-import 'package:watchmate_app/features/stream/views/link_screen.dart';
+import 'package:watchmate_app/common/models/video_model/base_video.dart';
+import 'package:watchmate_app/features/player/views/player_screen.dart';
 import 'package:watchmate_app/features/stream/views/stream_screen.dart';
+import 'package:watchmate_app/features/stream/views/link_screen.dart';
 import 'package:flutter/material.dart' show Icons;
 import 'app_route_model.dart';
 
@@ -17,5 +19,14 @@ abstract class StreamRoutes {
     name: 'Link',
   );
 
-  static final all = [stream, link];
+  static final player = AppRoute(
+    path: '/player',
+    name: 'Player',
+    builder: (context, state) {
+      final video = state.extra as BaseVideo;
+      return PlayerScreen(video: video);
+    },
+  );
+
+  static final all = [stream, link, player];
 }

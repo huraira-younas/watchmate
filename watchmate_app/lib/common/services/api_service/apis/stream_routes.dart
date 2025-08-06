@@ -1,3 +1,5 @@
+import 'package:watchmate_app/utils/network_utils.dart';
+
 class StreamApi {
   static const _name = "stream";
   late final String _endpoint;
@@ -6,11 +8,7 @@ class StreamApi {
     _endpoint = '$pre/$_name';
   }
 
-  String getStreamVideo({
-    required String resolution,
-    required String filename,
-    required String folder,
-  }) {
-    return '$_endpoint/video/$folder/$resolution/$filename';
+  String getStreamVideo({required String url}) {
+    return '${NetworkUtils.baseUrl}$_endpoint/video/$url';
   }
 }

@@ -59,12 +59,10 @@ class Download {
     const { videoDetails } = info;
     const title = sanitize(videoDetails.title);
     const filename = `${title}-${Date.now()}.mp4`;
-    this.filePath = path.resolve(
-      BASE,
-      "downloads/youtube",
-      this.userId,
-      filename
-    );
+
+    const url = path.join("downloads/youtube", this.userId, filename);
+    this.filePath = path.resolve(BASE, url);
+
     fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
 
     const format = ytdl.chooseFormat(info.formats, {
@@ -81,10 +79,10 @@ class Download {
       thumbnailURL: videoDetails.thumbnails.at(-1)?.url,
       size: parseInt(format.contentLength || "0", 10),
       title: videoDetails.title,
-      videoURL: this.filePath,
       visibility: "public",
       userId: this.userId,
       type: "youtube",
+      videoURL: url,
       id: this.id,
     };
 
@@ -103,19 +101,16 @@ class Download {
 
     const title = path.basename(new URL(this.url).pathname);
     const filename = `${sanitize(title)}-${Date.now()}.mp4`;
-    this.filePath = path.resolve(
-      BASE,
-      "downloads/direct",
-      this.userId,
-      filename
-    );
+
+    const url = path.join("downloads/direct", this.userId, filename);
+    this.filePath = path.resolve(BASE, url);
 
     this.videoData = {
-      videoURL: this.filePath,
       visibility: "public",
       userId: this.userId,
       thumbnailURL: null,
       type: "direct",
+      videoURL: url,
       id: this.id,
       title,
     };

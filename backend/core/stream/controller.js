@@ -4,8 +4,8 @@ const path = require("path");
 const BASE = path.join(process.cwd(), "app_data");
 
 const streamVideo = async (req, res) => {
-  const { folder, resolution, filename } = req.params;
-  const filePath = path.join(BASE, folder, resolution, filename);
+  const url = req.params[0];
+  const filePath = path.join(BASE, url);
 
   if (!fs.existsSync(filePath)) {
     return res.status(404).send("❌ File not found");
@@ -15,10 +15,10 @@ const streamVideo = async (req, res) => {
     return res.status(400).send("❌ Cannot stream a directory");
   }
 
-  const ext = path.extname(filename).toLowerCase();
+  const ext = path.extname(filePath).toLowerCase();
   const stat = fs.statSync(filePath);
-  const range = req.headers.range;
   const fileSize = stat.size;
+  const range = req.headers.range;
 
   const contentType =
     ext === ".m3u8"
@@ -40,11 +40,9 @@ const streamVideo = async (req, res) => {
 
   if (ext === ".ts" && range) {
     const parts = range.replace(/bytes=/, "").split("-");
-
     const start = parseInt(parts[0], 10);
+    
     const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-
-    const file = fs.createReadStream(filePath, { start, end });
     const chunkSize = end - start + 1;
 
     res.writeHead(206, {
@@ -56,7 +54,7 @@ const streamVideo = async (req, res) => {
       "Accept-Ranges": "bytes",
     });
 
-    return file.pipe(res);
+    return fs.createReadStream(filePath, { start, end }).pipe(res);
   }
 
   res.writeHead(200, {
