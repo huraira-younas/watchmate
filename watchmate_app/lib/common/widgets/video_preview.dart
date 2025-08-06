@@ -21,7 +21,7 @@ class VideoPreview extends StatelessWidget {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(10),
         color: theme.cardColor,
       ),
       child: Column(

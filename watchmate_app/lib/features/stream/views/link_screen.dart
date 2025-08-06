@@ -41,6 +41,7 @@ class _LinkScreenState extends State<LinkScreen> {
 
   void _startLink() {
     if (_isDownloading.value || !_key.currentState!.validate()) return;
+    FocusScope.of(context).unfocus();
     setDownloading(true);
 
     final url = _controller.text.trim();
