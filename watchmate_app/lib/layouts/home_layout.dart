@@ -6,7 +6,6 @@ import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/router/routes/stream_routes.dart';
 import "package:watchmate_app/router/routes/layout_routes.dart";
 import 'package:watchmate_app/common/cubits/theme_cubit.dart';
-import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/extensions/exports.dart';
@@ -68,12 +67,12 @@ class _HomeLayoutState extends State<HomeLayout> {
 
   AppBar _getAppBar(ThemeData theme, AppRoute navItem) {
     final isDark = theme.brightness == Brightness.dark;
+    final isHome = navItem.name == "Home";
 
     return customAppBar(
-      leadingIcon: Image.asset(
-        AppAssets.icons.appIcon,
-        height: 40,
-      ).hero(AppConstants.appname).padOnly(l: 10),
+      leadingIcon: Image.asset(AppAssets.icons.appIcon, height: 40)
+          .hero(isHome ? LayoutRoutes.homeLayout.name : navItem.name)
+          .padOnly(l: 10),
       title: navItem.name,
       centerTitle: false,
       context: context,

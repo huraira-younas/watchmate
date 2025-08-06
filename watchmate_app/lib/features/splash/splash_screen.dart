@@ -83,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Image.asset(
               AppAssets.icons.appIcon,
               width: w * 0.5,
-            ).hero(AppConstants.appname).fadeIn(),
+            ).hero(LayoutRoutes.homeLayout.name).fadeIn(),
           ),
           Positioned(
             bottom: 100,

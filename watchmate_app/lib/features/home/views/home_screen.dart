@@ -1,4 +1,5 @@
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:watchmate_app/common/models/video_model/base_video.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/video_preview.dart';
 import 'package:watchmate_app/common/cubits/video_cubit.dart';
@@ -21,10 +22,16 @@ class _HomeScreenState extends State<HomeScreen>
   final _vidCubit = getIt<VideoCubit>();
   final _authBloc = getIt<AuthBloc>();
 
+  final _key = VideoVisibility.public.name;
+
   @override
   void initState() {
     super.initState();
-    _vidCubit.getAllVideos(userId: _authBloc.user!.id, refresh: true);
+    _vidCubit.getAllVideos(
+      userId: _authBloc.user!.id,
+      visibility: _key,
+      refresh: true,
+    );
   }
 
   @override
@@ -32,10 +39,14 @@ class _HomeScreenState extends State<HomeScreen>
     final theme = context.theme;
     super.build(context);
 
-    return BlocBuilder<VideoCubit, VideoState>(
+    return BlocBuilder<VideoCubit, Map<String, VideoState>>(
+      buildWhen: (p, c) => c[_key] != p[_key],
       builder: (context, state) {
-        final loading = state.loading;
-        final error = state.error;
+        final st = state[_key];
+        if (st == null) return const SizedBox.shrink();
+
+        final loading = st.loading;
+        final error = st.error;
 
         if (error != null) {
           return CustomLabelWidget(
@@ -52,10 +63,11 @@ class _HomeScreenState extends State<HomeScreen>
           ).center().fadeIn();
         }
 
-        final pagination = state.pagination;
+        final pagination = st.pagination;
         if (pagination.videos.isEmpty) {
           return const CustomLabelWidget(
-            text: "Looks like there are no videos yet on the platform. Please upload one.",
+            text:
+                "Looks like there are no videos yet on the platform. Please upload one.",
             icon: Icons.insert_emoticon_sharp,
             title: "Oppss.. No Video Found",
           );

@@ -1,26 +1,29 @@
 import 'package:watchmate_app/common/models/video_model/paginated_videos.dart';
-import 'package:watchmate_app/common/models/video_model/base_video.dart';
 import 'package:watchmate_app/common/repositories/video_repository.dart';
 import 'package:watchmate_app/common/models/custom_state_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
-class VideoCubit extends Cubit<VideoState> {
+class VideoCubit extends Cubit<Map<String, VideoState>> {
   final VideoRepository _repo;
 
-  VideoCubit(this._repo) : super(const VideoState());
+  VideoCubit(this._repo) : super({});
 
   Future<void> getAllVideos({
+    required String visibility,
     required String userId,
     bool refresh = false,
-    String? visibility,
   }) async {
+    final type = visibility;
+    final pagination = state[type]?.pagination ?? const PaginatedVideos();
+
     try {
-      final pagination = state.pagination;
       final hasMore = pagination.hasMore;
       if (!refresh && !hasMore) return;
 
       _emit(
+        type: type,
+        pagination: pagination,
         loading: CustomState(
           message: "Please wait a sec...",
           title: "Fetching Videos",
@@ -31,30 +34,27 @@ class VideoCubit extends Cubit<VideoState> {
         "cursor": hasMore
             ? pagination.videos.last.createdAt.toIso8601String()
             : null,
-        "visibility": visibility ?? VideoVisibility.public.name,
+        "visibility": type,
         "userId": userId,
-        "limit": 4,
       });
 
-      _emit(pagination: pagination.mergeNextPage(payload));
+      _emit(type: type, pagination: pagination.mergeNextPage(payload));
     } catch (e) {
       final err = CustomState(message: e.toString(), title: "Error");
-      _emit(error: err);
+      _emit(pagination: pagination, type: type, error: err);
     }
   }
 
   void _emit({
-    PaginatedVideos? pagination,
+    required PaginatedVideos pagination,
+    required String type,
     CustomState? loading,
     CustomState? error,
   }) {
-    emit(
-      VideoState(
-        pagination: pagination ?? state.pagination,
-        loading: loading,
-        error: error,
-      ),
-    );
+    emit({
+      ...state,
+      type: VideoState(pagination: pagination, loading: loading, error: error),
+    });
   }
 }
 
