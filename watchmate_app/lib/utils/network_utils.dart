@@ -5,5 +5,5 @@ class NetworkUtils {
   static String get prodUrl => "https://watchmate.hurairayounas.com";
   static const _defaultPort = 5000;
 
-  static String get baseUrl => kDebugMode ? _defaultLocalUrl : prodUrl;
+  static String get baseUrl => !kDebugMode ? _defaultLocalUrl : prodUrl;
 }
