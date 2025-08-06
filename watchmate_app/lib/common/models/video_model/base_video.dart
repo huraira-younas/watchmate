@@ -17,36 +17,44 @@ VideoType parseType(String value) {
 abstract class BaseVideo extends Equatable {
   final VideoVisibility visibility;
   final String thumbnailURL;
+  final Duration duration;
   final String videoURL;
   final VideoType type;
   final String userId;
   final String title;
+  final int size;
 
   const BaseVideo({
     required this.thumbnailURL,
     required this.visibility,
+    required this.duration,
     required this.videoURL,
     required this.userId,
     required this.title,
     required this.type,
+    required this.size,
   });
 
   Map<String, dynamic> toJson() => {
+    'duration': duration.inSeconds,
     'visibility': visibility.name,
     'thumbnailURL': thumbnailURL,
     'videoURL': videoURL,
     'type': type.name,
     'userId': userId,
     'title': title,
+    'size': size,
   };
 
   @override
   List<Object?> get props => [
     thumbnailURL,
     visibility,
+    duration,
     videoURL,
     userId,
     title,
     type,
+    size,
   ];
 }

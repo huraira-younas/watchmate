@@ -2,6 +2,7 @@ import 'package:watchmate_app/common/services/socket_service/socket_service.dart
 import 'package:watchmate_app/common/services/socket_service/socket_events.dart';
 import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
 import 'package:watchmate_app/features/stream/views/widgets/custom_chip.dart';
+import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/common/widgets/video_preview.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
@@ -27,9 +28,10 @@ class LinkScreen extends StatefulWidget {
 class _LinkScreenState extends State<LinkScreen> {
   final _socketService = getIt<SocketNamespaceService>();
   final _controller = TextEditingController();
+
+  final _isDownloading = ValueNotifier<bool>(false);
   final _key = GlobalKey<FormState>();
   final _authBloc = getIt<AuthBloc>();
-  bool _isDownloading = false;
 
   @override
   void dispose() {
@@ -38,13 +40,20 @@ class _LinkScreenState extends State<LinkScreen> {
   }
 
   void _startLink() {
-    if (_isDownloading || !_key.currentState!.validate()) return;
-    setState(() => _isDownloading = true);
+    if (_isDownloading.value || !_key.currentState!.validate()) return;
+    setDownloading(true);
 
     final url = _controller.text.trim();
     _socketService.emit(NamespaceType.stream, SocketEvents.stream.downloadYT, {
       "userId": _authBloc.user?.id,
       "url": url,
+    });
+  }
+
+  void setDownloading(bool val) {
+    if (val == _isDownloading.value || !mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _isDownloading.value = val;
     });
   }
 
@@ -84,7 +93,7 @@ class _LinkScreenState extends State<LinkScreen> {
                   ),
                 ),
                 30.h,
-                if (_isDownloading)
+                if (_isDownloading.value)
                   const MyText(
                     size: AppConstants.subtitle,
                     text: "Downloading Videos",
@@ -98,10 +107,12 @@ class _LinkScreenState extends State<LinkScreen> {
                   ),
                   builder: (context, sc) {
                     if (sc.hasError) {
-                      return const MyText(
-                        size: AppConstants.subtitle,
-                        text: "Download failed",
-                      );
+                      return const CustomLabelWidget(
+                        icon: Icons.running_with_errors_rounded,
+                        title: "Server Response Error!",
+                        text: "Something went wrong",
+                        iconSize: 80,
+                      ).center().padOnly(t: 40);
                     }
 
                     final w = sc.connectionState == ConnectionState.waiting;
@@ -110,31 +121,42 @@ class _LinkScreenState extends State<LinkScreen> {
                     final json = sc.data;
                     final code = json['code'];
                     final data = code == 400 || code == 500
-                        ? json["error"]
+                        ? json["error"] ?? json["message"]
                         : Map<String, dynamic>.from(json['data']);
 
                     if (code == 201) {
                       final video = DownloadingVideo.fromJson(data);
-                      if (_isDownloading && video.percent >= 96) {
-                        _isDownloading = false;
+                      if (_isDownloading.value && video.percent >= 96) {
+                        setDownloading(false);
                       }
 
                       return VideoPreview(video: video);
                     } else if (code == 200) {
-                      if (_isDownloading) _isDownloading = false;
+                      if (_isDownloading.value) setDownloading(false);
                       final video = DownloadedVideo.fromJson(data);
                       return VideoPreview(video: video);
                     }
 
-                    return MyText(text: data.toString());
+                    if (_isDownloading.value) setDownloading(false);
+                    return CustomLabelWidget(
+                      icon: Icons.running_with_errors_rounded,
+                      title: "Error while downloading!",
+                      text: data.toString(),
+                      iconSize: 80,
+                    ).center().padOnly(t: 40);
                   },
                 ),
               ],
             ),
           ).expanded(),
-          CustomButton(
-            onPressed: _isDownloading ? null : _startLink,
-            text: "Add Link",
+          ValueListenableBuilder(
+            valueListenable: _isDownloading,
+            builder: (_, downloading, _) {
+              return CustomButton(
+                onPressed: downloading ? null : _startLink,
+                text: "Add Link",
+              );
+            },
           ),
         ],
       ).padAll(AppConstants.padding),

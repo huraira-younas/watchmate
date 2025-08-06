@@ -10,17 +10,21 @@ class DownloadingVideo extends BaseVideo {
   const DownloadingVideo({
     required super.thumbnailURL,
     required super.visibility,
-    required this.downloaded,
+    required super.duration,
     required super.videoURL,
-    required this.percent,
     required super.userId,
     required super.title,
     required super.type,
+    required super.size,    
+
+    required this.downloaded,
+    required this.percent,
     required this.total,
   });
 
   factory DownloadingVideo.fromJson(Map<String, dynamic> json) {
     return DownloadingVideo(
+      duration: Duration(seconds: json['duration'] ?? 0),
       downloaded: (json['downloaded'] ?? 0).toDouble(),
       visibility: parseVisibility(json['visibility']),
       percent: (json['percent'] ?? 0).toDouble(),
@@ -28,6 +32,7 @@ class DownloadingVideo extends BaseVideo {
       thumbnailURL: json['thumbnailURL'],
       type: parseType(json['type']),
       videoURL: json['videoURL'],
+      size: json['size'] ?? 0,
       userId: json['userId'],
       title: json['title'],
     );
@@ -35,11 +40,11 @@ class DownloadingVideo extends BaseVideo {
 
   @override
   Map<String, dynamic> toJson() => {
-    ...super.toJson(),
-    'downloaded': downloaded,
-    'percent': percent,
-    'total': total,
-  };
+        ...super.toJson(),
+        'downloaded': downloaded,
+        'percent': percent,
+        'total': total,
+      };
 
   bool equalsTo(DownloadingVideo other) =>
       downloaded == other.downloaded &&
