@@ -1,4 +1,4 @@
-import 'package:watchmate_app/services/api_service/api_routes.dart';
+import 'package:watchmate_app/common/services/api_service/api_routes.dart';
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:watchmate_app/utils/network_utils.dart';
 

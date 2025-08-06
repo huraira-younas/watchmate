@@ -1,6 +1,6 @@
 import 'package:watchmate_app/router/routes/stream_routes.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
-import 'package:watchmate_app/services/pre_loader.dart';
+import 'package:watchmate_app/utils/pre_loader.dart';
 
 class AppIcons {
   late final String _base;

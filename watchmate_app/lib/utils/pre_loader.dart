@@ -1,4 +1,4 @@
-import 'package:watchmate_app/services/logger.dart';
+import 'package:watchmate_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 
 class Preloader {

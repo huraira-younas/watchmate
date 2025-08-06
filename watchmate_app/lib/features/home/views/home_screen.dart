@@ -1,5 +1,5 @@
-import 'package:watchmate_app/services/socket_service/socket_service.dart';
-import 'package:watchmate_app/services/socket_service/socket_events.dart';
+import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
+import 'package:watchmate_app/common/services/socket_service/socket_events.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/common/widgets/video_preview.dart';

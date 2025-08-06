@@ -1,7 +1,7 @@
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:rxdart/rxdart.dart' show BehaviorSubject;
 import 'package:watchmate_app/utils/network_utils.dart';
-import 'package:watchmate_app/services/logger.dart';
+import 'package:watchmate_app/utils/logger.dart';
 import 'dart:async' show Timer;
 
 enum NamespaceType { stream, notifications, chat, auth }

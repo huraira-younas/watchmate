@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart' show Route, NavigatorObserver;
-import 'package:watchmate_app/services/logger.dart';
+import 'package:watchmate_app/utils/logger.dart';
 
 class GoRouterObserver extends NavigatorObserver {
   @override

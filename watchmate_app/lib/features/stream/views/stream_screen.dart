@@ -1,4 +1,3 @@
-import 'package:go_router/go_router.dart';
 import 'package:watchmate_app/features/stream/views/widgets/build_background.dart';
 import 'package:watchmate_app/features/stream/views/widgets/history_builder.dart';
 import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
@@ -6,8 +5,9 @@ import 'package:watchmate_app/features/stream/views/widgets/custom_chip.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
 import 'package:watchmate_app/router/routes/stream_routes.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
-import 'package:watchmate_app/services/pre_loader.dart';
 import 'package:watchmate_app/extensions/exports.dart';
+import 'package:watchmate_app/utils/pre_loader.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
 class StreamScreen extends StatefulWidget {

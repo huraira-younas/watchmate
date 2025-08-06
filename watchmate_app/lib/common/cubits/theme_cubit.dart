@@ -1,6 +1,6 @@
-import 'package:watchmate_app/services/shared_prefs.dart';
 import 'package:watchmate_app/constants/app_themes.dart';
-import 'package:watchmate_app/services/logger.dart';
+import 'package:watchmate_app/utils/shared_prefs.dart';
+import 'package:watchmate_app/utils/logger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 

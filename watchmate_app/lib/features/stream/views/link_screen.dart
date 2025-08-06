@@ -1,7 +1,7 @@
+import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
+import 'package:watchmate_app/common/services/socket_service/socket_events.dart';
 import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
 import 'package:watchmate_app/features/stream/views/widgets/custom_chip.dart';
-import 'package:watchmate_app/services/socket_service/socket_service.dart';
-import 'package:watchmate_app/services/socket_service/socket_events.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/common/widgets/video_preview.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';

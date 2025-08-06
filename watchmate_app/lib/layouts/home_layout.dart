@@ -1,4 +1,4 @@
-import 'package:watchmate_app/services/socket_service/socket_service.dart';
+import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
 import 'package:watchmate_app/common/widgets/custom_bottom_nav_bar.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/router/routes/stream_routes.dart';

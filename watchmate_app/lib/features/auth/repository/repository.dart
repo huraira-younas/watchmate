@@ -1,6 +1,6 @@
-import 'package:watchmate_app/services/api_service/api_routes.dart';
-import 'package:watchmate_app/services/api_service/dio_client.dart';
-import 'package:watchmate_app/services/shared_prefs.dart';
+import 'package:watchmate_app/common/services/api_service/api_routes.dart';
+import 'package:watchmate_app/common/services/api_service/dio_client.dart';
+import 'package:watchmate_app/utils/shared_prefs.dart';
 import '../model/user_model.dart';
 
 class AuthRepository {

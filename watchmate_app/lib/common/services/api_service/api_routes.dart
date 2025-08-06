@@ -1,4 +1,4 @@
-import 'package:watchmate_app/services/api_service/apis/exports.dart';
+import 'package:watchmate_app/common/services/api_service/apis/exports.dart';
 
 class ApiRoutes {
   static const _prefix = "/v1/api";
