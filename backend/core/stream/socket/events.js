@@ -10,14 +10,14 @@ const events = (io) => {
 
     socket.on(event.DOWNLOAD_YT, (data) =>
       socketHandler(
-        methods.downloadYT,
+        methods.download,
         new SocketParams({ event: event.DOWNLOAD_YT, socket, data, io })
       )
     );
 
     socket.on(event.DOWNLOAD_DIR, (data) =>
       socketHandler(
-        methods.downloadDirect,
+        methods.download,
         new SocketParams({ event: event.DOWNLOAD_DIR, socket, data, io })
       )
     );

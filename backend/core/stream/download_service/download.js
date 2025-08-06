@@ -45,12 +45,12 @@ class Download {
     this.url = url;
   }
 
-  async init() {
-    if (this.type === "youtube") await this._initYT();
-    else await this._initDirect();
+  async init(visibility) {
+    if (this.type === "youtube") await this._initYT(visibility);
+    else await this._initDirect(visibility);
   }
 
-  async _initYT() {
+  async _initYT(visibility) {
     if (!ytdl.validateURL(this.url)) {
       throw new SocketError("Invalid YouTube URL", 400);
     }
@@ -74,25 +74,26 @@ class Download {
       throw new SocketError("No suitable MP4 format found.", 400);
     }
 
+    const size = parseInt(String(format.contentLength || 0), 10);
     this.videoData = {
       duration: parseInt(videoDetails.lengthSeconds, 10),
       thumbnailURL: videoDetails.thumbnails.at(-1)?.url,
-      size: parseInt(format.contentLength || "0", 10),
       title: videoDetails.title,
-      visibility: "public",
       userId: this.userId,
       type: "youtube",
       videoURL: url,
       id: this.id,
+      visibility,
+      size,
     };
 
-    this.totalBytes = parseInt(format.contentLength || "0", 10);
     this.writeStream = fs.createWriteStream(this.filePath);
     this.videoStream = ytdl(this.url, { format });
+    this.totalBytes = size;
     this._setupListeners();
   }
 
-  async _initDirect() {
+  async _initDirect(visibility) {
     const response = await axios({
       responseType: "stream",
       url: this.url,
@@ -106,12 +107,12 @@ class Download {
     this.filePath = path.resolve(BASE, url);
 
     this.videoData = {
-      visibility: "public",
       userId: this.userId,
       thumbnailURL: null,
       type: "direct",
       videoURL: url,
       id: this.id,
+      visibility,
       title,
     };
 

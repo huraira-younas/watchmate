@@ -25,6 +25,9 @@ extension WidgetX on Widget {
   Widget expanded({int flex = 1, Key? key}) =>
       Expanded(flex: flex, key: key, child: this);
 
+  Widget flexible({int flex = 1, Key? key, FlexFit fit = FlexFit.loose}) =>
+      Flexible(flex: flex, key: key, fit: fit, child: this);
+
   Widget center({Key? key, double? widthFactor, double? heightFactor}) =>
       Center(
         heightFactor: heightFactor,

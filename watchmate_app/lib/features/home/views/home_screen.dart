@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    _vidCubit.getAllVideos(userId: _authBloc.user!.id);
+    _vidCubit.getAllVideos(userId: _authBloc.user!.id, refresh: true);
   }
 
   @override
@@ -52,8 +52,8 @@ class _HomeScreenState extends State<HomeScreen>
           ).center().fadeIn();
         }
 
-        final videos = state.videos;
-        if (videos.isEmpty) {
+        final pagination = state.pagination;
+        if (pagination.videos.isEmpty) {
           return const CustomLabelWidget(
             text: "Looks like there are no videos yet on the platform. Please upload one.",
             icon: Icons.insert_emoticon_sharp,
@@ -62,14 +62,14 @@ class _HomeScreenState extends State<HomeScreen>
         }
 
         return ListView.separated(
-          itemCount: videos.length,
+          itemCount: pagination.videos.length,
           padding: const EdgeInsets.symmetric(
             horizontal: AppConstants.padding - 12,
             vertical: AppConstants.padding - 10,
           ),
           separatorBuilder: (_, _) => const SizedBox(height: 10),
           itemBuilder: (context, idx) {
-            return VideoPreview(video: videos[idx]);
+            return VideoPreview(video: pagination.videos[idx]);
           },
         ).fadeIn();
       },

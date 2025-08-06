@@ -1,7 +1,8 @@
+import 'package:watchmate_app/features/stream/views/widgets/platform_selection.dart';
 import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
 import 'package:watchmate_app/common/services/socket_service/socket_events.dart';
-import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
 import 'package:watchmate_app/features/stream/views/widgets/custom_chip.dart';
+import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/common/widgets/video_preview.dart';
@@ -15,6 +16,7 @@ import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/utils/validator_builder.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
+import 'package:watchmate_app/utils/logger.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +35,9 @@ class _LinkScreenState extends State<LinkScreen> {
   final _key = GlobalKey<FormState>();
   final _authBloc = getIt<AuthBloc>();
 
+  VideoVisibility _visibility = VideoVisibility.public;
+  VideoType _type = VideoType.youtube;
+
   @override
   void dispose() {
     _controller.dispose();
@@ -45,8 +50,12 @@ class _LinkScreenState extends State<LinkScreen> {
     setDownloading(true);
 
     final url = _controller.text.trim();
+    Logger.info(tag: "VISIBILITY", message: _visibility.name);
+
     _socketService.emit(NamespaceType.stream, SocketEvents.stream.downloadYT, {
+      "visibility": _visibility.name,
       "userId": _authBloc.user?.id,
+      "type": _type.name,
       "url": url,
     });
   }
@@ -72,8 +81,9 @@ class _LinkScreenState extends State<LinkScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const BuildTitle(
-                  title: "Start streaming with your link.",
+                BuildTitle(
+                  title:
+                      "Start streaming with ${_type.name.capitalize} video link.",
                   c2: "download",
                   s1: "You can",
                   c1: "stream",
@@ -83,12 +93,25 @@ class _LinkScreenState extends State<LinkScreen> {
                 10.h,
                 const CustomChip(icon: Icons.add_link, text: "HTTP link"),
                 30.h,
+                PlatformSelection(
+                  visibility: _visibility,
+                  type: _type,
+                  onTypeChange: (type) {
+                    if (type == _type) return;
+                    setState(() => _type = type);
+                  },
+                  onVisibilityChange: (visibility) {
+                    if (visibility == _visibility) return;
+                    setState(() => _visibility = visibility);
+                  },
+                ),
+                20.h,
                 Form(
                   key: _key,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: CustomTextField(
                     validator: ValidatorBuilder.chain().required().build(),
-                    hint: "Please enter a network URL",
+                    hint: "Please enter a ${_type.name} video URL",
                     prefixIcon: const Icon(Icons.link),
                     controller: _controller,
                   ),
@@ -147,6 +170,7 @@ class _LinkScreenState extends State<LinkScreen> {
                     ).center().padOnly(t: 40);
                   },
                 ),
+                50.h,
               ],
             ),
           ).expanded(),

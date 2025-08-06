@@ -1,7 +1,7 @@
 import 'package:watchmate_app/common/widgets/text_widget.dart';
-import 'package:watchmate_app/extensions/num_entensions.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
+import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter/material.dart';
 
 class BuildTitle extends StatelessWidget {
@@ -62,6 +62,26 @@ class BuildTitle extends StatelessWidget {
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+class PlatformTitle extends StatelessWidget {
+  const PlatformTitle({super.key, required this.title, required this.text});
+  final String title;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.theme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        MyText(size: AppConstants.title, family: AppFonts.bold, text: title),
+        4.h,
+        MyText(text: text, color: theme.hintColor),
       ],
     );
   }

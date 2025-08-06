@@ -5,14 +5,20 @@ const {
 const { Download, DownloadManager } = require("../download_service");
 const logger = require("../../../methods/logger");
 
-const download = async ({ event, socket, data, type }) => {
+const download = async ({ event, socket, data }) => {
   try {
-    validateEvent(data, ["userId", "url"]);
-    const { userId, url } = data;
+    validateEvent(data, ["userId", "url", "type", "visibility"]);
+    const { userId, url, visibility, type } = data;
 
-    const download = new Download({ url, userId, socket, event, type });
-    await download.init();
+    const download = new Download({
+      userId,
+      socket,
+      event,
+      type,
+      url,
+    });
 
+    await download.init(visibility);
     DownloadManager.add(download);
 
     socket.emit(
@@ -34,9 +40,6 @@ const download = async ({ event, socket, data, type }) => {
     );
   }
 };
-
-const downloadDirect = (params) => download({ ...params, type: "direct" });
-const downloadYT = (params) => download({ ...params, type: "youtube" });
 
 const pauseDownload = ({ event, socket, data }) => {
   validateEvent(data, ["id"]);
@@ -78,9 +81,8 @@ const stopDownload = ({ event, socket, data }) => {
 };
 
 module.exports = {
-  downloadDirect,
   resumeDownload,
   pauseDownload,
   stopDownload,
-  downloadYT,
+  download,
 };
