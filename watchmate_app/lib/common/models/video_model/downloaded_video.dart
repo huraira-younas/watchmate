@@ -21,8 +21,8 @@ class DownloadedVideo extends BaseVideo {
 
   factory DownloadedVideo.fromJson(Map<String, dynamic> json) {
     return DownloadedVideo(
+      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       visibility: parseVisibility(json['visibility']),
-      createdAt: DateTime.parse(json['createdAt']),
       thumbnailURL: json['thumbnailURL'],
       deleted: json['deleted'] == 1,
       type: parseType(json['type']),
