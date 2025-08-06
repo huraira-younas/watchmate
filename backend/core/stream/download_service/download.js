@@ -65,17 +65,6 @@ class Download {
       this.userId,
       filename
     );
-
-    this.videoData = {
-      thumbnailURL: videoDetails.thumbnails.at(-1)?.url,
-      title: videoDetails.title,
-      videoURL: this.filePath,
-      visibility: "public",
-      userId: this.userId,
-      type: "youtube",
-      id: this.id,
-    };
-
     fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
 
     const format = ytdl.chooseFormat(info.formats, {
@@ -86,6 +75,18 @@ class Download {
     if (!format) {
       throw new SocketError("No suitable MP4 format found.", 400);
     }
+
+    this.videoData = {
+      duration: parseInt(videoDetails.lengthSeconds, 10),
+      thumbnailURL: videoDetails.thumbnails.at(-1)?.url,
+      size: parseInt(format.contentLength || "0", 10),
+      title: videoDetails.title,
+      videoURL: this.filePath,
+      visibility: "public",
+      userId: this.userId,
+      type: "youtube",
+      id: this.id,
+    };
 
     this.totalBytes = parseInt(format.contentLength || "0", 10);
     this.writeStream = fs.createWriteStream(this.filePath);

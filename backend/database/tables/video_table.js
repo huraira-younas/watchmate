@@ -14,6 +14,9 @@ async function createTable() {
           table.string("title").notNullable();
           table.uuid("id").primary();
 
+          table.integer("duration").notNullable();
+          table.bigInteger("size").notNullable();
+
           table
             .uuid("userId")
             .notNullable()
