@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final pass = _controllers[1].text.trim();
     _userBloc.add(
       AuthLogin(
-        onSuccess: () => context.go(LayoutRoutes.home.path),
+        onSuccess: () => context.go(LayoutRoutes.homeLayout.path),
         password: pass,
         email: email,
       ),
