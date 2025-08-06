@@ -42,14 +42,14 @@ class _HomeScreenState extends State<HomeScreen>
             icon: Icons.streetview_sharp,
             text: error.message,
             title: error.title,
-          );
+          ).fadeIn();
         }
 
         if (loading != null) {
-          return LoadingAnimationWidget.bouncingBall(
+          return LoadingAnimationWidget.threeRotatingDots(
             color: theme.primaryColor,
-            size: 100,
-          ).center();
+            size: 50,
+          ).center().fadeIn();
         }
 
         final videos = state.videos;
@@ -60,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen>
             title: "Oppss.. No Video Found",
           );
         }
+
         return ListView.separated(
           itemCount: videos.length,
           padding: const EdgeInsets.symmetric(
@@ -68,10 +69,9 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           separatorBuilder: (_, _) => const SizedBox(height: 10),
           itemBuilder: (context, idx) {
-            final video = videos[idx];
-            return VideoPreview(video: video);
+            return VideoPreview(video: videos[idx]);
           },
-        );
+        ).fadeIn();
       },
     );
   }

@@ -1,40 +1,46 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Base
-  // static const Color lightPrimary = Color(0xFF6D53F4);
-  static const Color lightPrimary = Color(0xFF1189EA);
-  static const Color darkPrimary = Color(0xFF1189EA);
+  static const lightPrimary = Color(0xFF1189EA);
+  static const darkPrimary = Color(0xFF1189EA);
 
-  static const Color lightBackground = Color(0xFFFFFFFF);
-  static const Color darkBackground = Color(0xFF0F172A);
+  static const lightBackground = Color(0xFFFFFFFF);
+  static const darkBackground = Color(0xFF0F172A);
 
-  static const Color lightCard = Color(0xFFF6F6F6);
-  static const Color darkCard = Color(0xFF1E293B);
+  static const lightCard = Color(0xFFF6F6F6);
+  static const darkCard = Color(0xFF1E293B);
 
-  static const Color lightText = Colors.black;
-  static const Color darkText = Color(0xFFE2E8F0);
+  static const lightText = Colors.black;
+  static const darkText = Color(0xFFE2E8F0);
 
-  static const Color lightHint = Color(0xFF797979);
-  static const Color darkHint = Color(0xFF94A3B8);
+  static const lightHint = Color(0xFF797979);
+  static const darkHint = Color(0xFF94A3B8);
 
-  static const Color success = Color(0xFF2ECC71);
-  static const Color error = Color(0xFFF87171);
+  static const success = Color(0xFF2ECC71);
+  static const error = Color(0xFFF87171);
 
-  static const Color shimmerBase = Color(0xFF64748B);
-  static final Color shimmerHighlight = shimmerBase.withValues(alpha: 0.3);
-  static final Color shimmerLowlight = shimmerBase.withValues(alpha: 0.2);
+  static const shimmerBase = Color(0xFF64748B);
+  static final shimmerHighlight = shimmerBase.withValues(alpha: 0.3);
+  static final shimmerLowlight = shimmerBase.withValues(alpha: 0.2);
 
-  static const Color lightBorder = Color(0xFFE0E0E0);
-  static const Color darkBorder = Color(0xFF334155);
+  static const lightBorder = Color(0xFFE0E0E0);
+  static const darkBorder = Color(0xFF334155);
+
+  static const pageTransition = PageTransitionsTheme(
+    builders: {
+      TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+    },
+  );
 }
 
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
-    brightness: Brightness.light,
     scaffoldBackgroundColor: AppColors.lightBackground,
+    // pageTransitionsTheme: AppColors.pageTransition,
     primaryColor: AppColors.lightPrimary,
     cardColor: AppColors.lightCard,
+    brightness: Brightness.light,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.lightBackground,
       foregroundColor: AppColors.lightText,
@@ -56,10 +62,11 @@ class AppThemes {
   );
 
   static final ThemeData darkTheme = ThemeData(
-    brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.darkBackground,
+    // pageTransitionsTheme: AppColors.pageTransition,
     primaryColor: AppColors.darkPrimary,
     cardColor: AppColors.darkCard,
+    brightness: Brightness.dark,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.darkBackground,
       foregroundColor: AppColors.darkText,

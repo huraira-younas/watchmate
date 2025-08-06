@@ -86,9 +86,9 @@ class VideoPreview extends StatelessWidget {
       final formatter = DateFormat('dd MMM yyyy');
 
       final date = formatter.format(downloaded.createdAt.toLocal());
-      return "Downloaded on $date • ${_formatDuration(video.duration)} • ${_formatSize(video.size)}";
+      return "Downloaded on $date • ${_formatSize(video.size)}";
     } else {
-      return "${_formatDuration(video.duration)} • ${_formatSize(video.size)}";
+      return _formatSize(video.size);
     }
   }
 

@@ -16,7 +16,13 @@ class VideoCubit extends Cubit<VideoState> {
   }) async {
     try {
       if (!refresh && videos.isNotEmpty) return;
-      
+      _emit(
+        loading: CustomState(
+          message: "Please wait a sec...",
+          title: "Fetching Videos",
+        ),
+      );
+
       videos.addAll(await _repo.getAll({"userId": userId}));
       _emit();
     } catch (e) {
