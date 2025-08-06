@@ -1,0 +1,11 @@
+{
+  "versions": {
+    "1.0.0": {
+      "changelog": ["Initial release of the video module."],
+      "core_compatible": ">=1.0.0 <=1.5.0"
+    }
+  },
+  "name": "Video",
+  "type": "core",
+  "dependency": []
+}

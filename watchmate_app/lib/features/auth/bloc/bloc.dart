@@ -1,6 +1,6 @@
+import 'package:watchmate_app/features/auth/repository/repository.dart';
 import 'package:watchmate_app/features/auth/model/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../repository/auth_repository.dart';
 import 'events.dart';
 import 'states.dart';
 
