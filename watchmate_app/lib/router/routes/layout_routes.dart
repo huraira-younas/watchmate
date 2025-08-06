@@ -3,9 +3,17 @@ import 'package:watchmate_app/features/profile/views/profile_screen.dart';
 import 'package:watchmate_app/features/chats/views/chat_screen.dart';
 import 'package:watchmate_app/features/home/views/home_screen.dart';
 import 'package:watchmate_app/router/routes/app_route_model.dart';
+import 'package:watchmate_app/layouts/home_layout.dart';
 import 'package:flutter/material.dart' show Icons;
 
 abstract class LayoutRoutes {
+  static const homeLayout = AppRoute(
+    page: HomeLayout(),
+    icon: Icons.home,
+    path: '/home',
+    name: 'Home',
+  );
+
   static const home = AppRoute(
     page: HomeScreen(),
     icon: Icons.home,
@@ -34,18 +42,5 @@ abstract class LayoutRoutes {
     name: 'Profile',
   );
 
-  static final all = [home, myList, downloads, profile];
-
-  static AppRoute getByPath(String path) {
-    return all.firstWhere(
-      (item) => path.startsWith(item.path),
-      orElse: () => all.first,
-    );
-  }
-
-  static int getIndex(String path) {
-    return all
-        .indexWhere((item) => path.startsWith(item.path))
-        .clamp(0, all.length - 1);
-  }
+  static const all = [home, myList, downloads, profile];
 }

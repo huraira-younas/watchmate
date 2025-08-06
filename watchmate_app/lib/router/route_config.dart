@@ -18,9 +18,9 @@ Iterable<RouteBase> _getRoutes() => AppRoutes.all.map((route) {
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final GoRouter appRouter = GoRouter(
-  routes: [...AppRoutes.shells, ..._getRoutes()],
   errorBuilder: (_, _) => const NotFoundPage(),
   initialLocation: AuthRoutes.splash.path,
   observers: [GoRouterObserver()],
   navigatorKey: _rootNavigatorKey,
+  routes: [..._getRoutes()],
 );

@@ -1,3 +1,4 @@
+import 'package:watchmate_app/common/cubits/navigation_cubit.dart';
 import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:watchmate_app/common/cubits/video_cubit.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => getIt<NavigationCubit>()),
         BlocProvider(create: (_) => getIt<ThemeCubit>()),
         BlocProvider(create: (_) => getIt<VideoCubit>()),
         BlocProvider(create: (_) => getIt<AuthBloc>()),

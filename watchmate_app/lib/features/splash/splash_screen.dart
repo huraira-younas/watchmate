@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
           await _delay(stopwatch.elapsed);
 
           if (!mounted) return;
-          context.pushReplacement(LayoutRoutes.home.path);
+          context.pushReplacement(LayoutRoutes.homeLayout.path);
         },
         onError: (error) async {
           await _delay(stopwatch.elapsed);
