@@ -1,5 +1,6 @@
 import 'package:watchmate_app/common/services/api_service/api_routes.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
+import 'package:watchmate_app/common/widgets/profile_avt.dart';
 import 'package:watchmate_app/router/routes/stream_routes.dart';
 import 'package:watchmate_app/common/widgets/cache_image.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
@@ -32,42 +33,34 @@ class VideoPreview extends StatelessWidget {
             aspectRatio: 16 / 9,
             child: Stack(
               children: <Widget>[
-                CacheImage(url: ApiRoutes.stream.getThumbnail(url: video.thumbnailURL)),
-                Positioned(
-                  right: 3,
-                  bottom: 3,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      color: theme.cardColor,
-                    ),
-                    child: MyText(
-                      text: _formatDuration(video.duration),
-                      family: AppFonts.semibold,
-                      size: 12,
+                CacheImage(
+                  url: ApiRoutes.stream.getThumbnail(url: video.thumbnailURL),
+                ),
+                if (video.duration.inSeconds != 0)
+                  Positioned(
+                    right: 3,
+                    bottom: 3,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: theme.cardColor,
+                      ),
+                      child: MyText(
+                        text: _formatDuration(video.duration),
+                        family: AppFonts.semibold,
+                        size: 12,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
           6.h,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              MyText(
-                size: AppConstants.subtitle,
-                family: AppFonts.bold,
-                text: video.title,
-              ),
-              4.h,
-              MyText(text: _buildInfoText(), size: 12, color: theme.hintColor),
-            ],
-          ).padAll(10),
+          _buildBottom(color: theme.hintColor),
         ],
       ),
     ).onTap(
@@ -75,6 +68,35 @@ class VideoPreview extends StatelessWidget {
           ? context.push(StreamRoutes.player.path, extra: video)
           : null,
     );
+  }
+
+  Widget _buildBottom({required Color color}) {
+    return Row(
+      children: <Widget>[
+        const ProfileAvt(size: 40, url: AppConstants.userAvt),
+        10.w,
+        Row(
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                MyText(
+                  size: AppConstants.subtitle,
+                  family: AppFonts.bold,
+                  text: video.title,
+                ),
+                3.h,
+                MyText(text: _buildInfoText(), size: 12, color: color),
+              ],
+            ).expanded(),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.more_vert_outlined),
+            ),
+          ],
+        ).expanded(),
+      ],
+    ).padAll(10);
   }
 
   String _buildInfoText() {

@@ -21,8 +21,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onGetUser(AuthGetUser event, Emitter<AuthState> emit) async {
     try {
       user = await repo.getUser();
-      if(user == null) throw "User not found";
-      
+      if (user == null) throw "User not found";
+
       event.onSuccess?.call();
       _emit(emit);
     } catch (e) {
@@ -129,8 +129,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onLogout(AuthLogout event, Emitter<AuthState> emit) async {
+    final loading = CustomState(
+      message: "Please wait...",
+      title: "Logging out",
+    );
+
+    _emit(loading: loading, emit);
     await repo.logout();
-    user = null;
+    event.onSuccess?.call();
     _emit(emit);
   }
 

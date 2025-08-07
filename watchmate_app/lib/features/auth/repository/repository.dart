@@ -63,6 +63,6 @@ class AuthRepository {
 
   Future<void> logout() async {
     await Future.delayed(const Duration(milliseconds: 200));
-    SharedPrefs.instance.removeLoggedUser();
+    _sp.removeLoggedUser();
   }
 }

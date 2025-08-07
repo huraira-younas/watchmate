@@ -1,47 +1,52 @@
-import 'package:watchmate_app/common/widgets/text_widget.dart';
-import 'package:watchmate_app/constants/app_constants.dart';
-import 'package:watchmate_app/constants/app_themes.dart';
-import 'package:watchmate_app/constants/app_fonts.dart';
+import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
+import 'package:watchmate_app/features/profile/views/widgets/user_tile.dart';
+import 'package:watchmate_app/features/profile/views/widgets/my_tile.dart';
+import 'package:watchmate_app/features/auth/bloc/events.dart';
+import 'package:watchmate_app/features/auth/bloc/bloc.dart';
+import 'package:watchmate_app/router/routes/exports.dart';
+import 'package:watchmate_app/extensions/exports.dart';
+import 'package:watchmate_app/di/locator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
 
+class _ProfileScreenState extends State<ProfileScreen> {
+  final _socket = getIt<SocketNamespaceService>();
+  final _authBloc = getIt<AuthBloc>();
+
+  void _logout() => _authBloc.add(AuthLogout(onSuccess: _dispose));
+  void _dispose() {
+    _socket.disposeAll();
+    context.go(AuthRoutes.login.path);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.not_accessible_rounded,
-                color: isDark ? AppColors.darkHint : AppColors.lightHint,
-                size: 100,
-              ),
-              const SizedBox(height: 24),
-              MyText(
-                color: theme.textTheme.bodyLarge?.color ?? Colors.white,
-                text: 'Senpai is Working',
-                size: AppConstants.title,
-                family: AppFonts.bold,
-                isCenter: true,
-              ),
-              const SizedBox(height: 12),
-              MyText(
-                text: 'The page you\'re looking for is under development.',
-                color: theme.textTheme.bodyMedium?.color,
-                size: AppConstants.subtitle,
-                isCenter: true,
-              ),
-              const SizedBox(height: 30),
-            ],
-          ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            10.h,
+            const UserTile(),
+            30.h,
+            MyTile(
+              icon: Icons.person_outline,
+              title: "Edit Profile",
+              onTap: () {},
+            ),
+            MyTile(
+              icon: Icons.logout_rounded,
+              iconColor: Colors.red,
+              title: "Logout",
+              onTap: _logout,
+            ),
+          ],
         ),
       ),
     );
