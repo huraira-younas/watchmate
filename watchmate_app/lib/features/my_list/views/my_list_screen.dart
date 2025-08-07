@@ -1,5 +1,5 @@
+import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart';
 import 'package:watchmate_app/common/models/video_model/base_video.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/video_preview.dart';
 import 'package:watchmate_app/common/cubits/video_cubit.dart';
@@ -36,7 +36,6 @@ class _MyListScreenState extends State<MyListScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
     super.build(context);
 
     return BlocBuilder<VideoCubit, Map<String, VideoState>>(
@@ -56,18 +55,12 @@ class _MyListScreenState extends State<MyListScreen>
           ).fadeIn();
         }
 
-        if (loading != null) {
-          return LoadingAnimationWidget.threeRotatingDots(
-            color: theme.primaryColor,
-            size: 50,
-          ).center().fadeIn();
-        }
+        if (loading != null) return const VideoCardSkeleton().fadeIn();
 
         final pagination = st.pagination;
         if (pagination.videos.isEmpty) {
           return const CustomLabelWidget(
-            text:
-                "Looks like there are no videos yet on the platform. Please upload one.",
+            text: "No videos found in your list. Try to add one",
             icon: Icons.insert_emoticon_sharp,
             title: "Oppss.. No Video Found",
           );

@@ -22,7 +22,7 @@ class VideoPreview extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: theme.cardColor,
+        color: theme.cardColor.withValues(alpha: 0.2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

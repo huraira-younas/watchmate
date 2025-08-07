@@ -31,14 +31,15 @@ class VideoCubit extends Cubit<Map<String, VideoState>> {
       );
 
       final payload = await _repo.getAll({
-        "cursor": hasMore
-            ? pagination.videos.last.createdAt.toIso8601String()
-            : null,
         "visibility": type,
         "userId": userId,
+        "cursor": !refresh && hasMore
+            ? pagination.videos.last.createdAt.toIso8601String()
+            : null,
       });
 
-      _emit(type: type, pagination: pagination.mergeNextPage(payload));
+      final page = refresh ? payload : pagination.mergeNextPage(payload);
+      _emit(pagination: page, type: type);
     } catch (e) {
       final err = CustomState(message: e.toString(), title: "Error");
       _emit(pagination: pagination, type: type, error: err);

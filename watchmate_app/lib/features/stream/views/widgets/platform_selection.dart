@@ -38,7 +38,7 @@ class PlatformSelection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         PlatformTitle(title: "Select Platform", text: titlesMap["platform"]!),
-        20.h,
+        10.h,
         Row(
           spacing: 16,
           children: <Widget>[
@@ -64,7 +64,7 @@ class PlatformSelection extends StatelessWidget {
         ),
         4.h,
         MyText(text: titlesMap[visibility.name]!, color: theme.hintColor),
-        20.h,
+        10.h,
         Row(
           spacing: 16,
           children: <Widget>[

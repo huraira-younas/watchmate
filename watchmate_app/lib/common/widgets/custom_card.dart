@@ -15,13 +15,13 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding:  EdgeInsets.all(margin),
+      padding:  EdgeInsets.all(padding),
       margin: EdgeInsets.all(margin),
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: theme.highlightColor, width: 1),
-        color: theme.cardColor,
+        color: theme.cardColor.withValues(alpha: 0.2),
       ),
       child: child,
     );

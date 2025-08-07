@@ -1,4 +1,4 @@
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart';
 import 'package:watchmate_app/common/models/video_model/base_video.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/video_preview.dart';
@@ -27,7 +27,11 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    _vidCubit.getAllVideos(
+    _refresh();
+  }
+
+  Future<void> _refresh() async {
+    await _vidCubit.getAllVideos(
       userId: _authBloc.user!.id,
       visibility: _key,
       refresh: true,
@@ -36,55 +40,52 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
     super.build(context);
 
-    return BlocBuilder<VideoCubit, Map<String, VideoState>>(
-      buildWhen: (p, c) => c[_key] != p[_key],
-      builder: (context, state) {
-        final st = state[_key];
-        if (st == null) return const SizedBox.shrink();
+    return RefreshIndicator(
+      onRefresh: _refresh,
+      child: BlocBuilder<VideoCubit, Map<String, VideoState>>(
+        buildWhen: (p, c) => c[_key] != p[_key],
+        builder: (context, state) {
+          final st = state[_key];
+          if (st == null) return const SizedBox.shrink();
 
-        final loading = st.loading;
-        final error = st.error;
+          final loading = st.loading;
+          final error = st.error;
 
-        if (error != null) {
-          return CustomLabelWidget(
-            icon: Icons.streetview_sharp,
-            text: error.message,
-            title: error.title,
-          ).fadeIn();
-        }
+          if (error != null) {
+            return CustomLabelWidget(
+              icon: Icons.streetview_sharp,
+              text: error.message,
+              title: error.title,
+            ).fadeIn();
+          }
 
-        if (loading != null) {
-          return LoadingAnimationWidget.threeRotatingDots(
-            color: theme.primaryColor,
-            size: 50,
-          ).center().fadeIn();
-        }
+          if (loading != null) return const VideoCardSkeleton().fadeIn();
 
-        final pagination = st.pagination;
-        if (pagination.videos.isEmpty) {
-          return const CustomLabelWidget(
-            text:
-                "Looks like there are no videos yet on the platform. Please upload one.",
-            icon: Icons.insert_emoticon_sharp,
-            title: "Oppss.. No Video Found",
+          final pagination = st.pagination;
+          if (pagination.videos.isEmpty) {
+            return const CustomLabelWidget(
+              text:
+                  "Looks like there are no videos yet on the platform. Please upload one.",
+              icon: Icons.insert_emoticon_sharp,
+              title: "Oppss.. No Video Found",
+            );
+          }
+
+          return ListView.separated(
+            itemCount: pagination.videos.length,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppConstants.padding - 12,
+              vertical: AppConstants.padding - 10,
+            ),
+            separatorBuilder: (_, _) => const SizedBox(height: 10),
+            itemBuilder: (context, idx) {
+              return VideoPreview(video: pagination.videos[idx]);
+            },
           );
-        }
-
-        return ListView.separated(
-          itemCount: pagination.videos.length,
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppConstants.padding - 12,
-            vertical: AppConstants.padding - 10,
-          ),
-          separatorBuilder: (_, _) => const SizedBox(height: 10),
-          itemBuilder: (context, idx) {
-            return VideoPreview(video: pagination.videos[idx]);
-          },
-        );
-      },
+        },
+      ),
     );
   }
 

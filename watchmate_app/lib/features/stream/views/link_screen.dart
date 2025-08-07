@@ -1,3 +1,5 @@
+import 'package:watchmate_app/common/widgets/custom_card.dart';
+import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart';
 import 'package:watchmate_app/features/stream/views/widgets/platform_selection.dart';
 import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
 import 'package:watchmate_app/common/services/socket_service/socket_events.dart';
@@ -78,6 +80,7 @@ class _LinkScreenState extends State<LinkScreen> {
       body: Column(
         children: <Widget>[
           SingleChildScrollView(
+            padding: const EdgeInsets.all(AppConstants.padding - 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -93,17 +96,21 @@ class _LinkScreenState extends State<LinkScreen> {
                 10.h,
                 const CustomChip(icon: Icons.add_link, text: "HTTP link"),
                 30.h,
-                PlatformSelection(
-                  visibility: _visibility,
-                  type: _type,
-                  onTypeChange: (type) {
-                    if (type == _type) return;
-                    setState(() => _type = type);
-                  },
-                  onVisibilityChange: (visibility) {
-                    if (visibility == _visibility) return;
-                    setState(() => _visibility = visibility);
-                  },
+                CustomCard(
+                  margin: 0,
+                  padding: 14,
+                  child: PlatformSelection(
+                    visibility: _visibility,
+                    type: _type,
+                    onTypeChange: (type) {
+                      if (type == _type) return;
+                      setState(() => _type = type);
+                    },
+                    onVisibilityChange: (visibility) {
+                      if (visibility == _visibility) return;
+                      setState(() => _visibility = visibility);
+                    },
+                  ),
                 ),
                 20.h,
                 Form(
@@ -140,7 +147,8 @@ class _LinkScreenState extends State<LinkScreen> {
                     }
 
                     final w = sc.connectionState == ConnectionState.waiting;
-                    if (w || !sc.hasData) return const SizedBox.shrink();
+                    if (w) return const SizedBox.shrink();
+                    if (!sc.hasData) return const VideoCardSkeleton(count: 1);
 
                     final json = sc.data;
                     final code = json['code'];
@@ -182,9 +190,14 @@ class _LinkScreenState extends State<LinkScreen> {
                 text: "Add Link",
               );
             },
+          ).padOnly(
+            l: AppConstants.padding - 10,
+            r: AppConstants.padding - 10,
+            t: AppConstants.padding - 10,
+            b: AppConstants.padding,
           ),
         ],
-      ).padAll(AppConstants.padding),
+      ),
     );
   }
 }
