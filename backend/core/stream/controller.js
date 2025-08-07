@@ -3,6 +3,52 @@ const path = require("path");
 
 const BASE = path.join(process.cwd(), "app_data");
 
+const _getContentType = (ext) => {
+  const map = {
+    ".m3u8": "application/vnd.apple.mpegurl",
+    ".ts": "video/MP2T",
+    ".mp4": "video/mp4",
+  };
+
+  return map[ext] || "application/octet-stream";
+};
+
+const _handleFullStream = ({ res, filePath, fileSize, contentType }) => {
+  res.writeHead(200, {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": contentType,
+    "Cache-Control": "no-cache",
+    "Content-Length": fileSize,
+  });
+
+  fs.createReadStream(filePath).pipe(res);
+};
+
+const _handleRangeStream = ({
+  contentType,
+  filePath,
+  fileSize,
+  range,
+  res,
+}) => {
+  const [startStr, endStr] = range.replace(/bytes=/, "").split("-");
+  const start = parseInt(startStr, 10);
+
+  const end = endStr ? parseInt(endStr, 10) : fileSize - 1;
+  const chunkSize = end - start + 1;
+
+  res.writeHead(206, {
+    "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+    "Access-Control-Allow-Headers": "Origin, Range",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Length": chunkSize,
+    "Content-Type": contentType,
+    "Accept-Ranges": "bytes",
+  });
+
+  fs.createReadStream(filePath, { start, end }).pipe(res);
+};
+
 const streamVideo = async (req, res) => {
   const url = req.params[0];
   const filePath = path.join(BASE, url);
@@ -16,55 +62,26 @@ const streamVideo = async (req, res) => {
   }
 
   const ext = path.extname(filePath).toLowerCase();
-  const stat = fs.statSync(filePath);
-  const fileSize = stat.size;
+  const fileSize = fs.statSync(filePath).size;
+  const contentType = _getContentType(ext);
   const range = req.headers.range;
 
-  const contentType =
-    ext === ".m3u8"
-      ? "application/vnd.apple.mpegurl"
-      : ext === ".ts"
-      ? "video/MP2T"
-      : "application/octet-stream";
-
-  if (ext === ".m3u8") {
-    res.writeHead(200, {
-      "Access-Control-Allow-Headers": "Origin, Range",
-      "Access-Control-Allow-Origin": "*",
-      "Cache-Control": "no-cache",
-      "Content-Type": contentType,
-      "Content-Length": fileSize,
+  if (ext === ".m3u8" || !range) {
+    return _handleFullStream({
+      contentType,
+      filePath,
+      fileSize,
+      res,
     });
-    return fs.createReadStream(filePath).pipe(res);
   }
 
-  if (ext === ".ts" && range) {
-    const parts = range.replace(/bytes=/, "").split("-");
-    const start = parseInt(parts[0], 10);
-    
-    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-    const chunkSize = end - start + 1;
-
-    res.writeHead(206, {
-      "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-      "Access-Control-Allow-Headers": "Origin, Range",
-      "Access-Control-Allow-Origin": "*",
-      "Content-Length": chunkSize,
-      "Content-Type": contentType,
-      "Accept-Ranges": "bytes",
-    });
-
-    return fs.createReadStream(filePath, { start, end }).pipe(res);
-  }
-
-  res.writeHead(200, {
-    "Access-Control-Allow-Origin": "*",
-    "Cache-Control": "no-cache",
-    "Content-Type": contentType,
-    "Content-Length": fileSize,
+  return _handleRangeStream({
+    contentType,
+    filePath,
+    fileSize,
+    range,
+    res,
   });
-
-  return fs.createReadStream(filePath).pipe(res);
 };
 
 module.exports = { streamVideo };
