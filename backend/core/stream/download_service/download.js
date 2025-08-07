@@ -110,6 +110,10 @@ class Download {
     const url = path.join("downloads/direct", this.userId, filename);
 
     const size = parseInt(response.headers["content-length"] || "0", 10);
+    if (size === 0) {
+      return this._onError(new SocketError("Invalid video url", 400));
+    }
+
     this.filePath = path.resolve(BASE, url);
     this.videoStream = response.data;
     this.totalBytes = size;
