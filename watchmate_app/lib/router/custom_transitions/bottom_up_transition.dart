@@ -9,8 +9,8 @@ CustomTransitionPage<T> bottomUpTransition<T>({
   return CustomTransitionPage<T>(
     key: key,
     child: child,
-    transitionDuration: const Duration(milliseconds: 500),
-    reverseTransitionDuration: const Duration(milliseconds: 500),
+    transitionDuration: const Duration(milliseconds: 300),
+    reverseTransitionDuration: const Duration(milliseconds: 300),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       final curvedAnimation = CurvedAnimation(
         reverseCurve: Curves.easeInCubic,
@@ -20,13 +20,10 @@ CustomTransitionPage<T> bottomUpTransition<T>({
 
       return SlideTransition(
         position: Tween<Offset>(
-          begin: const Offset(0, 0.1),
+          begin: const Offset(0, 1),
           end: Offset.zero,
         ).animate(curvedAnimation),
-        child: FadeTransition(
-          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation),
-          child: child,
-        ),
+        child: child,
       );
     },
   );
