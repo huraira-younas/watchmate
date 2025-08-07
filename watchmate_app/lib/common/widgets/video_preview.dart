@@ -1,3 +1,4 @@
+import 'package:watchmate_app/common/services/api_service/api_routes.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/router/routes/stream_routes.dart';
 import 'package:watchmate_app/common/widgets/cache_image.dart';
@@ -31,7 +32,7 @@ class VideoPreview extends StatelessWidget {
             aspectRatio: 16 / 9,
             child: Stack(
               children: <Widget>[
-                CacheImage(url: video.thumbnailURL),
+                CacheImage(url: ApiRoutes.stream.getThumbnail(url: video.thumbnailURL)),
                 Positioned(
                   right: 3,
                   bottom: 3,

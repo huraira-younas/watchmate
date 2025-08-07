@@ -29,11 +29,11 @@ class CacheImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = const Size(double.infinity, double.infinity);
-    final error = Center(
+    final defaultError = Center(
       child: Image.asset(AppAssets.icons.appIcon, height: 140),
     );
 
-    if (url.isEmpty) return error;
+    if (url.isEmpty) return defaultError;
 
     if (url.startsWith("assets")) {
       return Image.asset(
@@ -74,7 +74,7 @@ class CacheImage extends StatelessWidget {
           ? (context, url) => Center(child: placeHolder)
           : null,
       errorWidget: (context, url, error) {
-        return errorWidget ?? error as Widget;
+        return errorWidget ?? defaultError;
       },
     );
   }

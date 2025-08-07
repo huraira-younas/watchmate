@@ -3,7 +3,6 @@ const {
   SocketResponse,
 } = require("../../../methods/socket/socket_methods");
 const Video = require("../../../database/models/video_model");
-const getMediaDimensions = require("get-media-dimensions");
 const logger = require("../../../methods/logger");
 const sanitize = require("sanitize-filename");
 const DownloadManager = require("./manager");
@@ -173,24 +172,13 @@ class Download {
     return url;
   }
 
-  async getDimensions({ filepath }) {
-    return new Promise((resolve) => {
-      getMediaDimensions(filepath)
-        .then((dim) => {
-          resolve({
-            duration: dim.duration,
-            height: dim.height,
-            width: dim.width,
-          });
-        })
-        .catch(() => {
-          resolve({
-            duration: 0,
-            height: 0,
-            width: 0,
-          });
-        });
-    });
+  async getDimensions(filepath) {
+    // Todo: Do this in future by purchasing VPS, YOU SHIT
+    return {
+      duration: 0,
+      height: 0,
+      width: 0,
+    };
   }
 
   _setupListeners() {
@@ -261,7 +249,15 @@ class Download {
 
   async _onFinish() {
     logger.info(`File write finished for ${this.videoData.title}`);
+    DownloadManager.remove(this.id);
     clearTimeout(this.timeout);
+
+    if (!this.videoData.height && !this.videoData.width) {
+      const dim = await this.getDimensions(this.filePath);
+      this.videoData = { ...this.videoData, ...dim };
+    }
+
+    await Video.insert({ data: this.videoData });
     if (!this.isStopped) {
       this.socket.emit(
         this.event,
@@ -272,14 +268,6 @@ class Download {
         })
       );
     }
-    DownloadManager.remove(this.id);
-    if (!this.videoData.height) {
-      const dim = await this.getDimensions(this.filePath);
-      this.videoData = { ...this.videoData, ...dim };
-      console.log(this.videoData);
-    }
-
-    Video.insert({ data: this.videoData });
   }
 
   pause() {

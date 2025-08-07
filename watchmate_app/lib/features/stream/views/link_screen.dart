@@ -31,15 +31,13 @@ class LinkScreen extends StatefulWidget {
 
 class _LinkScreenState extends State<LinkScreen> {
   final _socketService = getIt<SocketNamespaceService>();
+  final _authBloc = getIt<AuthBloc>();
 
   final _dControllers = List.generate(2, (_) => TextEditingController());
   final _dKeys = List.generate(2, (_) => GlobalKey<FormState>());
 
   final _controller = TextEditingController();
   final _key = GlobalKey<FormState>();
-
-  final _isDownloading = ValueNotifier<bool>(false);
-  final _authBloc = getIt<AuthBloc>();
 
   bool get _isDirect => _type.name == VideoType.direct.name;
   VideoVisibility _visibility = VideoVisibility.public;
@@ -50,6 +48,13 @@ class _LinkScreenState extends State<LinkScreen> {
     VideoType.youtube.name: SocketEvents.stream.downloadYT,
   };
 
+  final _downloadMap = <String, ValueNotifier>{
+    VideoType.youtube.name: ValueNotifier<bool>(false),
+    VideoType.direct.name: ValueNotifier<bool>(false),
+  };
+
+  bool _isDownloading(String type) => _downloadMap[type]?.value ?? false;
+
   @override
   void dispose() {
     _dControllers.asMap().forEach((_, v) => v.dispose());
@@ -58,13 +63,13 @@ class _LinkScreenState extends State<LinkScreen> {
   }
 
   void _startLink() {
-    if (_isDownloading.value || !_key.currentState!.validate()) return;
-    if (_isDirect && (!_dKeys.any((e) => !e.currentState!.validate()))) {
+    if (_isDownloading(_type.name) || !_key.currentState!.validate()) return;
+    if (_isDirect && (_dKeys.any((e) => !e.currentState!.validate()))) {
       return;
     }
 
     FocusScope.of(context).unfocus();
-    setDownloading(true);
+    setDownloading(_type.name, true);
 
     Logger.info(tag: "VISIBILITY", message: _visibility.name);
     final thumbnail = _dControllers[1].text.trim();
@@ -81,10 +86,10 @@ class _LinkScreenState extends State<LinkScreen> {
     });
   }
 
-  void setDownloading(bool val) {
-    if (val == _isDownloading.value || !mounted) return;
+  void setDownloading(String type, bool val) {
+    if (val == _isDownloading(type) || !mounted) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _isDownloading.value = val;
+      _downloadMap[type]!.value = val;
     });
   }
 
@@ -196,7 +201,7 @@ class _LinkScreenState extends State<LinkScreen> {
             ),
           ).expanded(),
           ValueListenableBuilder(
-            valueListenable: _isDownloading,
+            valueListenable: _downloadMap[_type.name]!,
             builder: (_, downloading, _) {
               return CustomButton(
                 onPressed: downloading ? null : _startLink,
@@ -257,14 +262,14 @@ class _LinkScreenState extends State<LinkScreen> {
 
         final json = sc.data;
         final code = json['code'];
-        final data = code == 400 || code == 500
+        final data = code != 200 && code != 201
             ? json["error"] ?? json["message"]
             : Map<String, dynamic>.from(json['data']);
 
         if (code == 201) {
           final video = DownloadingVideo.fromJson(data);
-          if (_isDownloading.value && video.percent >= 96) {
-            setDownloading(false);
+          if (_isDownloading(type) && video.percent >= 96) {
+            setDownloading(type, false);
           }
 
           return _buildPreview(
@@ -272,7 +277,7 @@ class _LinkScreenState extends State<LinkScreen> {
             type: type,
           );
         } else if (code == 200) {
-          if (_isDownloading.value) setDownloading(false);
+          if (_isDownloading(type)) setDownloading(type, false);
           final video = DownloadedVideo.fromJson(data);
           return _buildPreview(
             child: VideoPreview(video: video),
@@ -280,9 +285,9 @@ class _LinkScreenState extends State<LinkScreen> {
           );
         }
 
-        if (_isDownloading.value) setDownloading(false);
+        if (_isDownloading(type)) setDownloading(type, false);
         return CustomLabelWidget(
-          icon: Icons.running_with_errors_rounded,
+          icon: Icons.wifi_tethering_error_rounded_outlined,
           title: "Error while downloading!",
           text: data.toString(),
           iconSize: 80,

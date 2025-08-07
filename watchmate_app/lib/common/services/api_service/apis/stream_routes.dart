@@ -11,4 +11,9 @@ class StreamApi {
   String getStreamVideo({required String url}) {
     return '${NetworkUtils.baseUrl}$_endpoint/video/$url';
   }
+
+  String getThumbnail({required String url}) {
+    if (url.contains("http")) return url;
+    return '${NetworkUtils.baseUrl}$_endpoint/thumbnail/$url';
+  }
 }
