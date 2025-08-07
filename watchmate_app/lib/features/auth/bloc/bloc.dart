@@ -21,6 +21,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onGetUser(AuthGetUser event, Emitter<AuthState> emit) async {
     try {
       user = await repo.getUser();
+      if(user == null) throw "User not found";
+      
       event.onSuccess?.call();
       _emit(emit);
     } catch (e) {

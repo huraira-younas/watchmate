@@ -102,7 +102,11 @@ class Download {
 
     const filename = `${sanitize(title)}-${Date.now()}.mp4`;
     const url = path.join("downloads/direct", this.userId, filename);
+
+    const size = parseInt(response.headers["content-length"] || "0", 10);
     this.filePath = path.resolve(BASE, url);
+    this.videoStream = response.data;
+    this.totalBytes = size;
 
     this.videoData = {
       userId: this.userId,
@@ -112,14 +116,11 @@ class Download {
       duration: 0,
       id: this.id,
       visibility,
-      size: 0,
       title,
+      size,
     };
 
     fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
-
-    this.totalBytes = parseInt(response.headers["content-length"] || "0", 10);
-    this.videoStream = response.data;
     this.writeStream = fs.createWriteStream(this.filePath);
     this._setupListeners();
   }

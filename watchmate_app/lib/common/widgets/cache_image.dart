@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'dart:io' show File;
 
@@ -27,13 +28,12 @@ class CacheImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = const Size(double.infinity, double.infinity);
-    if (url.isEmpty) {
-      return CircleAvatar(
-        backgroundColor: Colors.transparent,
-        child: errorWidget,
-      );
-    }
+    final size = const Size(double.infinity, double.infinity);
+    final error = Center(
+      child: Image.asset(AppAssets.icons.appIcon, height: 140),
+    );
+
+    if (url.isEmpty) return error;
 
     if (url.startsWith("assets")) {
       return Image.asset(
@@ -74,7 +74,7 @@ class CacheImage extends StatelessWidget {
           ? (context, url) => Center(child: placeHolder)
           : null,
       errorWidget: (context, url, error) {
-        return errorWidget ?? const Center(child: Icon(Icons.error, size: 40));
+        return errorWidget ?? error as Widget;
       },
     );
   }
