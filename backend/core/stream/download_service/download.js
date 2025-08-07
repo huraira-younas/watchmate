@@ -3,6 +3,7 @@ const {
   SocketResponse,
 } = require("../../../methods/socket/socket_methods");
 const Video = require("../../../database/models/video_model");
+const getMediaDimensions = require("get-media-dimensions");
 const logger = require("../../../methods/logger");
 const sanitize = require("sanitize-filename");
 const DownloadManager = require("./manager");
@@ -149,7 +150,11 @@ class Download {
 
   async _downloadThumbnail({ thumbnail, title, dir_path }) {
     const ext = path.extname(new URL(thumbnail).pathname) || ".jpg";
-    const thumbPath = path.join(dir_path, `thumbnails/${title}${ext}`);
+    const safeTitle = sanitize(title);
+
+    const fileName = `${safeTitle}${ext}`;
+    const url = path.join(dir_path, "thumbnails", fileName);
+    const filePath = path.resolve(BASE, url);
 
     const response = await axios({
       responseType: "stream",
@@ -157,14 +162,35 @@ class Download {
       method: "get",
     });
 
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
     await new Promise((resolve, reject) => {
-      const stream = fs.createWriteStream(thumbPath);
+      const stream = fs.createWriteStream(filePath);
+      response.data.pipe(stream);
       stream.on("finish", resolve);
       stream.on("error", reject);
-      response.data.pipe(stream);
     });
 
-    return thumbPath;
+    return url;
+  }
+
+  async getDimensions({ filepath }) {
+    return new Promise((resolve) => {
+      getMediaDimensions(filepath)
+        .then((dim) => {
+          resolve({
+            duration: dim.duration,
+            height: dim.height,
+            width: dim.width,
+          });
+        })
+        .catch(() => {
+          resolve({
+            duration: 0,
+            height: 0,
+            width: 0,
+          });
+        });
+    });
   }
 
   _setupListeners() {
@@ -233,7 +259,7 @@ class Download {
     logger.debug(`Download stream ended for ${this.videoData.title}`);
   }
 
-  _onFinish() {
+  async _onFinish() {
     logger.info(`File write finished for ${this.videoData.title}`);
     clearTimeout(this.timeout);
     if (!this.isStopped) {
@@ -246,8 +272,14 @@ class Download {
         })
       );
     }
-    Video.insert({ data: this.videoData });
     DownloadManager.remove(this.id);
+    if (!this.videoData.height) {
+      const dim = await this.getDimensions(this.filePath);
+      this.videoData = { ...this.videoData, ...dim };
+      console.log(this.videoData);
+    }
+
+    Video.insert({ data: this.videoData });
   }
 
   pause() {
