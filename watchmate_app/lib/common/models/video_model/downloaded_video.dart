@@ -28,7 +28,7 @@ class DownloadedVideo extends BaseVideo {
       deleted: json['deleted'] == 1 || json['deleted'] == true,
       duration: Duration(seconds: json['duration'] ?? 0),
       visibility: parseVisibility(json['visibility']),
-      thumbnailURL: json['thumbnailURL'],
+      thumbnailURL: json['thumbnailURL'] ?? "",
       type: parseType(json['type']),
       videoURL: json['videoURL'],
       size: json['size'] ?? 0,

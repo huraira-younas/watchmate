@@ -106,7 +106,7 @@ class Download {
 
     this.videoData = {
       userId: this.userId,
-      thumbnailURL: null,
+      thumbnailURL: "",
       type: "direct",
       videoURL: url,
       duration: 0,
