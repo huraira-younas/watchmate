@@ -9,10 +9,13 @@ Iterable<RouteBase> _getRoutes() => AppRoutes.all.map((route) {
   return GoRoute(
     path: route.path,
     name: route.name,
-    builder: (context, state) {
-      if (route.builder == null) return route.page!;
-      return route.builder!(context, state);
-    },
+    pageBuilder: route.pageBuilder,
+    builder: route.pageBuilder == null
+        ? (context, state) {
+            if (route.builder == null) return route.page!;
+            return route.builder!(context, state);
+          }
+        : null,
   );
 });
 

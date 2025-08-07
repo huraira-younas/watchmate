@@ -5,6 +5,7 @@ import 'package:watchmate_app/common/widgets/text_field.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/utils/validator_builder.dart';
+import 'package:watchmate_app/router/routes/exports.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
@@ -60,7 +61,7 @@ class _SignupScreenState extends State<SignupScreen> {
               Image.asset(
                 AppAssets.icons.appIcon,
                 width: size.width * 0.5,
-              ).hero(AppConstants.appname),
+              ).hero(LayoutRoutes.homeLayout.name),
               20.h,
               MyText(
                 size: size.width * 0.08,

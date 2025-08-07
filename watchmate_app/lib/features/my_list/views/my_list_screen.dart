@@ -83,7 +83,7 @@ class _MyListScreenState extends State<MyListScreen>
           itemBuilder: (context, idx) {
             return VideoPreview(video: pagination.videos[idx]);
           },
-        ).fadeIn();
+        );
       },
     );
   }

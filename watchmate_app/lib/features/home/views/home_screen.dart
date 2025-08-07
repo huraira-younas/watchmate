@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen>
           itemBuilder: (context, idx) {
             return VideoPreview(video: pagination.videos[idx]);
           },
-        ).fadeIn();
+        );
       },
     );
   }

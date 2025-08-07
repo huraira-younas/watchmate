@@ -37,7 +37,7 @@ class AppColors {
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: AppColors.lightBackground,
-    // pageTransitionsTheme: AppColors.pageTransition,
+    pageTransitionsTheme: AppColors.pageTransition,
     primaryColor: AppColors.lightPrimary,
     cardColor: AppColors.lightCard,
     brightness: Brightness.light,
@@ -63,7 +63,7 @@ class AppThemes {
 
   static final ThemeData darkTheme = ThemeData(
     scaffoldBackgroundColor: AppColors.darkBackground,
-    // pageTransitionsTheme: AppColors.pageTransition,
+    pageTransitionsTheme: AppColors.pageTransition,
     primaryColor: AppColors.darkPrimary,
     cardColor: AppColors.darkCard,
     brightness: Brightness.dark,

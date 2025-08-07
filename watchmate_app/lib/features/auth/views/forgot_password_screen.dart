@@ -1,5 +1,6 @@
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
+import 'package:watchmate_app/router/routes/layout_routes.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/features/auth/bloc/events.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
@@ -57,7 +58,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               Image.asset(
                 AppAssets.icons.codeIcon,
                 width: size.width * 0.5,
-              ).hero(AppConstants.appname),
+              ).hero(LayoutRoutes.homeLayout.name),
               20.h,
               MyText(
                 size: size.width * 0.08,

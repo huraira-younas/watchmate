@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Image.asset(
                 AppAssets.icons.appIcon,
                 width: size.width * 0.5,
-              ).hero(AppConstants.appname),
+              ).hero(LayoutRoutes.homeLayout.name),
               20.h,
               MyText(
                 size: size.width * 0.08,
