@@ -1,9 +1,12 @@
 import 'package:watchmate_app/features/auth/views/forgot_password_screen.dart';
+import 'package:watchmate_app/features/profile/views/edit_profile_screen.dart';
 import 'package:watchmate_app/features/auth/views/new_password_screen.dart';
 import 'package:watchmate_app/features/auth/views/verify_code_screen.dart';
 import 'package:watchmate_app/features/auth/views/signup_screen.dart';
 import 'package:watchmate_app/features/auth/views/login_screen.dart';
+import 'package:watchmate_app/features/auth/model/user_model.dart';
 import 'package:watchmate_app/features/splash/splash_screen.dart';
+import 'package:flutter/material.dart' show Icons;
 import 'app_route_model.dart';
 
 abstract class AuthRoutes {
@@ -49,8 +52,19 @@ abstract class AuthRoutes {
     },
   );
 
+  static final editProfile = AppRoute(
+    path: '/edit_profile',
+    name: 'Edit Profile',
+    icon: Icons.edit,
+    builder: (context, state) {
+      final user = state.extra as UserModel;
+      return EditProfileScreen(user: user);
+    },
+  );
+
   static final all = [
     forgotPassword,
+    editProfile,
     newPassword,
     verifyCode,
     splash,

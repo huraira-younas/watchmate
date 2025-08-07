@@ -7,8 +7,8 @@ const {
 const { getMemberFromHash } = require("../../redis/redis_methods");
 const { methods } = require("../../bullmq/queues/emails/producer");
 const User = require("../../database/models/user_model");
-const bcrypt = require("bcryptjs");
 const logger = require("../../methods/logger");
+const bcrypt = require("bcryptjs");
 
 const login = async (req, res) => {
   validateReq(req.body, ["email", "password"]);

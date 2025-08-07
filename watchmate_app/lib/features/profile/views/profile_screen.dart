@@ -42,7 +42,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             MyTile(
               icon: Icons.person_outline,
               title: "Edit Profile",
-              onTap: () {},
+              onTap: () => context.push(
+                AuthRoutes.editProfile.path,
+                extra: _authBloc.user,
+              ),
             ),
             MyTile(
               icon: isDark ? Icons.wb_sunny_outlined : Icons.dark_mode_outlined,
