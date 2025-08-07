@@ -1,7 +1,6 @@
-import 'package:watchmate_app/common/widgets/custom_card.dart';
-import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart';
 import 'package:watchmate_app/features/stream/views/widgets/platform_selection.dart';
 import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
+import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart';
 import 'package:watchmate_app/common/services/socket_service/socket_events.dart';
 import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
@@ -10,6 +9,7 @@ import 'package:watchmate_app/common/widgets/video_preview.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
 import 'package:watchmate_app/router/routes/stream_routes.dart';
+import 'package:watchmate_app/common/widgets/custom_card.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/common/widgets/custom_chip.dart';
 import 'package:watchmate_app/common/widgets/text_field.dart';
@@ -31,30 +31,45 @@ class LinkScreen extends StatefulWidget {
 
 class _LinkScreenState extends State<LinkScreen> {
   final _socketService = getIt<SocketNamespaceService>();
+
   final _controller = TextEditingController();
+  final _title = TextEditingController();
+  final _tKey = GlobalKey<FormState>();
+  final _key = GlobalKey<FormState>();
 
   final _isDownloading = ValueNotifier<bool>(false);
-  final _key = GlobalKey<FormState>();
   final _authBloc = getIt<AuthBloc>();
 
+  bool get _isDirect => _type.name == VideoType.direct.name;
   VideoVisibility _visibility = VideoVisibility.public;
   VideoType _type = VideoType.youtube;
+
+  final _event = <String, String>{
+    VideoType.direct.name: SocketEvents.stream.downloadDirect,
+    VideoType.youtube.name: SocketEvents.stream.downloadYT,
+  };
 
   @override
   void dispose() {
     _controller.dispose();
+    _title.dispose();
     super.dispose();
   }
 
   void _startLink() {
     if (_isDownloading.value || !_key.currentState!.validate()) return;
+    if (_isDirect && !_tKey.currentState!.validate()) {
+      return;
+    }
+
     FocusScope.of(context).unfocus();
     setDownloading(true);
 
     final url = _controller.text.trim();
     Logger.info(tag: "VISIBILITY", message: _visibility.name);
 
-    _socketService.emit(NamespaceType.stream, SocketEvents.stream.downloadYT, {
+    _socketService.emit(NamespaceType.stream, _event[_type.name]!, {
+      if (_isDirect) "title": _title.text.trim(),
       "visibility": _visibility.name,
       "userId": _authBloc.user?.id,
       "type": _type.name,
@@ -112,11 +127,31 @@ class _LinkScreenState extends State<LinkScreen> {
                     },
                   ),
                 ),
+                if (_isDirect) ...[
+                  20.h,
+                  Form(
+                    key: _tKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: CustomTextField(
+                      showTitle: true,
+                      label: "Video Title",
+                      validator: ValidatorBuilder.chain()
+                          .required()
+                          .min(6)
+                          .build(),
+                      hint: "Please enter the title of the video",
+                      prefixIcon: const Icon(Icons.title),
+                      controller: _title,
+                    ),
+                  ),
+                ],
                 20.h,
                 Form(
                   key: _key,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: CustomTextField(
+                    showTitle: true,
+                    label: "Video URL",
                     validator: ValidatorBuilder.chain().required().build(),
                     hint: "Please enter a ${_type.name} video URL",
                     prefixIcon: const Icon(Icons.link),
@@ -124,59 +159,20 @@ class _LinkScreenState extends State<LinkScreen> {
                   ),
                 ),
                 30.h,
-                if (_isDownloading.value)
-                  const MyText(
-                    size: AppConstants.subtitle,
-                    text: "Downloading Videos",
-                    family: AppFonts.bold,
-                  ),
-                15.h,
-                StreamBuilder(
+                _handleStream(
+                  type: VideoType.youtube.name,
                   stream: _socketService.onEvent(
                     event: SocketEvents.stream.downloadYT,
                     type: NamespaceType.stream,
                   ),
-                  builder: (context, sc) {
-                    if (sc.hasError) {
-                      return const CustomLabelWidget(
-                        icon: Icons.running_with_errors_rounded,
-                        title: "Server Response Error!",
-                        text: "Something went wrong",
-                        iconSize: 80,
-                      ).center().padOnly(t: 40);
-                    }
-
-                    final w = sc.connectionState == ConnectionState.waiting;
-                    if (w) return const SizedBox.shrink();
-                    if (!sc.hasData) return const VideoCardSkeleton(count: 1);
-
-                    final json = sc.data;
-                    final code = json['code'];
-                    final data = code == 400 || code == 500
-                        ? json["error"] ?? json["message"]
-                        : Map<String, dynamic>.from(json['data']);
-
-                    if (code == 201) {
-                      final video = DownloadingVideo.fromJson(data);
-                      if (_isDownloading.value && video.percent >= 96) {
-                        setDownloading(false);
-                      }
-
-                      return VideoPreview(video: video);
-                    } else if (code == 200) {
-                      if (_isDownloading.value) setDownloading(false);
-                      final video = DownloadedVideo.fromJson(data);
-                      return VideoPreview(video: video);
-                    }
-
-                    if (_isDownloading.value) setDownloading(false);
-                    return CustomLabelWidget(
-                      icon: Icons.running_with_errors_rounded,
-                      title: "Error while downloading!",
-                      text: data.toString(),
-                      iconSize: 80,
-                    ).center().padOnly(t: 40);
-                  },
+                ),
+                20.h,
+                _handleStream(
+                  type: VideoType.direct.name,
+                  stream: _socketService.onEvent(
+                    event: SocketEvents.stream.downloadDirect,
+                    type: NamespaceType.stream,
+                  ),
                 ),
                 50.h,
               ],
@@ -198,6 +194,83 @@ class _LinkScreenState extends State<LinkScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Column _buildPreview({required String type, required Widget child}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        MyText(
+          size: AppConstants.subtitle,
+          text: type.capitalize,
+          family: AppFonts.bold,
+        ),
+        10.h,
+        child,
+      ],
+    );
+  }
+
+  StreamBuilder _handleStream({
+    required Stream<dynamic> stream,
+    required String type,
+  }) {
+    return StreamBuilder(
+      stream: stream,
+      builder: (context, sc) {
+        if (sc.hasError) {
+          return const CustomLabelWidget(
+            icon: Icons.running_with_errors_rounded,
+            title: "Server Response Error!",
+            text: "Something went wrong",
+            iconSize: 80,
+          ).center().padOnly(t: 40);
+        }
+
+        final w = sc.connectionState == ConnectionState.waiting;
+        if (w) return const SizedBox.shrink();
+
+        if (!sc.hasData) {
+          return _buildPreview(
+            child: const VideoCardSkeleton(count: 1),
+            type: type,
+          );
+        }
+
+        final json = sc.data;
+        final code = json['code'];
+        final data = code == 400 || code == 500
+            ? json["error"] ?? json["message"]
+            : Map<String, dynamic>.from(json['data']);
+
+        if (code == 201) {
+          final video = DownloadingVideo.fromJson(data);
+          if (_isDownloading.value && video.percent >= 96) {
+            setDownloading(false);
+          }
+
+          return _buildPreview(
+            child: VideoPreview(video: video),
+            type: type,
+          );
+        } else if (code == 200) {
+          if (_isDownloading.value) setDownloading(false);
+          final video = DownloadedVideo.fromJson(data);
+          return _buildPreview(
+            child: VideoPreview(video: video),
+            type: type,
+          );
+        }
+
+        if (_isDownloading.value) setDownloading(false);
+        return CustomLabelWidget(
+          icon: Icons.running_with_errors_rounded,
+          title: "Error while downloading!",
+          text: data.toString(),
+          iconSize: 80,
+        ).center().padOnly(t: 40);
+      },
     );
   }
 }

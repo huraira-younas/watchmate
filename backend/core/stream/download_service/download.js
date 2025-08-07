@@ -45,9 +45,9 @@ class Download {
     this.url = url;
   }
 
-  async init(visibility) {
+  async init(visibility, title) {
     if (this.type === "youtube") await this._initYT(visibility);
-    else await this._initDirect(visibility);
+    else await this._initDirect(visibility, title);
   }
 
   async _initYT(visibility) {
@@ -93,16 +93,14 @@ class Download {
     this._setupListeners();
   }
 
-  async _initDirect(visibility) {
+  async _initDirect(visibility, title) {
     const response = await axios({
       responseType: "stream",
       url: this.url,
       method: "get",
     });
 
-    const title = path.basename(new URL(this.url).pathname);
     const filename = `${sanitize(title)}-${Date.now()}.mp4`;
-
     const url = path.join("downloads/direct", this.userId, filename);
     this.filePath = path.resolve(BASE, url);
 
@@ -111,8 +109,10 @@ class Download {
       thumbnailURL: null,
       type: "direct",
       videoURL: url,
+      duration: 0,
       id: this.id,
       visibility,
+      size: 0,
       title,
     };
 

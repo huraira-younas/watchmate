@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
   final _authBloc = getIt<AuthBloc>();
 
   Future<void> _delay(Duration elapsed) async {
-    final remaining = 3.secs - elapsed;
+    final remaining = 2.secs - elapsed;
 
     if (remaining <= Duration.zero) return;
     await Future.delayed(remaining);

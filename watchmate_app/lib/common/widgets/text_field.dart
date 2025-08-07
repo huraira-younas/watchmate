@@ -51,10 +51,9 @@ class CustomTextField extends StatelessWidget {
       children: [
         if (showTitle)
           MyText(
-            color: textColor,
-            size: AppConstants.subtitle,
-            family: AppFonts.medium,
+            family: AppFonts.semibold,
             text: label ?? hint,
+            color: textColor,
           ),
         const SizedBox(height: 6),
         MediaQuery(
@@ -63,8 +62,8 @@ class CustomTextField extends StatelessWidget {
           ).copyWith(textScaler: TextScaler.linear(textScaleFactor(context))),
           child: TextFormField(
             controller: controller,
-            focusNode: focusNode,
             obscureText: obsecure,
+            focusNode: focusNode,
             validator: validator,
             onChanged: onChange,
             onFieldSubmitted: (_) => onSubmit?.call(),
@@ -81,7 +80,6 @@ class CustomTextField extends StatelessWidget {
               suffixIcon: suffixIcon,
               border: border,
               hint: hint,
-              label: label,
             ),
           ),
         ),
