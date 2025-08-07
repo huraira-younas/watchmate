@@ -16,7 +16,7 @@ class CustomChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = theme.hintColor.withValues(alpha: 0.2);
+    final color = theme.highlightColor.withValues(alpha: 0.2);
 
     return MaterialButton(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
@@ -27,7 +27,7 @@ class CustomChip extends StatelessWidget {
       minWidth: 0,
       height: 26,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadiusGeometry.circular(7),
+        borderRadius: BorderRadiusGeometry.circular(30),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
