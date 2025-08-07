@@ -1,6 +1,5 @@
 import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
-import 'package:watchmate_app/common/widgets/dialog_boxs.dart'
-    show errorDialogue;
+import 'package:watchmate_app/common/widgets/dialog_boxs.dart' show errorDialogue;
 import 'package:watchmate_app/common/widgets/loading/loading_screen.dart';
 import 'package:watchmate_app/common/widgets/custom_bottom_nav_bar.dart';
 import 'package:watchmate_app/common/cubits/navigation_cubit.dart';
@@ -8,7 +7,6 @@ import 'package:watchmate_app/router/routes/app_route_model.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/router/routes/stream_routes.dart';
 import 'package:watchmate_app/features/auth/bloc/states.dart';
-import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/router/routes/exports.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
@@ -103,7 +101,6 @@ class _HomeLayoutState extends State<HomeLayout> {
   }
 
   AppBar _getAppBar(ThemeData theme, AppRoute navItem) {
-    final isDark = theme.brightness == Brightness.dark;
     final isHome = navItem.name == "Home";
 
     return customAppBar(
@@ -119,14 +116,6 @@ class _HomeLayoutState extends State<HomeLayout> {
           icon: Icon(
             color: theme.colorScheme.primary,
             StreamRoutes.stream.icon,
-            size: 26,
-          ),
-        ),
-        IconButton(
-          onPressed: () => getIt<ThemeCubit>().toggleTheme(),
-          icon: Icon(
-            isDark ? Icons.wb_sunny_rounded : Icons.dark_mode_rounded,
-            color: theme.colorScheme.primary,
             size: 26,
           ),
         ),

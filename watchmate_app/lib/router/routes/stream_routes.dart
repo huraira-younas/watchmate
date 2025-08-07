@@ -8,7 +8,7 @@ import 'app_route_model.dart';
 
 abstract class StreamRoutes {
   static const stream = AppRoute(
-    icon: Icons.settings_input_antenna_rounded,
+    icon: Icons.wifi_tethering,
     page: StreamScreen(),
     path: '/stream',
     name: 'Stream',

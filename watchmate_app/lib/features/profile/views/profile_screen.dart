@@ -1,6 +1,7 @@
 import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
 import 'package:watchmate_app/features/profile/views/widgets/user_tile.dart';
 import 'package:watchmate_app/features/profile/views/widgets/my_tile.dart';
+import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:watchmate_app/features/auth/bloc/events.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/router/routes/exports.dart';
@@ -28,6 +29,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.theme;
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -39,6 +43,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               icon: Icons.person_outline,
               title: "Edit Profile",
               onTap: () {},
+            ),
+            MyTile(
+              icon: isDark ? Icons.wb_sunny_outlined : Icons.dark_mode_outlined,
+              onTap: () => getIt<ThemeCubit>().toggleTheme(),
+              title: "Toggle Theme",
             ),
             MyTile(
               icon: Icons.logout_rounded,
