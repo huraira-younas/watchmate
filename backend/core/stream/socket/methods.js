@@ -7,7 +7,7 @@ const logger = require("../../../methods/logger");
 
 const download = async ({ event, socket, data }) => {
   try {
-    validateEvent(data, ["userId", "url", "type", "title", "visibility"]);
+    validateEvent(data, ["userId", "url", "type", "visibility"]);
     const { userId, url, visibility, type, title } = data;
 
     const download = new Download({
