@@ -34,7 +34,7 @@ class _StreamScreenState extends State<StreamScreen> {
               children: <Widget>[
                 30.h,
                 const BuildTitle(
-                  title: "Start streaming with your link.",
+                  title: "Start uploading with your link.",
                   s1: "You can",
                   c2: "download",
                   c1: "stream",
@@ -75,7 +75,7 @@ class _StreamScreenState extends State<StreamScreen> {
                     10.w,
                     CustomButton(
                       onPressed: () => context.push(StreamRoutes.link.path),
-                      text: "Stream Link",
+                      text: "Upload Link",
                       radius: 20,
                     ).expanded(),
                   ],

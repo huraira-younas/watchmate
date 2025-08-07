@@ -32,9 +32,10 @@ class LinkScreen extends StatefulWidget {
 class _LinkScreenState extends State<LinkScreen> {
   final _socketService = getIt<SocketNamespaceService>();
 
+  final _dControllers = List.generate(2, (_) => TextEditingController());
+  final _dKeys = List.generate(2, (_) => GlobalKey<FormState>());
+
   final _controller = TextEditingController();
-  final _title = TextEditingController();
-  final _tKey = GlobalKey<FormState>();
   final _key = GlobalKey<FormState>();
 
   final _isDownloading = ValueNotifier<bool>(false);
@@ -51,26 +52,29 @@ class _LinkScreenState extends State<LinkScreen> {
 
   @override
   void dispose() {
+    _dControllers.asMap().forEach((_, v) => v.dispose());
     _controller.dispose();
-    _title.dispose();
     super.dispose();
   }
 
   void _startLink() {
     if (_isDownloading.value || !_key.currentState!.validate()) return;
-    if (_isDirect && !_tKey.currentState!.validate()) {
+    if (_isDirect && (!_dKeys.any((e) => !e.currentState!.validate()))) {
       return;
     }
 
     FocusScope.of(context).unfocus();
     setDownloading(true);
 
-    final url = _controller.text.trim();
     Logger.info(tag: "VISIBILITY", message: _visibility.name);
+    final thumbnail = _dControllers[1].text.trim();
+    final title = _dControllers[0].text.trim();
+    final url = _controller.text.trim();
 
     _socketService.emit(NamespaceType.stream, _event[_type.name]!, {
-      if (_isDirect) "title": _title.text.trim(),
+      if (_isDirect) "thumbnail": thumbnail,
       "visibility": _visibility.name,
+      if (_isDirect) "title": title,
       "userId": _authBloc.user?.id,
       "type": _type.name,
       "url": url,
@@ -101,7 +105,7 @@ class _LinkScreenState extends State<LinkScreen> {
               children: <Widget>[
                 BuildTitle(
                   title:
-                      "Start streaming with ${_type.name.capitalize} video link.",
+                      "Start uploading with ${_type.name.capitalize} video link.",
                   c2: "download",
                   s1: "You can",
                   c1: "stream",
@@ -130,7 +134,7 @@ class _LinkScreenState extends State<LinkScreen> {
                 if (_isDirect) ...[
                   20.h,
                   Form(
-                    key: _tKey,
+                    key: _dKeys[0],
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: CustomTextField(
                       showTitle: true,
@@ -141,7 +145,20 @@ class _LinkScreenState extends State<LinkScreen> {
                           .build(),
                       hint: "Please enter the title of the video",
                       prefixIcon: const Icon(Icons.title),
-                      controller: _title,
+                      controller: _dControllers[0],
+                    ),
+                  ),
+                  20.h,
+                  Form(
+                    key: _dKeys[1],
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: CustomTextField(
+                      validator: ValidatorBuilder.chain().required().build(),
+                      hint: "Please enter the url of the thumbnail",
+                      prefixIcon: const Icon(Icons.image_outlined),
+                      label: "Thumbnail Url",
+                      controller: _dControllers[1],
+                      showTitle: true,
                     ),
                   ),
                 ],

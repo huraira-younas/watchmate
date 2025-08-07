@@ -27,17 +27,19 @@ class PlatformSelection extends StatelessWidget {
 
     final titlesMap = {
       VideoVisibility.public.name:
-          "Selecting public visibility allows all users on the platform to access the video. Play it or watch with others",
+          "Setting visibility to Public makes the video accessible to all platform users. This allows for public playback and shared viewing experiences.",
       VideoVisibility.private.name:
-          "Selecting private visibility restricts access to you only. You can still watch it with others by creating a room and sharing the link.",
-      "platform":
-          "Please ensure the selected platform matches the link type. Invalid platform selections may result in download failure.",
+          "Setting visibility to Private restricts access to your account only. You can still share the video with others by creating and sharing a private room link.",
+      VideoType.direct.name:
+          "Please provide a valid URL for a direct video from a website. URLs from other platforms like Facebook, X, or Instagram are not supported and may not function correctly.",
+      VideoType.youtube.name:
+          "To ensure a successful download, please provide a valid YouTube URL. URLs from other video platforms are not compatible with this feature.",
     };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        PlatformTitle(title: "Select Platform", text: titlesMap["platform"]!),
+        PlatformTitle(title: "Select Platform", text: titlesMap[type.name]!),
         10.h,
         Row(
           spacing: 16,

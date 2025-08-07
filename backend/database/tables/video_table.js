@@ -11,11 +11,14 @@ async function createTable() {
           table.string("type").defaultTo("youtube").notNullable();
           table.string("thumbnailURL").notNullable();
           table.string("videoURL").notNullable();
+          table.integer("height").notNullable();
+          table.integer("width").notNullable();
           table.string("title").notNullable();
           table.uuid("id").primary();
-
-          table.integer("duration").notNullable();
-          table.bigInteger("size").notNullable();
+          
+          table.integer("duration").notNullable().defaultTo(0);
+          table.bigInteger("likes").notNullable().defaultTo(0);
+          table.bigInteger("size").notNullable().defaultTo(0);
 
           table
             .uuid("userId")

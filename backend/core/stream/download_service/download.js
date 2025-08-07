@@ -45,9 +45,9 @@ class Download {
     this.url = url;
   }
 
-  async init(visibility, title) {
+  async init(visibility, title, thumbnail) {
     if (this.type === "youtube") await this._initYT(visibility);
-    else await this._initDirect(visibility, title);
+    else await this._initDirect(visibility, title, thumbnail);
   }
 
   async _initYT(visibility) {
@@ -60,7 +60,7 @@ class Download {
     const title = sanitize(videoDetails.title);
     const filename = `${title}-${Date.now()}.mp4`;
 
-    const url = path.join("downloads/youtube", this.userId, filename);
+    const url = path.join(`downloads/${this.userId}`, "youtube", filename);
     this.filePath = path.resolve(BASE, url);
 
     fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
@@ -75,6 +75,9 @@ class Download {
     }
 
     const size = parseInt(String(format.contentLength || 0), 10);
+    const height = parseInt(String(format.height || 0), 10);
+    const width = parseInt(String(format.width || 0), 10);
+
     this.videoData = {
       duration: parseInt(videoDetails.lengthSeconds, 10),
       thumbnailURL: videoDetails.thumbnails.at(-1)?.url,
@@ -84,6 +87,8 @@ class Download {
       videoURL: url,
       id: this.id,
       visibility,
+      height,
+      width,
       size,
     };
 
@@ -93,11 +98,21 @@ class Download {
     this._setupListeners();
   }
 
-  async _initDirect(visibility, title) {
+  async _initDirect(visibility, title, thumbnail) {
     const headers = {
       "User-Agent":
         "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Mobile/15E148 Safari/604.1",
     };
+
+    const filename = `${sanitize(title)}-${Date.now()}.mp4`;
+    const USER_DIR = path.join("downloads", this.userId);
+    const url = path.join(USER_DIR, "direct", filename);
+
+    const thumbnailURL = await this._downloadThumbnail({
+      dir_path: USER_DIR,
+      thumbnail,
+      title,
+    });
 
     const response = await axios({
       responseType: "stream",
@@ -106,12 +121,9 @@ class Download {
       headers,
     });
 
-    const filename = `${sanitize(title)}-${Date.now()}.mp4`;
-    const url = path.join("downloads/direct", this.userId, filename);
-
     const size = parseInt(response.headers["content-length"] || "0", 10);
     if (size === 0) {
-      return this._onError(new SocketError("Invalid video url", 400));
+      return this._onError(new SocketError("Invalid Video Format", 400));
     }
 
     this.filePath = path.resolve(BASE, url);
@@ -120,9 +132,9 @@ class Download {
 
     this.videoData = {
       userId: this.userId,
-      thumbnailURL: "",
       type: "direct",
       videoURL: url,
+      thumbnailURL,
       duration: 0,
       id: this.id,
       visibility,
@@ -133,6 +145,26 @@ class Download {
     fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
     this.writeStream = fs.createWriteStream(this.filePath);
     this._setupListeners();
+  }
+
+  async _downloadThumbnail({ thumbnail, title, dir_path }) {
+    const ext = path.extname(new URL(thumbnail).pathname) || ".jpg";
+    const thumbPath = path.join(dir_path, `thumbnails/${title}${ext}`);
+
+    const response = await axios({
+      responseType: "stream",
+      url: thumbnail,
+      method: "get",
+    });
+
+    await new Promise((resolve, reject) => {
+      const stream = fs.createWriteStream(thumbPath);
+      stream.on("finish", resolve);
+      stream.on("error", reject);
+      response.data.pipe(stream);
+    });
+
+    return thumbPath;
   }
 
   _setupListeners() {
