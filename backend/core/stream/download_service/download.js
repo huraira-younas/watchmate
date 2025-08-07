@@ -94,10 +94,16 @@ class Download {
   }
 
   async _initDirect(visibility, title) {
+    const headers = {
+      "User-Agent":
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Mobile/15E148 Safari/604.1",
+    };
+
     const response = await axios({
       responseType: "stream",
       url: this.url,
       method: "get",
+      headers,
     });
 
     const filename = `${sanitize(title)}-${Date.now()}.mp4`;
