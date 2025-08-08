@@ -60,7 +60,7 @@ class Download {
     const title = sanitize(videoDetails.title);
     const filename = `${title}-${Date.now()}.mp4`;
 
-    const url = path.join(`downloads/${this.userId}`, "youtube", filename);
+    const url = path.join(`${this.userId}/downloads`, "youtube", filename);
     this.filePath = path.resolve(BASE, url);
 
     fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
@@ -105,7 +105,7 @@ class Download {
     };
 
     const filename = `${sanitize(title)}-${Date.now()}.mp4`;
-    const USER_DIR = path.join("downloads", this.userId);
+    const USER_DIR = path.join(this.userId, "downloads");
     const url = path.join(USER_DIR, "direct", filename);
 
     const thumbnailURL = await this._downloadThumbnail({

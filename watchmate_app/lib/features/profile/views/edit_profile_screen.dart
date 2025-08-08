@@ -2,6 +2,7 @@ import 'package:watchmate_app/features/auth/model/user_model.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/common/widgets/profile_avt.dart';
+import 'package:watchmate_app/features/auth/bloc/events.dart';
 import 'package:watchmate_app/common/widgets/text_field.dart';
 import 'package:watchmate_app/features/auth/bloc/states.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
@@ -9,6 +10,7 @@ import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/utils/validator_builder.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:watchmate_app/di/locator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io' show File;
@@ -23,11 +25,18 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _keys = List.generate(2, (_) => GlobalKey<FormState>());
+  final _authBloc = getIt<AuthBloc>();
+
   late UserModel user = widget.user;
   File? _pickedImage;
 
-  void handleUpdate() {
+  Future<void> handleUpdate() async {
     if (user.name.isNullOrEmpty) return;
+    final profileURL = _pickedImage?.path;
+
+    _authBloc.add(
+      AuthUpdateUser(profileURL: profileURL, name: user.name, id: user.id),
+    );
   }
 
   @override

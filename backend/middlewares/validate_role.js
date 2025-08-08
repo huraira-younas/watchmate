@@ -8,7 +8,7 @@ const ROLES = {
 
 const validateRole = (key, roles = [ROLES.ADMIN]) =>
   asyncHandler(async (req, _, next) => {
-    const userId = req.body[key] || req[key] || req.params[key];
+    const userId = req.body[key] || req[key] || req.headers[key] || req.params[key];
     if (!userId) throw new AppError(`${key} is required`, 400);
 
     const user = await User.findById(userId);

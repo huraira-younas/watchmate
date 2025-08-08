@@ -88,6 +88,33 @@ class AuthGetUser extends AuthEvent {
   AuthGetUser({super.onSuccess, super.onError});
 }
 
+class AuthUpdateUser extends AuthEvent {
+  final String? profileURL;
+  final String name;
+  final String id;
+
+  AuthUpdateUser({
+    required this.name,
+    required this.id,
+    super.onSuccess,
+    this.profileURL,
+    super.onError,
+  });
+
+  AuthUpdateUser copyWith({String? profileURL, String? name, String? id}) =>
+      AuthUpdateUser(
+        profileURL: profileURL ?? this.profileURL,
+        name: name ?? this.name,
+        id: id ?? this.id,
+      );
+
+  Map<String, dynamic> toJson() => {
+    "profileURL": profileURL,
+    "name": name,
+    "id": id,
+  };
+}
+
 class AuthLogout extends AuthEvent {
   AuthLogout({super.onSuccess, super.onError});
 }

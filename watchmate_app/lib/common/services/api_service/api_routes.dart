@@ -6,4 +6,5 @@ class ApiRoutes {
   static final stream = StreamApi(pre: _prefix);
   static final video = VideoApi(pre: _prefix);
   static final auth = AuthApi(pre: _prefix);
+  static final file = FileApi(pre: _prefix);
 }

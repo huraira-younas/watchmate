@@ -61,6 +61,23 @@ class AuthRepository {
     return response.body.toString();
   }
 
+  Future<String> uploadProfile(String userId, String profileURL) async {
+    final res = await _api.upload(
+      url: ApiRoutes.file.upload,
+      filePath: profileURL,
+      userId: userId,
+    );
+
+    return res.body;
+  }
+
+  Future<UserModel> updateUser(Map<String, dynamic> data) async {
+    final response = await _api.post(ApiRoutes.auth.updateUser, data: data);
+    if (response.error != null) throw response.error!;
+    final user = UserModel.fromJson(response.body);
+    return user;
+  }
+
   Future<void> logout() async {
     await Future.delayed(const Duration(milliseconds: 200));
     _sp.removeLoggedUser();

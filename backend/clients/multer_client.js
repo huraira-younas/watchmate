@@ -3,7 +3,8 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const UPLOADS_DIR = path.join(__dirname, "../uploads");
+const UPLOADS_DIR = path.join(process.cwd(), "app_data");
+
 if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
@@ -11,13 +12,14 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 const storage = multer.diskStorage({
   destination: (req, _, cb) => {
     try {
-      const userId = req.headers.userid;
-      if (!userId) {
-        logger.error("userId is required");
-        return cb(new Error("userId is required"));
+      const userid = req.headers.userid;
+      console.log(userid);
+      if (!userid) {
+        logger.error("userid is required");
+        return cb(new Error("userid is required"));
       }
 
-      const userFolder = path.join(UPLOADS_DIR, userId);
+      const userFolder = path.join(UPLOADS_DIR, userid, "uploads");
       if (!fs.existsSync(userFolder)) {
         fs.mkdirSync(userFolder, { recursive: true });
       }
@@ -34,38 +36,21 @@ const storage = multer.diskStorage({
 });
 
 const allowedMimes = [
-  "application/x-zip-compressed",
   "application/octet-stream",
-  "application/vnd.rar",
   "video/x-matroska",
   "video/quicktime",
   "video/x-msvideo",
-  "application/zip",
-  "application/pdf",
   "image/jpeg",
-  "text/plain",
   "image/webp",
   "video/mp4",
   "image/png",
 ];
 
-const allowedExts = [
-  ".jpeg",
-  ".webp",
-  ".zip",
-  ".rar",
-  ".pdf",
-  ".png",
-  ".jpg",
-  ".mp4",
-  ".mov",
-  ".avi",
-  ".p8",
-];
+const allowedExts = [".jpeg", ".webp", ".png", ".jpg", ".mp4", ".mov", ".avi"];
 
 const uploadLocally = multer({
   storage,
-  limits: { fileSize: 100 * 1024 * 1024 },
+  limits: { fileSize: 2 * 1024 * 1024 * 1024 },
   fileFilter: (_, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
     const isMimeAllowed = allowedMimes.includes(file.mimetype);

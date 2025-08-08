@@ -38,13 +38,28 @@ class ApiService {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           final tag = "${options.method} REQUEST";
+
+          dynamic safeBody;
+          if (options.data is FormData) {
+            final data = options.data as FormData;
+            safeBody = {
+              'fields': {for (var f in data.fields) f.key: f.value},
+              'files': {
+                for (var f in data.files)
+                  f.key: f.value.filename ?? 'unnamed_file',
+              },
+            };
+          } else {
+            safeBody = options.data;
+          }
+
           Logger.info(
             tag: tag,
             message: {
               "uri": options.uri.toString(),
               "params": options.queryParameters,
               "headers": options.headers,
-              "body": options.data,
+              "body": safeBody,
             },
           );
           return handler.next(options);
@@ -69,9 +84,9 @@ class ApiService {
             tag: tag,
             message: {
               "uri": req.uri.toString(),
-              "statusCode": e.response?.statusCode,
-              "error": e.response?.data,
-              "message": e.message,
+              "statusCode": e.response?.statusCode?.toString() ?? 'n/a',
+              "error": e.response?.data ?? 'No response data',
+              "message": e.message ?? 'No message',
             },
           );
           return handler.next(e);
@@ -119,19 +134,36 @@ class ApiService {
     }
   }
 
-  Future<ApiResponse<T>> upload<T>(
-    String path,
-    FormData formData, {
-    Map<String, dynamic>? headers,
+  Future<ApiResponse<T>> upload<T>({
+    void Function(double progreess)? onReceiveProgress,
+    void Function(double progreess)? onSendProgress,
+    required String filePath,
+    required String userId,
+    required String url,
   }) async {
     try {
+      final formData = FormData.fromMap({
+        'file': MultipartFile.fromFileSync(filePath),
+        'userId': userId,
+      });
+
       final res = await _dio.post(
-        path,
+        url,
         data: formData,
-        options: Options(
-          headers: {'Content-Type': 'multipart/form-data', ...?headers},
-        ),
+        options: Options(headers: {'userid': userId}),
+        onSendProgress: (count, total) {
+          final progress = (count / total) * 100;
+          onSendProgress?.call(progress);
+          Logger.info(tag: "UPLOADING", message: progress.toStringAsFixed(2));
+        },
+        onReceiveProgress: (count, total) {
+          final progress = (count / total) * 100;
+          onReceiveProgress?.call(progress);
+          Logger.info(tag: "DOWNLOADING", message: progress.toStringAsFixed(2));
+        },
       );
+
+      if (res.statusCode != 200) throw "File upload failed";
       return ApiResponse<T>(statusCode: res.statusCode, body: res.data);
     } catch (e) {
       return _handleError<T>(e);

@@ -117,6 +117,23 @@ const verifyCode = async (req, res) => {
   res.json({ message: "Code verified successfully" });
 };
 
+const updateUser = async (req, res) => {
+  validateReq(req.body, ["id"], ["deviceId", "role", "ban"]);
+  const { id, ...updates } = req.body;
+
+  const userExists = await User.findById(id);
+  if (!userExists) throw new AppError("User not found", 400);
+  const ipAddress = getIpAddress(req);
+
+  const user = await User.findByIdAndUpdate({
+    data: { ...updates, ipAddress },
+    userId: id,
+  });
+
+  delete user.password;
+  res.json(user);
+};
+
 const sendCode = async (req, res) => {
   const { email, method = "reset" } = req.body;
   if (!email) throw new AppError("Email is required", 400);
@@ -138,6 +155,7 @@ const sendCode = async (req, res) => {
 
 module.exports = {
   resetPassword,
+  updateUser,
   verifyCode,
   sendCode,
   getUser,

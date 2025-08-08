@@ -10,12 +10,47 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc(this.repo) : super(AuthState()) {
     on<AuthUpdatePassword>(_onUpdatePassword);
+    on<AuthUpdateUser>(_onAuthUpdateUser);
     on<AuthVerifyCode>(_onVerifyCode);
     on<AuthRegister>(_onRegister);
     on<AuthGetUser>(_onGetUser);
     on<AuthGetCode>(_onGetCode);
     on<AuthLogout>(_onLogout);
     on<AuthLogin>(_onLogin);
+  }
+
+  Future<void> _onAuthUpdateUser(
+    AuthUpdateUser event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      String? profileURL = event.profileURL;
+      if (profileURL != null) {
+        final loading = CustomState(
+          title: "Uploading Profile",
+          message: "Please wait...",
+        );
+        _emit(loading: loading, emit);
+        profileURL = await repo.uploadProfile(event.id, event.profileURL!);
+      }
+
+      final loading = CustomState(
+        message: "Please wait...",
+        title: "Updating User",
+      );
+      _emit(loading: loading, emit);
+
+      user = await repo.updateUser(
+        event.copyWith(profileURL: profileURL).toJson(),
+      );
+
+      event.onSuccess?.call();
+      _emit(emit);
+    } catch (e) {
+      final error = CustomState(message: e.toString(), title: "Login Error");
+      _emit(error: error, emit);
+      event.onError?.call(error);
+    }
   }
 
   Future<void> _onGetUser(AuthGetUser event, Emitter<AuthState> emit) async {
