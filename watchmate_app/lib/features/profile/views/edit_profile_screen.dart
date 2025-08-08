@@ -12,6 +12,7 @@ import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'dart:io' show File;
 
@@ -35,7 +36,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final profileURL = _pickedImage?.path;
 
     _authBloc.add(
-      AuthUpdateUser(profileURL: profileURL, name: user.name, id: user.id),
+      AuthUpdateUser(
+        onSuccess: () => context.pop(),
+        profileURL: profileURL,
+        name: user.name,
+        id: user.id,
+      ),
     );
   }
 
@@ -135,6 +141,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   String _getProfile() {
-    return _pickedImage?.path ?? user.profileURL ?? AppConstants.userAvt;
+    return _pickedImage?.path ?? user.fullProfileURL;
   }
 }

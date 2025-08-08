@@ -22,11 +22,7 @@ class UserTile extends StatelessWidget {
         return Row(
           spacing: 16,
           children: <Widget>[
-            ProfileAvt(
-              size: 60,
-              url: user.profileURL ?? AppConstants.userAvt,
-            ).hero(user.username),
-
+            ProfileAvt(size: 60, url: user.fullProfileURL).hero(user.username),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[

@@ -1,7 +1,7 @@
 import 'package:watchmate_app/common/services/api_service/api_routes.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
-import 'package:watchmate_app/common/widgets/profile_avt.dart';
 import 'package:watchmate_app/router/routes/stream_routes.dart';
+import 'package:watchmate_app/common/widgets/profile_avt.dart';
 import 'package:watchmate_app/common/widgets/cache_image.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
@@ -81,9 +81,11 @@ class VideoPreview extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 MyText(
+                  overflow: TextOverflow.ellipsis,
                   size: AppConstants.subtitle,
                   family: AppFonts.bold,
                   text: video.title,
+                  maxLines: 2,
                 ),
                 3.h,
                 MyText(text: _buildInfoText(), size: 12, color: color),

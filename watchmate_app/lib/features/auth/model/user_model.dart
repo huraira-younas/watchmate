@@ -1,3 +1,5 @@
+import 'package:watchmate_app/common/services/api_service/api_routes.dart';
+import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
@@ -68,6 +70,13 @@ class UserModel extends Equatable {
       name: name ?? this.name,
       bio: bio ?? this.bio,
       id: id ?? this.id,
+    );
+  }
+
+  String get fullProfileURL {
+    return ApiRoutes.file.getFile(
+      url: profileURL ?? AppConstants.userAvt,
+      userId: id,
     );
   }
 

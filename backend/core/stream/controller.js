@@ -50,7 +50,7 @@ const _handleRangeStream = ({
   fs.createReadStream(filePath, { start, end }).pipe(res);
 };
 
-const _validatePath = (filePath) => {
+const _validatePath = (filePath, res) => {
   if (!fs.existsSync(filePath)) {
     return res.status(404).send("❌ File not found");
   }
@@ -63,7 +63,7 @@ const _validatePath = (filePath) => {
 const streamVideo = async (req, res) => {
   const url = req.params[0];
   const filePath = path.join(BASE, url);
-  _validatePath(filePath);
+  _validatePath(filePath, res);
 
   const ext = path.extname(filePath).toLowerCase();
   const fileSize = fs.statSync(filePath).size;
@@ -91,7 +91,7 @@ const streamVideo = async (req, res) => {
 const getThumbnail = (req, res) => {
   const url = req.params[0];
   const filePath = path.join(BASE, url);
-  _validatePath(filePath);
+  _validatePath(filePath, res);
 
   res.setHeader("Cache-Control", "public, max-age=31536000");
   res.setHeader("Content-Type", mime.default.getType(filePath));

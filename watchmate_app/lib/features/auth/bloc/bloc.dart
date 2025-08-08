@@ -41,7 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       _emit(loading: loading, emit);
 
       user = await repo.updateUser(
-        event.copyWith(profileURL: profileURL).toJson(),
+        event.copyWith(profileURL: profileURL ?? user?.profileURL).toJson(),
       );
 
       event.onSuccess?.call();
