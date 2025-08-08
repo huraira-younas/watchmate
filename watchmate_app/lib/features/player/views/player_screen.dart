@@ -37,11 +37,6 @@ class PlayerScreen extends StatelessWidget {
             children: <Widget>[
               const CustomChip(icon: Icons.thumb_up_alt_outlined, text: "1.2k"),
               4.w,
-              const CustomChip(
-                icon: Icons.thumb_down_alt_outlined,
-                text: "Dislike",
-              ),
-              4.w,
               const CustomChip(icon: Icons.share_outlined, text: "Share"),
               4.w,
               const CustomChip(icon: Icons.download_outlined, text: "Download"),
