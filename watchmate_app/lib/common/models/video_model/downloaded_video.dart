@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart' show immutable;
 @immutable
 class DownloadedVideo extends BaseVideo {
   final DateTime createdAt;
-  final VideoUser user;
   final bool deleted;
   final String id;
 
@@ -18,10 +17,10 @@ class DownloadedVideo extends BaseVideo {
     required super.title,
     required super.type,
     required super.size,
+    required super.user,
 
     required this.createdAt,
     required this.deleted,
-    required this.user,
     required this.id,
   });
 
@@ -48,7 +47,6 @@ class DownloadedVideo extends BaseVideo {
   Map<String, dynamic> toJson() => {
     ...super.toJson(),
     'createdAt': createdAt.toIso8601String(),
-    'user': user.toJson(),
     'deleted': deleted,
     'id': id,
   };
@@ -61,7 +59,7 @@ class DownloadedVideo extends BaseVideo {
       super == other;
 
   @override
-  List<Object?> get props => [...super.props, createdAt, deleted, id, user];
+  List<Object?> get props => [...super.props, createdAt, deleted, id];
 
   @override
   String toString() => 'DownloadedVideo(${toJson()})';

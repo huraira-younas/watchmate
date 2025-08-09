@@ -20,9 +20,9 @@ class Download {
     filter = (f) => f.container === "mp4" && f.hasVideo && f.hasAudio,
     quality = "highestvideo",
     type = "direct",
-    userId,
     socket,
     event,
+    user,
     url,
   }) {
     this.writeStream = null;
@@ -33,7 +33,6 @@ class Download {
     this.filter = filter;
     this.filePath = null;
     this.lastPercent = 0;
-    this.userId = userId;
     this.socket = socket;
     this.videoData = {};
     this.totalBytes = 0;
@@ -41,6 +40,7 @@ class Download {
     this.timeout = null;
     this.event = event;
     this.id = uuidv4();
+    this.user = user;
     this.type = type;
     this.url = url;
   }
@@ -54,13 +54,12 @@ class Download {
     if (!ytdl.validateURL(this.url)) {
       throw new SocketError("Invalid YouTube URL", 400);
     }
-
     const info = await ytdl.getInfo(this.url);
     const { videoDetails } = info;
     const title = sanitize(videoDetails.title);
     const filename = `${title}-${Date.now()}.mp4`;
 
-    const url = path.join(`${this.userId}/downloads`, "youtube", filename);
+    const url = path.join(`${this.user.id}/downloads`, "youtube", filename);
     this.filePath = path.resolve(BASE, url);
 
     fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
@@ -77,12 +76,11 @@ class Download {
     const size = parseInt(String(format.contentLength || 0), 10);
     const height = parseInt(String(format.height || 0), 10);
     const width = parseInt(String(format.width || 0), 10);
-
     this.videoData = {
       duration: parseInt(videoDetails.lengthSeconds, 10),
       thumbnailURL: videoDetails.thumbnails.at(-1)?.url,
       title: videoDetails.title,
-      userId: this.userId,
+      userId: this.user.id,
       type: "youtube",
       videoURL: url,
       id: this.id,
@@ -91,6 +89,8 @@ class Download {
       width,
       size,
     };
+
+    console.log(this.videoData);
 
     this.writeStream = fs.createWriteStream(this.filePath);
     this.videoStream = ytdl(this.url, { format });
@@ -105,7 +105,7 @@ class Download {
     };
 
     const filename = `${sanitize(title)}-${Date.now()}.mp4`;
-    const USER_DIR = path.join(this.userId, "downloads");
+    const USER_DIR = path.join(this.user.id, "downloads");
     const url = path.join(USER_DIR, "direct", filename);
 
     const thumbnailURL = await this._downloadThumbnail({
@@ -131,7 +131,7 @@ class Download {
     this.totalBytes = size;
 
     this.videoData = {
-      userId: this.userId,
+      userId: this.user.id,
       type: "direct",
       videoURL: url,
       thumbnailURL,
@@ -221,9 +221,9 @@ class Download {
         message: `Downloading ${this.videoData.title}`,
         code: 201,
         data: {
+          ...{ ...this.videoData, user: this.user },
           downloaded: this.downloaded,
           total: this.totalBytes,
-          ...this.videoData,
           percent,
         },
       })
@@ -257,13 +257,13 @@ class Download {
       this.videoData = { ...this.videoData, ...dim };
     }
 
-    await Video.insert({ data: this.videoData });
+    await Video.insert({ data: this.videoData, returnNew: false });
     if (!this.isStopped) {
       this.socket.emit(
         this.event,
         new SocketResponse({
           message: `Downloaded ${this.videoData.title} successfully`,
-          data: this.videoData,
+          data: { ...this.videoData, user: this.user },
           code: 200,
         })
       );

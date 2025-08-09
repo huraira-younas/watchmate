@@ -9,6 +9,7 @@ const Video = {
     const id = data.id || uuidv4();
     delete data.createdAt;
     delete data.updatedAt;
+    delete data.user;
 
     await db(this._videos).insert({ ...data, id });
     return returnNew ? await this.findById(id, fields) : null;

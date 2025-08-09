@@ -1,3 +1,4 @@
+import 'package:watchmate_app/common/models/video_model/video_user.dart';
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:equatable/equatable.dart';
 
@@ -19,6 +20,7 @@ abstract class BaseVideo extends Equatable {
   final String thumbnailURL;
   final Duration duration;
   final String videoURL;
+  final VideoUser user;
   final VideoType type;
   final String userId;
   final String title;
@@ -31,6 +33,7 @@ abstract class BaseVideo extends Equatable {
     required this.videoURL,
     required this.userId,
     required this.title,
+    required this.user,
     required this.type,
     required this.size,
   });
@@ -54,6 +57,7 @@ abstract class BaseVideo extends Equatable {
     videoURL,
     userId,
     title,
+    user,
     type,
     size,
   ];

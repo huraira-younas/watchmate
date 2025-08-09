@@ -3,6 +3,7 @@ const {
   SocketResponse,
 } = require("../../../methods/socket/socket_methods.js");
 const { Download, DownloadManager } = require("../download_service");
+const User = require("../../../database/models/user_model");
 const logger = require("../../../methods/logger");
 
 const download = async ({ event, socket, data }) => {
@@ -10,11 +11,12 @@ const download = async ({ event, socket, data }) => {
     validateEvent(data, ["userId", "url", "type", "visibility"]);
     const { userId, url, visibility, type, title, thumbnail } = data;
 
+    const user = await User.findById(userId, ["name", "profileURL", "id"]);
     const download = new Download({
-      userId,
       socket,
       event,
       type,
+      user,
       url,
     });
 

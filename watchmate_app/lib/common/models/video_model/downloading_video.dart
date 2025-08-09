@@ -1,4 +1,5 @@
 import 'package:watchmate_app/common/models/video_model/base_video.dart';
+import 'package:watchmate_app/common/models/video_model/video_user.dart';
 import 'package:flutter/foundation.dart' show immutable;
 
 @immutable
@@ -15,7 +16,8 @@ class DownloadingVideo extends BaseVideo {
     required super.userId,
     required super.title,
     required super.type,
-    required super.size,    
+    required super.size,
+    required super.user,
 
     required this.downloaded,
     required this.percent,
@@ -27,6 +29,7 @@ class DownloadingVideo extends BaseVideo {
       duration: Duration(seconds: json['duration'] ?? 0),
       downloaded: (json['downloaded'] ?? 0).toDouble(),
       visibility: parseVisibility(json['visibility']),
+      user: VideoUser.fromJson(json['user'] ?? {}),
       percent: (json['percent'] ?? 0).toDouble(),
       thumbnailURL: json['thumbnailURL'] ?? "",
       total: (json['total'] ?? 0).toDouble(),
@@ -40,11 +43,11 @@ class DownloadingVideo extends BaseVideo {
 
   @override
   Map<String, dynamic> toJson() => {
-        ...super.toJson(),
-        'downloaded': downloaded,
-        'percent': percent,
-        'total': total,
-      };
+    ...super.toJson(),
+    'downloaded': downloaded,
+    'percent': percent,
+    'total': total,
+  };
 
   bool equalsTo(DownloadingVideo other) =>
       downloaded == other.downloaded &&

@@ -18,7 +18,7 @@ class VideoUser {
     return VideoUser(
       profileURL: json['profileURL'],
       name: json['name'] ?? '',
-      id: json['id'],
+      id: json['id'] ?? '',
     );
   }
 
