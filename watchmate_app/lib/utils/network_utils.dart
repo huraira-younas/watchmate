@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NetworkUtils {
-  static const _defaultLocalUrl = 'http://192.168.1.5:$_defaultPort';
-  static String get prodUrl => "https://watchmate.hurairayounas.com";
-  static const _defaultPort = 5000;
+  static final _defaultLocalUrl = dotenv.get("DEV_URL", fallback: "");
+  static String get prodUrl => dotenv.get("PROD_URL", fallback: "");
 
   static String get baseUrl => kDebugMode ? _defaultLocalUrl : prodUrl;
 }

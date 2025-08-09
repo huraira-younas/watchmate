@@ -10,23 +10,24 @@ dependencies:
   flutter:
     sdk: flutter
 
+  loading_animation_widget: ^1.3.0
   cached_network_image: ^3.4.1
   shared_preferences: ^2.5.3
+  socket_io_client: ^3.1.2
   cupertino_icons: ^1.0.8
   country_picker: ^2.0.27
+  flutter_dotenv: ^5.2.1
+  video_player: ^2.10.0
+  file_picker: ^10.2.2
   flutter_bloc: ^9.1.1
   go_router: ^16.0.0
-  loading_animation_widget: ^1.3.0
-  dio: ^5.8.0+1
-  get_it: ^8.0.3
   equatable: ^2.0.7
-  chewie: ^1.12.1
-  video_player: ^2.10.0
-  socket_io_client: ^3.1.2
-  rxdart: ^0.28.0
-  intl: ^0.20.2
   shimmer: ^3.0.0
-  file_picker: ^10.2.2
+  chewie: ^1.12.1
+  rxdart: ^0.28.0
+  get_it: ^8.0.3
+  dio: ^5.8.0+1
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -49,6 +50,7 @@ flutter:
     - assets/images/backgrounds/
     - assets/images/icons/
     - assets/
+    - .env
 
   fonts:
     - family: Bold

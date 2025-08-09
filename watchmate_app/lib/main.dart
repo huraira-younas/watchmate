@@ -7,6 +7,7 @@ import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/router/route_config.dart';
 import 'package:watchmate_app/utils/shared_prefs.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +55,12 @@ class _AppView extends StatelessWidget {
 
 Future<void> _initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   setupLocator();
 
-  await Future.wait([SharedPrefs.instance.init()]);
+  await Future.wait([
+    dotenv.load(fileName: ".env"),
+    SharedPrefs.instance.init(),
+  ]);
   AppAssets.registerPreloads();
 }
