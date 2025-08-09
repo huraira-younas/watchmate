@@ -1,4 +1,5 @@
 import 'package:watchmate_app/common/cubits/navigation_cubit.dart';
+import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:watchmate_app/common/cubits/video_cubit.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
@@ -40,6 +41,7 @@ class _AppView extends StatelessWidget {
     return BlocBuilder<ThemeCubit, ThemeData>(
       builder: (context, theme) {
         return MaterialApp.router(
+          scaffoldMessengerKey: scaffoldKey,
           debugShowCheckedModeBanner: false,
           title: AppConstants.appname,
           routerConfig: appRouter,
