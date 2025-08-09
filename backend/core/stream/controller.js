@@ -1,3 +1,4 @@
+const logger = require("../../methods/logger");
 const fs = require("fs-extra");
 const path = require("path");
 const mime = require("mime");
@@ -15,11 +16,14 @@ const _getContentType = (ext) => {
 };
 
 const _handleFullStream = ({ res, filePath, fileSize, contentType }) => {
+  logger.warn(`Full file stream: ${filePath}`);
+
   res.writeHead(200, {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": contentType,
     "Cache-Control": "no-cache",
     "Content-Length": fileSize,
+    "Accept-Ranges": "bytes",
   });
 
   fs.createReadStream(filePath).pipe(res);
@@ -33,6 +37,7 @@ const _handleRangeStream = ({
   res,
 }) => {
   const [startStr, endStr] = range.replace(/bytes=/, "").split("-");
+  logger.info(`Streaming Range: ${filePath}`);
   const start = parseInt(startStr, 10);
 
   const end = endStr ? parseInt(endStr, 10) : fileSize - 1;
