@@ -11,7 +11,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
 class VideoPreview extends StatelessWidget {
-  const VideoPreview({super.key, required this.video});
+  const VideoPreview({super.key, required this.video, this.onMenuTap});
+  final VoidCallback? onMenuTap;
   final BaseVideo video;
 
   @override
@@ -97,8 +98,8 @@ class VideoPreview extends StatelessWidget {
               ],
             ).expanded(),
             IconButton(
-              onPressed: () {},
               icon: const Icon(Icons.more_vert_outlined),
+              onPressed: onMenuTap,
             ),
           ],
         ).expanded(),
