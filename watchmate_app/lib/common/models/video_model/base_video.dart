@@ -57,4 +57,16 @@ abstract class BaseVideo extends Equatable {
     type,
     size,
   ];
+
+  String get sizeFormat {
+    if (size >= 1 << 30) {
+      return "${(size / (1 << 30)).toStringAsFixed(1)} GB";
+    } else if (size >= 1 << 20) {
+      return "${(size / (1 << 20)).toStringAsFixed(1)} MB";
+    } else if (size >= 1 << 10) {
+      return "${(size / (1 << 10)).toStringAsFixed(1)} KB";
+    } else {
+      return "$size B";
+    }
+  }
 }

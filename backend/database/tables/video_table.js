@@ -30,6 +30,7 @@ async function createTable() {
           table.boolean("deleted").defaultTo(false).notNullable().index();
           table.timestamp("createdAt").defaultTo(trx.fn.now()).index();
           table.timestamp("updatedAt").defaultTo(trx.fn.now());
+          table.index(["visibility", "userId"]);
         });
         logger.warn("✅ Videos table created!");
       }

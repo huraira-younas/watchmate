@@ -9,7 +9,6 @@ import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class VideoPreview extends StatelessWidget {
   const VideoPreview({super.key, required this.video});
@@ -72,10 +71,16 @@ class VideoPreview extends StatelessWidget {
 
   Widget _buildBottom({required Color color}) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const ProfileAvt(size: 40, url: AppConstants.userAvt),
+        if (video is DownloadedVideo)
+          ProfileAvt(
+            url: (video as DownloadedVideo).user.fullProfileURL,
+            size: 40,
+          ),
         10.w,
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,25 +110,13 @@ class VideoPreview extends StatelessWidget {
     if (video is DownloadingVideo) {
       final downloading = video as DownloadingVideo;
 
-      return "${downloading.percent.toStringAsFixed(1)}% downloaded • ${_formatSize(video.size)}";
+      return "${downloading.percent.toStringAsFixed(1)}% downloaded • ${video.sizeFormat}";
     } else if (video is DownloadedVideo) {
       final downloaded = video as DownloadedVideo;
-      final formatter = DateFormat('dd MMM yyyy');
 
-      final date = formatter.format(downloaded.createdAt.toLocal());
-      return "Downloaded on $date • ${_formatSize(video.size)}";
+      return "${downloaded.getRelativeTime()} • ${video.sizeFormat}";
     } else {
-      return _formatSize(video.size);
-    }
-  }
-
-  String _formatSize(int size) {
-    if (size >= 1 << 20) {
-      return "${(size / (1 << 20)).toStringAsFixed(1)} MB";
-    } else if (size >= 1 << 10) {
-      return "${(size / (1 << 10)).toStringAsFixed(1)} KB";
-    } else {
-      return "$size B";
+      return video.sizeFormat;
     }
   }
 

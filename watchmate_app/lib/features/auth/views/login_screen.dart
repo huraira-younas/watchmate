@@ -14,7 +14,6 @@ import 'package:watchmate_app/utils/validator_builder.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
-import 'package:watchmate_app/utils/pre_loader.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:go_router/go_router.dart';
@@ -194,15 +193,5 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     _controllers.asMap().forEach((i, c) => c.dispose());
     super.dispose();
-  }
-
-  bool _isLoaded = false;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isLoaded) return;
-
-    Preloader.preloadForRoute(context, AuthRoutes.login.name);
-    _isLoaded = true;
   }
 }

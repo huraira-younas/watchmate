@@ -7,6 +7,7 @@ import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/router/route_config.dart';
 import 'package:watchmate_app/utils/shared_prefs.dart';
+import 'package:watchmate_app/utils/pre_loader.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
@@ -39,6 +40,8 @@ class _AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Preloader.preloadGlobal(context);
+
     return BlocBuilder<ThemeCubit, ThemeData>(
       builder: (context, theme) {
         return MaterialApp.router(

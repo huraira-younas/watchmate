@@ -6,7 +6,6 @@ import 'package:watchmate_app/router/routes/stream_routes.dart';
 import 'package:watchmate_app/common/widgets/custom_chip.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/extensions/exports.dart';
-import 'package:watchmate_app/utils/pre_loader.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
@@ -88,15 +87,5 @@ class _StreamScreenState extends State<StreamScreen> {
         ],
       ),
     );
-  }
-
-  bool _isLoaded = false;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isLoaded) return;
-
-    Preloader.preloadForRoute(context, StreamRoutes.stream.name);
-    _isLoaded = true;
   }
 }

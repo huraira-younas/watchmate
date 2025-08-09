@@ -1,10 +1,17 @@
 const Video = require("../../database/models/video_model");
+const { validateReq } = require("../../methods/utils");
 
 const getAllVideos = async (req, res) => {
-  const { visibility = "public", cursor = null, limit = 10, search } = req.body;
+  validateReq(req.body, ["visibility"]);
+  const { visibility, cursor = null, limit = 10, search } = req.body;
+
+  const conditions = { visibility };
+  if (visibility === "private") {
+    conditions.userId = req.body.userId;
+  }
 
   const videos = await Video.pagination({
-    conditions: { visibility },
+    conditions,
     cursor,
     search,
     limit,

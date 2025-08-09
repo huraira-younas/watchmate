@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const db = require("../knex_client");
+const User = require("./user_model");
 
 const Video = {
   _videos: "videos",
@@ -82,13 +83,35 @@ const Video = {
     query.orderBy("createdAt", "desc").limit(limit + 1);
 
     const results = await query;
-    const hasMore = results.length > limit;
+    if (results.length === 0) {
+      return { hasMore: false, cursor: null, results: [] };
+    }
 
+    const userIds = new Set(results.map((v) => v.userId));
+    const users = await this._getVideoOwner(userIds);
+
+    const userMap = new Map(users.map((user) => [user.id, user]));
+    const enhancedResults = results.slice(0, limit).map((video) => ({
+      user: userMap.get(video.userId) || null,
+      ...video,
+    }));
+
+    const hasMore = results.length > limit;
     return {
-      cursor: hasMore ? results[limit - 1].createdAt : null,
-      results: results.slice(0, limit),
+      cursor: hasMore ? results[limit].createdAt : null,
+      results: enhancedResults,
       hasMore,
     };
+  },
+
+  async _getVideoOwner(userIds) {
+    const users = await User.findWhereIn({
+      fields: ["id", "profileURL", "name"],
+      values: [...userIds],
+      column: "id",
+    });
+
+    return users;
   },
 };
 
