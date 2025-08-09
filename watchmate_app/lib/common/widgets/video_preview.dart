@@ -114,7 +114,7 @@ class VideoPreview extends StatelessWidget {
     } else if (video is DownloadedVideo) {
       final downloaded = video as DownloadedVideo;
 
-      return "${downloaded.getRelativeTime()} • ${video.sizeFormat}";
+      return "${downloaded.user.name} • ${downloaded.getRelativeTime()}";
     } else {
       return video.sizeFormat;
     }
