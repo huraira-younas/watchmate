@@ -9,16 +9,16 @@ import 'package:flutter/material.dart';
 
 class PlatformSelection extends StatelessWidget {
   final Function(VideoVisibility type) onVisibilityChange;
-  final Function(VideoType type) onTypeChange;
+  final Function(VideoType type)? onTypeChange;
   final VideoVisibility visibility;
-  final VideoType type;
+  final VideoType? type;
 
   const PlatformSelection({
     required this.onVisibilityChange,
-    required this.onTypeChange,
     required this.visibility,
-    required this.type,
+    this.onTypeChange,
     super.key,
+    this.type,
   });
 
   @override
@@ -39,26 +39,28 @@ class PlatformSelection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        PlatformTitle(title: "Select Platform", text: titlesMap[type.name]!),
-        10.h,
-        Row(
-          spacing: 16,
-          children: <Widget>[
-            _buildOption<VideoType>(
-              label: VideoType.youtube.name.capitalize,
-              current: VideoType.youtube,
-              onTap: onTypeChange,
-              selected: type,
-            ),
-            _buildOption<VideoType>(
-              label: VideoType.direct.name.capitalize,
-              current: VideoType.direct,
-              onTap: onTypeChange,
-              selected: type,
-            ),
-          ],
-        ),
-        20.h,
+        if (onTypeChange != null && type != null) ...[
+          PlatformTitle(title: "Select Platform", text: titlesMap[type!.name]!),
+          10.h,
+          Row(
+            spacing: 16,
+            children: <Widget>[
+              _buildOption<VideoType>(
+                label: VideoType.youtube.name.capitalize,
+                current: VideoType.youtube,
+                onTap: onTypeChange!,
+                selected: type!,
+              ),
+              _buildOption<VideoType>(
+                label: VideoType.direct.name.capitalize,
+                current: VideoType.direct,
+                onTap: onTypeChange!,
+                selected: type!,
+              ),
+            ],
+          ),
+          20.h,
+        ],
         const MyText(
           text: "Select Visibility",
           size: AppConstants.title,

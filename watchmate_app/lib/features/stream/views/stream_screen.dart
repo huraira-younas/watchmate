@@ -64,11 +64,11 @@ class _StreamScreenState extends State<StreamScreen> {
                 Row(
                   children: <Widget>[
                     CustomButton(
+                      onPressed: () => context.push(StreamRoutes.upload.path),
                       borderColor: theme.primaryColor,
                       textColor: theme.primaryColor,
                       bgColor: Colors.transparent,
                       text: "Upload File",
-                      onPressed: () {},
                       radius: 20,
                     ).expanded(),
                     10.w,

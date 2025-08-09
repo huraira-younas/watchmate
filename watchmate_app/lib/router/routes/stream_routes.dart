@@ -1,5 +1,6 @@
 import 'package:watchmate_app/router/custom_transitions/bottom_up_transition.dart';
 import 'package:watchmate_app/common/models/video_model/base_video.dart';
+import 'package:watchmate_app/features/stream/views/upload_screen.dart';
 import 'package:watchmate_app/features/player/views/player_screen.dart';
 import 'package:watchmate_app/features/stream/views/stream_screen.dart';
 import 'package:watchmate_app/features/stream/views/link_screen.dart';
@@ -20,6 +21,12 @@ abstract class StreamRoutes {
     name: 'Link',
   );
 
+  static const upload = AppRoute(
+    path: '/upload_file',
+    page: UploadScreen(),
+    name: 'Upload',
+  );
+
   static final player = AppRoute(
     path: '/player',
     name: 'Player',
@@ -32,5 +39,5 @@ abstract class StreamRoutes {
     },
   );
 
-  static final all = [stream, link, player];
+  static final all = [stream, link, player, upload];
 }

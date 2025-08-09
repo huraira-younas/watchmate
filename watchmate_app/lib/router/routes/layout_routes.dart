@@ -8,9 +8,9 @@ import 'package:flutter/material.dart' show Icons;
 
 abstract class LayoutRoutes {
   static const homeLayout = AppRoute(
+    path: '/home_layout',
     page: HomeLayout(),
     icon: Icons.home,
-    path: '/home',
     name: 'Home',
   );
 

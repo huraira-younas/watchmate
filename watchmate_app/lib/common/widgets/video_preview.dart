@@ -74,11 +74,7 @@ class VideoPreview extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        if (video is DownloadedVideo)
-          ProfileAvt(
-            url: (video as DownloadedVideo).user.fullProfileURL,
-            size: 40,
-          ),
+        ProfileAvt(url: video.user.fullProfileURL, size: 40),
         10.w,
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
