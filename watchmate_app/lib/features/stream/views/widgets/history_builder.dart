@@ -19,11 +19,11 @@ class HistoryBuilder extends StatelessWidget {
             const Icon(Icons.delete_outline),
           ],
         ),
-        40.h,
+        70.h,
         const CustomLabelWidget(
           text: "Upload file or stream link to get history.",
-          icon: Icons.nearby_error_outlined,
           title: "No History Found",
+          icon: Icons.ac_unit,
           iconSize: 60,
         ),
       ],
