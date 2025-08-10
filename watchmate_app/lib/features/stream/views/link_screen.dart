@@ -41,6 +41,11 @@ class _LinkScreenState extends State<LinkScreen> {
   VideoVisibility _visibility = VideoVisibility.public;
   VideoType _type = VideoType.youtube;
 
+  final _lastUsed = <String, String>{
+    VideoType.youtube.name: "",
+    VideoType.direct.name: "",
+  };
+
   @override
   void dispose() {
     _dControllers.asMap().forEach((_, v) => v.dispose());
@@ -65,6 +70,7 @@ class _LinkScreenState extends State<LinkScreen> {
     final title = _dControllers[0].text.trim();
     final url = _controller.text.trim();
 
+    _lastUsed[_visibility.name] = url;
     _linkBloc.add(LinkSubmitted(url: url, title: title, thumbnail: thumbnail));
   }
 
@@ -121,15 +127,16 @@ class _LinkScreenState extends State<LinkScreen> {
                     key: _dKeys[0],
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: CustomTextField(
-                      showTitle: true,
+                      hint: "Please enter the title of the video",
+                      prefixIcon: const Icon(Icons.title),
+                      onChange: (p0) => setState(() {}),
+                      controller: _dControllers[0],
                       label: "Video Title",
+                      showTitle: true,
                       validator: ValidatorBuilder.chain()
                           .required()
                           .min(6)
                           .build(),
-                      hint: "Please enter the title of the video",
-                      prefixIcon: const Icon(Icons.title),
-                      controller: _dControllers[0],
                     ),
                   ),
                   20.h,

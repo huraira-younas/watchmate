@@ -1,4 +1,3 @@
-import 'package:watchmate_app/common/services/api_service/api_routes.dart';
 import 'package:watchmate_app/extensions/context_extensions.dart';
 import 'package:watchmate_app/utils/logger.dart';
 import 'package:video_player/video_player.dart';
@@ -21,7 +20,7 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   void initState() {
     super.initState();
 
-    final url = ApiRoutes.stream.getStreamVideo(url: widget.url);
+    final url = widget.url;
     Logger.info(tag: "PLAYING", message: Uri.parse(url));
 
     _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url))
