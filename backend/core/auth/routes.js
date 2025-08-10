@@ -11,6 +11,7 @@ router
   .post("/send_code", asyncHandler(auth.sendCode))
   .post("/sign_up", asyncHandler(auth.signUp))
   .post("/login", asyncHandler(auth.login))
+  .get("/fetch", asyncHandler(auth.fetch))
   .post("/get", asyncHandler(auth.getUser));
 
 module.exports = router;

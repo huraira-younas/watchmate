@@ -137,10 +137,9 @@ const User = {
   },
 
   async find({ params = {}, search, disabled, fields = ["users.*"] }) {
-    let query = db(this._users)
-      .where("users.disabled", disabled)
-      .select(fields);
+    const query = db(this._users).select(fields);
 
+    if (disabled) query.where("users.disabled", disabled);
     if (search) {
       query.where((qb) => {
         qb.where("users.email", "like", `%${search}%`).orWhere(
@@ -151,8 +150,8 @@ const User = {
       });
     }
 
-    if (params.offset) query = query.offset(params.offset);
-    if (params.limit) query = query.limit(params.limit);
+    if (params.offset) query.offset(params.offset);
+    if (params.limit) query.limit(params.limit);
 
     return await query;
   },

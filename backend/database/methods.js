@@ -19,8 +19,9 @@ async function dropTables(tables = []) {
       let tablesToDrop = tables;
       if (tables.length === 1 && tables[0].toLowerCase() === "all") {
         const res = await trx("information_schema.tables")
-          .select("table_name")
-          .where("table_schema", trx.raw("DATABASE()"));
+          .where("table_schema", trx.raw("DATABASE()"))
+          .select("table_name");
+          
         // flushRedis({ exclude: [] });
         tablesToDrop = res.map((t) => t.TABLE_NAME || t.table_name);
       }

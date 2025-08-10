@@ -1,0 +1,189 @@
+const { SocketResponse } = require("../methods/socket/socket_methods");
+const { getMemberFromHash } = require("../redis/redis_methods");
+const Video = require("../database/models/video_model");
+const { Upload } = require("@aws-sdk/lib-storage");
+const sanitize = require("sanitize-filename");
+const { getIO } = require("./socket_client");
+const logger = require("../methods/logger");
+const ytdl = require("@distube/ytdl-core");
+const { PassThrough } = require("stream");
+const { s3 } = require("./s3_client");
+const { v4: uuid } = require("uuid");
+const axios = require("axios");
+const { socketKey } = require("../redis/admin_keys");
+
+class R2Client {
+  constructor({ user, socket, url, event }) {
+    this.lastPercent = -1;
+    this.socket = socket;
+    this.videoData = {};
+    this.event = event;
+    this.user = user;
+    this.url = url;
+  }
+
+  async start(type, visibility, title, thumbnail) {
+    if (type === "youtube") await this._initYT(visibility);
+    else await this._initDirect(visibility, title, thumbnail);
+
+    await this._saveVideoData();
+  }
+
+  async _initYT(visibility) {
+    if (!ytdl.validateURL(this.url)) {
+      throw new SocketError("Invalid YouTube URL", 400);
+    }
+
+    const info = await ytdl.getInfo(this.url);
+    const { videoDetails } = info;
+
+    const title = sanitize(videoDetails.title);
+    const filename = `${title}.mp4`;
+
+    const key = `${this.user.id}/youtube/${filename}`;
+
+    const format = ytdl.chooseFormat(info.formats, {
+      filter: (f) => f.container === "mp4" && f.hasVideo && f.hasAudio,
+      quality: "highest",
+    });
+
+    const size = parseInt(format.contentLength || 0, 10);
+
+    this.videoData = {
+      videoURL: `${process.env.R2_PUBLIC_BASE_URL}/${key}`,
+      duration: parseInt(videoDetails.lengthSeconds, 10),
+      thumbnailURL: videoDetails.thumbnails.at(-1)?.url,
+      height: parseInt(format.height || 0, 10),
+      width: parseInt(format.width || 0, 10),
+      title: videoDetails.title,
+      userId: this.user.id,
+      type: "youtube",
+      visibility,
+      id: uuid(),
+      size,
+    };
+
+    this.videoStream = ytdl(this.url, { format });
+    await this._uploadToR2(this.videoStream, key, "video/mp4", size);
+  }
+
+  async _initDirect(visibility, title, thumbnail) {
+    const response = await axios.get(this.url, { responseType: "stream" });
+    const contentType = response.headers["content-type"] || "video/mp4";
+
+    const filename = `${title}.${contentType.split("/")[1] || "mp4"}`;
+    const size = parseInt(response.headers["content-length"] || 0, 10);
+
+    const key = `${this.user.id}/direct/${filename}`;
+
+    this.videoData = {
+      videoURL: `${process.env.R2_PUBLIC_BASE_URL}/${key}`,
+      userId: this.user.id,
+      thumbnailURL: "",
+      title: filename,
+      type: "direct",
+      duration: 0,
+      id: uuid(),
+      visibility,
+      height: 0,
+      width: 0,
+      size,
+    };
+
+    await Promise.all([
+      this._uploadToR2(response.data, key, contentType, size),
+      this._uploadThumbnail(thumbnail, title),
+    ]);
+  }
+
+  async _uploadToR2(stream, key, contentType, totalBytes) {
+    let nextJump = Math.floor(Math.random() * 5) + 1;
+    let uploadedBytes = 0;
+
+    const progressStream = new PassThrough();
+    stream.on("data", (chunk) => {
+      uploadedBytes += chunk.length;
+      const percent = Math.floor((uploadedBytes / totalBytes) * 100);
+      if (percent >= this.lastPercent + nextJump) {
+        nextJump = Math.floor(Math.random() * 5) + 1;
+        this._sendProgress(percent);
+        this.lastPercent = percent;
+      }
+    });
+
+    stream.pipe(progressStream);
+    const upload = new Upload({
+      client: s3,
+      params: {
+        Bucket: process.env.R2_BUCKET,
+        ContentType: contentType,
+        Body: progressStream,
+        Key: key,
+      },
+    });
+
+    await upload.done();
+    console.log(`[R2] Uploaded: ${key}`);
+  }
+
+  async _uploadThumbnail(url, title) {
+    if (!url) return;
+
+    const response = await axios.get(url, { responseType: "arraybuffer" });
+    const key = `${this.user.id}/thumbnails/${title}.jpg`;
+
+    await r2.send(
+      new Upload({
+        client: r2,
+        params: {
+          Body: Buffer.from(response.data),
+          Bucket: process.env.R2_BUCKET,
+          ContentType: "image/jpeg",
+          Key: key,
+        },
+      })
+    );
+
+    this.videoData.thumbnailURL = `${process.env.R2_PUBLIC_BASE_URL}/${key}`;
+  }
+
+  async _saveVideoData() {
+    await Video.insert({ data: this.videoData, returnNew: false });
+    logger.info(`[DB] Video saved for user ${this.user.id}`);
+    await this._sendProgress(100, 200);
+  }
+
+  async _sendProgress(percent, code = 201) {
+    if (!this.socket || !this.socket.connected) {
+      const key = socketKey(this.user.id, "stream");
+      const io = getIO();
+
+      const sockets = await io.of("/stream").fetchSockets();
+      const socketId = await getMemberFromHash(key);
+      
+      console.log('Sockets in /stream:', sockets.map(s => s.id));
+      this.socket = sockets.find((s) => s.id === socketId);
+      console.log("Current SocketId: ", socketId);
+            
+      if (!this.socket) {
+        logger.warn(`Socket not found: ${percent}`);
+        return;
+      }
+    }
+
+    this.socket.emit(
+      this.event,
+      new SocketResponse({
+        message: `Downloading ${this.videoData.title}`,
+        code: code,
+        data: {
+          ...this.videoData,
+          user: this.user,
+          percent,
+        },
+      })
+    );
+  }
+}
+
+module.exports = R2Client;

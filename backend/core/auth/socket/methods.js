@@ -10,6 +10,7 @@ const {
   SocketResponse,
 } = require("../../../methods/socket/socket_methods.js");
 const User = require("../../../database/models/user_model.js");
+const { socketKey } = require("../../../redis/admin_keys.js");
 const logger = require("../../..//methods/logger");
 
 const onDisconnect = async ({ socket }) => {
@@ -33,7 +34,7 @@ const connectUser = async ({ event, socket, data }) => {
   socket.email = user.email;
   logger.info("User: " + user.email + " connected");
   await Promise.all([
-    addToHash(`socket:${userId}`, socket.id, 0),
+    addToHash(socketKey(userId, "auth"), socket.id, 2440),
     deleteFromHash(`disabled:${userId}`),
     addToSet("online_users", userId),
   ]);
@@ -51,7 +52,7 @@ const disconnectUser = async ({ event, socket, data }) => {
     const email = socket.email;
 
     if (!userId) return;
-    const key = `socket:${userId}`;
+    const key = socketKey(userId, "auth");
 
     await Promise.all([
       removeFromSet("online_users", userId),

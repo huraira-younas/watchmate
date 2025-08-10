@@ -153,6 +153,8 @@ const sendCode = async (req, res) => {
   res.json({ message: "Code sent successfully" });
 };
 
+const fetch = async (_, res) => res.json(await User.find({}));
+
 module.exports = {
   resetPassword,
   updateUser,
@@ -160,5 +162,6 @@ module.exports = {
   sendCode,
   getUser,
   signUp,
+  fetch,
   login,
 };
