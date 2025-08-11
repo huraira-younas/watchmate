@@ -1,9 +1,18 @@
+const { validateReq, AppError } = require("../../methods/utils");
 const Video = require("../../database/models/video_model");
-const { validateReq } = require("../../methods/utils");
 
 const addVideo = async (req, res) => {
-  Video.insert({ data: req.body, returnNew: false });
+  await Video.insert({ data: req.body, returnNew: false });
   res.json({ message: "Video added" });
+};
+
+const deleteVideo = async (req, res) => {
+  validateReq(req.params, ["id"]);
+  const id = req.params.id;
+
+  const del = await Video.findByIdAndDelete(id);
+  if (!del) throw new AppError("Video not found", 400);
+  res.json({ message: "Video deleted successfully" });
 };
 
 const getAllVideos = async (req, res) => {
@@ -25,4 +34,4 @@ const getAllVideos = async (req, res) => {
   res.json(videos);
 };
 
-module.exports = { getAllVideos, addVideo };
+module.exports = { getAllVideos, addVideo, deleteVideo };

@@ -14,6 +14,11 @@ router
     "/add_video",
     validateRole("userId", [ROLES.ADMIN, ROLES.USER]),
     asyncHandler(vid.addVideo)
+  )
+  .post(
+    "/delete_video",
+    validateRole("userId", [ROLES.ADMIN, ROLES.USER]),
+    asyncHandler(vid.deleteVideo)
   );
 
 module.exports = router;
