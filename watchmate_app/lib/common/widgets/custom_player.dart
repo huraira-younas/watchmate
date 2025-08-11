@@ -20,22 +20,23 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   void initState() {
     super.initState();
 
-    final url = widget.url;
-    Logger.info(tag: "PLAYING", message: Uri.parse(url));
+    final cleanUrl = widget.url.replaceAll('"', '');
+    Logger.info(tag: "PLAYING", message: Uri.parse(cleanUrl));
 
-    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url))
-      ..initialize().then((_) {
-        _chewieController = ChewieController(
-          videoPlayerController: _videoPlayerController,
-          allowFullScreen: true,
-          aspectRatio: 16 / 9,
-          showOptions: false,
-          allowMuting: true,
-          looping: false,
-          autoPlay: true,
-        );
-        setState(() {});
-      });
+    _videoPlayerController =
+        VideoPlayerController.networkUrl(Uri.parse(cleanUrl))
+          ..initialize().then((_) {
+            _chewieController = ChewieController(
+              videoPlayerController: _videoPlayerController,
+              allowFullScreen: true,
+              aspectRatio: 16 / 9,
+              showOptions: false,
+              allowMuting: true,
+              looping: false,
+              autoPlay: true,
+            );
+            setState(() {});
+          });
   }
 
   @override

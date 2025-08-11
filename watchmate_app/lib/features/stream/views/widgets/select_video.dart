@@ -1,4 +1,5 @@
 import 'package:path_provider/path_provider.dart' show getTemporaryDirectory;
+import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:watchmate_app/common/widgets/cache_image.dart';
 import 'package:watchmate_app/common/widgets/custom_card.dart';
@@ -15,7 +16,7 @@ import 'dart:io' show File;
 
 class SelectVideo extends StatefulWidget {
   const SelectVideo({required this.onSelect, super.key});
-  final Function(String, String) onSelect;
+  final Function(DownloadedVideo, String, String) onSelect;
 
   @override
   State<SelectVideo> createState() => _SelectVideoState();
@@ -43,8 +44,8 @@ class _SelectVideoState extends State<SelectVideo> {
     final uint8list = await VideoThumbnail.thumbnailData(
       imageFormat: ImageFormat.JPEG,
       maxWidth: 1280,
-      quality: 100,
       video: file,
+      quality: 80,
     );
 
     String? thumbPath;
@@ -75,7 +76,20 @@ class _SelectVideoState extends State<SelectVideo> {
     setState(() => _loading = false);
 
     if (thumbPath != null) {
-      widget.onSelect(file, thumbPath);
+      final fileSize = await File(file).length();
+      widget.onSelect(
+        DownloadedVideo(
+          height: _videoController!.value.size.height,
+          duration: _videoController!.value.duration,
+          width: _videoController!.value.size.width,
+          createdAt: DateTime.now(),
+          size: fileSize,
+          userId: "",
+          id: "",
+        ),
+        thumbPath,
+        file,
+      );
     } else {
       showAppSnackBar("Failed to generate thumbnail");
     }

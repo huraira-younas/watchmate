@@ -11,8 +11,8 @@ async function createTable() {
           table.string("type").defaultTo("youtube").notNullable();
           table.string("thumbnailURL").notNullable();
           table.string("videoURL").notNullable();
-          table.integer("height").notNullable();
-          table.integer("width").notNullable();
+          table.double("height").notNullable();
+          table.double("width").notNullable();
           table.string("title").notNullable();
           table.uuid("id").primary();
           

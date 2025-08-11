@@ -7,22 +7,57 @@ class DownloadingVideo extends BaseVideo {
   final double percent;
 
   const DownloadingVideo({
-    required super.thumbnailURL,
-    required super.visibility,
-    required super.duration,
-    required super.videoURL,
     required super.userId,
-    required super.title,
-    required super.type,
+    required super.height,
+    required super.width,
     required super.size,
-    required super.user,
+
+    super.thumbnailURL,
+    super.visibility,
+    super.videoURL,
+    super.duration,
+    super.title,
+    super.user,
+    super.type,
 
     required this.percent,
   });
 
+  DownloadingVideo copyWith({
+    VideoVisibility? visibility,
+    String? thumbnailURL,
+    Duration? duration,
+    String? videoURL,
+    VideoUser? user,
+    VideoType? type,
+    double? percent,
+    String? userId,
+    double? height,
+    double? width,
+    String? title,
+    int? size,
+  }) {
+    return DownloadingVideo(
+      thumbnailURL: thumbnailURL ?? this.thumbnailURL,
+      visibility: visibility ?? this.visibility,
+      duration: duration ?? this.duration,
+      videoURL: videoURL ?? this.videoURL,
+      percent: percent ?? this.percent,
+      userId: userId ?? this.userId,
+      height: height ?? this.height,
+      width: width ?? this.width,
+      title: title ?? this.title,
+      size: size ?? this.size,
+      user: user ?? this.user,
+      type: type ?? this.type,
+    );
+  }
+
   factory DownloadingVideo.fromJson(Map<String, dynamic> json) {
     return DownloadingVideo(
       duration: Duration(seconds: json['duration'] ?? 0),
+      height: (json['height'] as num? ?? 0).toDouble(),
+      width: (json['width'] as num? ?? 0).toDouble(),
       visibility: parseVisibility(json['visibility']),
       user: VideoUser.fromJson(json['user'] ?? {}),
       percent: (json['percent'] ?? 0).toDouble(),

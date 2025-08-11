@@ -9,29 +9,31 @@ class DownloadedVideo extends BaseVideo {
   final String id;
 
   const DownloadedVideo({
-    required super.thumbnailURL,
-    required super.visibility,
-    required super.duration,
-    required super.videoURL,
+    required super.height,
     required super.userId,
-    required super.title,
-    required super.type,
+    required super.width,
     required super.size,
-    required super.user,
+    super.thumbnailURL,
+    super.visibility,
+    super.videoURL,
+    super.duration,
+    super.title,
+    super.user,
+    super.type,
 
     required this.createdAt,
-    required this.deleted,
+    this.deleted = false,
     required this.id,
   });
 
   factory DownloadedVideo.fromJson(Map<String, dynamic> json) {
     return DownloadedVideo(
-      createdAt: DateTime.parse(
-        json['createdAt'] ?? DateTime.now().toIso8601String(),
-      ),
+      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       deleted: json['deleted'] == 1 || json['deleted'] == true,
       duration: Duration(seconds: json['duration'] ?? 0),
+      height: (json['height'] as num? ?? 0).toDouble(),
       visibility: parseVisibility(json['visibility']),
+      width: (json['width'] as num? ?? 0).toDouble(),
       user: VideoUser.fromJson(json['user'] ?? {}),
       thumbnailURL: json['thumbnailURL'] ?? "",
       type: parseType(json['type']),
@@ -43,12 +45,45 @@ class DownloadedVideo extends BaseVideo {
     );
   }
 
+  DownloadedVideo copyWith({
+    VideoVisibility? visibility,
+    String? thumbnailURL,
+    DateTime? createdAt,
+    Duration? duration,
+    String? videoURL,
+    VideoUser? user,
+    VideoType? type,
+    String? userId,
+    double? height,
+    String? title,
+    bool? deleted,
+    double? width,
+    String? id,
+    int? size,
+  }) {
+    return DownloadedVideo(
+      thumbnailURL: thumbnailURL ?? this.thumbnailURL,
+      visibility: visibility ?? this.visibility,
+      createdAt: createdAt ?? this.createdAt,
+      duration: duration ?? this.duration,
+      videoURL: videoURL ?? this.videoURL,
+      deleted: deleted ?? this.deleted,
+      userId: userId ?? this.userId,
+      height: height ?? this.height,
+      width: width ?? this.width,
+      title: title ?? this.title,
+      user: user ?? this.user,
+      type: type ?? this.type,
+      size: size ?? this.size,
+      id: id ?? this.id,
+    );
+  }
+
   @override
   Map<String, dynamic> toJson() => {
     ...super.toJson(),
     'createdAt': createdAt.toIso8601String(),
     'deleted': deleted,
-    'id': id,
   };
 
   bool equalsTo(DownloadedVideo other) =>

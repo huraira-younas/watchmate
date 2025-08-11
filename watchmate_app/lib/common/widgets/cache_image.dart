@@ -71,7 +71,8 @@ class CacheImage extends StatelessWidget {
             )
           : null,
       placeholder: !showProgress
-          ? (context, url) => Center(child: placeHolder)
+          ? (context, url) =>
+                Center(child: placeHolder ?? const CircularProgressIndicator())
           : null,
       errorWidget: (context, url, error) {
         return errorWidget ?? defaultError;

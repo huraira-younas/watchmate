@@ -20,22 +20,26 @@ abstract class BaseVideo extends Equatable {
   final String thumbnailURL;
   final Duration duration;
   final String videoURL;
-  final VideoUser user;
+  final VideoUser? user;
   final VideoType type;
   final String userId;
+  final double height;
   final String title;
+  final double width;
   final int size;
 
   const BaseVideo({
-    required this.thumbnailURL,
-    required this.visibility,
-    required this.duration,
-    required this.videoURL,
+    this.visibility = VideoVisibility.public,
+    this.duration = Duration.zero,
+    this.type = VideoType.direct,
+    this.thumbnailURL = "",
     required this.userId,
-    required this.title,
-    required this.user,
-    required this.type,
+    required this.height,
+    required this.width,
+    this.videoURL = "",
     required this.size,
+    this.title = "",
+    this.user,
   });
 
   Map<String, dynamic> toJson() => {
@@ -45,6 +49,8 @@ abstract class BaseVideo extends Equatable {
     'videoURL': videoURL,
     'type': type.name,
     'userId': userId,
+    'height': height,
+    'width': width,
     'title': title,
     'size': size,
   };
@@ -56,6 +62,8 @@ abstract class BaseVideo extends Equatable {
     duration,
     videoURL,
     userId,
+    height,
+    width,
     title,
     user,
     type,

@@ -71,7 +71,8 @@ class VideoPreview extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        ProfileAvt(url: video.user.fullProfileURL, size: 40),
+        if (video.user != null)
+          ProfileAvt(url: video.user!.fullProfileURL, size: 40),
         10.w,
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +109,7 @@ class VideoPreview extends StatelessWidget {
     } else if (video is DownloadedVideo) {
       final downloaded = video as DownloadedVideo;
 
-      return "${downloaded.user.name} • ${downloaded.getRelativeTime()}";
+      return "${downloaded.user?.name ?? "User"} • ${downloaded.getRelativeTime()}";
     } else {
       return video.sizeFormat;
     }

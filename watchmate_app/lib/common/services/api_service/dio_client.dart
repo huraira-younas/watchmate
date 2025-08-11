@@ -137,6 +137,7 @@ class ApiService {
   Future<ApiResponse<T>> upload<T>({
     void Function(double progreess)? onReceiveProgress,
     void Function(double progreess)? onSendProgress,
+    String folder = "profile",
     required String filePath,
     required String userId,
     required String url,
@@ -150,7 +151,7 @@ class ApiService {
       final res = await _dio.post(
         url,
         data: formData,
-        options: Options(headers: {'userid': userId}),
+        options: Options(headers: {'userid': userId, "folder": folder}),
         onSendProgress: (count, total) {
           final progress = (count / total) * 100;
           onSendProgress?.call(progress);

@@ -1,5 +1,5 @@
 import 'package:watchmate_app/features/stream/views/widgets/build_background.dart';
-import 'package:watchmate_app/features/stream/views/widgets/history_builder.dart';
+import 'package:watchmate_app/features/stream/views/widgets/tasks_builder.dart';
 import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
 import 'package:watchmate_app/router/routes/stream_routes.dart';
@@ -80,7 +80,7 @@ class _StreamScreenState extends State<StreamScreen> {
                   ],
                 ),
                 30.h,
-                const HistoryBuilder(),
+                const TasksBuilder(),
               ],
             ),
           ).safeArea(),

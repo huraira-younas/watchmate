@@ -6,6 +6,7 @@ import 'package:watchmate_app/features/stream/bloc/link_bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
+import 'package:watchmate_app/features/stream/bloc/upload_bloc/bloc.dart';
 import 'package:watchmate_app/router/route_config.dart';
 import 'package:watchmate_app/utils/shared_prefs.dart';
 import 'package:watchmate_app/utils/pre_loader.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<NavigationCubit>()),
+        BlocProvider(create: (_) => getIt<UploaderBloc>()),
         BlocProvider(create: (_) => getIt<ThemeCubit>()),
         BlocProvider(create: (_) => getIt<VideoCubit>()),
         BlocProvider(create: (_) => getIt<AuthBloc>()),
