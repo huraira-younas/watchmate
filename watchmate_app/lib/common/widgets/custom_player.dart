@@ -15,6 +15,7 @@ class CustomVideoPlayer extends StatefulWidget {
 class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   late VideoPlayerController _videoPlayerController;
   ChewieController? _chewieController;
+  double? _aspectRatio;
 
   @override
   void initState() {
@@ -26,10 +27,14 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
     _videoPlayerController =
         VideoPlayerController.networkUrl(Uri.parse(cleanUrl))
           ..initialize().then((_) {
+            _aspectRatio =
+                _videoPlayerController.value.size.width /
+                _videoPlayerController.value.size.height;
+
             _chewieController = ChewieController(
               videoPlayerController: _videoPlayerController,
               allowFullScreen: true,
-              aspectRatio: 16 / 9,
+              aspectRatio: _aspectRatio ?? (16 / 9),
               showOptions: false,
               allowMuting: true,
               looping: false,
@@ -54,7 +59,7 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
         !_chewieController!.videoPlayerController.value.isInitialized;
 
     return AspectRatio(
-      aspectRatio: 16 / 9,
+      aspectRatio: _aspectRatio ?? (16 / 9),
       child: loading
           ? ColoredBox(
               color: theme.cardColor,
