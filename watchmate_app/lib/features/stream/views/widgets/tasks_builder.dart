@@ -88,12 +88,7 @@ class _LinkTaskSection extends StatelessWidget {
     return ListTile(
       horizontalTitleGap: 8,
       subtitle: isDownloading
-          ? LinearProgressIndicator(
-              value: (video as DownloadingVideo).percent / 100,
-              backgroundColor: color.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(10),
-              minHeight: 6,
-            )
+          ? _ProgressBuilder((video as DownloadingVideo).percent / 100, color)
           : MyText(text: "Completed", color: color, size: 11),
       trailing: const CustomCheckBox(isChecked: true, isCircle: true),
       contentPadding: EdgeInsets.zero,
@@ -138,12 +133,7 @@ class _BuildUploadTasks extends StatelessWidget {
                 ),
               ),
               subtitleBuilder: (task) {
-                return LinearProgressIndicator(
-                  backgroundColor: color.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(10),
-                  value: task.progress,
-                  minHeight: 6,
-                );
+                return _ProgressBuilder(task.progress, color);
               },
             ),
             _TaskSection(
@@ -169,6 +159,33 @@ class _BuildUploadTasks extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class _ProgressBuilder extends StatelessWidget {
+  const _ProgressBuilder(this.progress, this.color);
+  final double progress;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        LinearProgressIndicator(
+          backgroundColor: color.withValues(alpha: 0.2),
+          borderRadius: BorderRadius.circular(10),
+          value: progress,
+          minHeight: 6,
+        ).expanded(),
+        8.w,
+        MyText(
+          text: "${(progress * 100).toStringAsFixed(1).padLeft(5)}%",
+          family: AppFonts.medium,
+          color: color,
+          size: 10,
+        ),
+      ],
     );
   }
 }

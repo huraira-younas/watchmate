@@ -173,7 +173,7 @@ class _UploadScreenState extends State<UploadScreen> {
             ),
           ).expanded(),
           CustomButton(
-            onPressed: _startUpload,
+            onPressed: _pickedFile == null ? null : _startUpload,
             isLoading: _loading,
             text: "Upload File",
           ).padOnly(

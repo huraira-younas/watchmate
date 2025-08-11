@@ -212,19 +212,21 @@ class UploaderBloc extends Bloc<UploaderEvent, UploaderState> {
     add(StartUploads());
   }
 
-  void _handleUploadTermination({
+  Future<void> _handleUploadTermination({
     required Emitter<UploaderState> emit,
     required String taskId,
     bool completed = false,
     bool failed = false,
     String? videoUrl,
-  }) {
+  }) async {
     final index = state.active.indexWhere((u) => u.id == taskId);
     if (index == -1) return;
 
     final uploadItem = state.active[index];
     if (videoUrl != null && completed) {
-      _repo.addVideo(uploadItem.video.copyWith(videoURL: videoUrl).toJson());
+      await _repo.addVideo(
+        uploadItem.video.copyWith(videoURL: videoUrl).toJson(),
+      );
     }
 
     _removeUploadById(
