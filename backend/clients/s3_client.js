@@ -17,37 +17,24 @@ const s3 = new S3Client({
 
 const allowedMimes = [
   "application/octet-stream",
-  "video/x-matroska", 
+  "video/x-matroska",
   "video/quicktime",
   "video/x-msvideo",
-  "video/3gpp2",
-  "video/x-flv",
-  "video/mpeg", 
-  "video/webm",
-  "video/3gpp", 
-  "image/jpeg", 
-  "image/webp", 
+  "image/jpeg",
+  "image/webp",
   "video/mp4",
-  "video/ogg",
   "image/png",
 ];
 
 const allowedExts = [
   ".jpeg",
-  ".webm",
   ".webp",
-  ".mpeg",
+  ".png",
+  ".mkv",
   ".jpg",
   ".mp4",
-  ".png",
-  ".ogg",
   ".mov",
   ".avi",
-  ".mkv",
-  ".mpg",
-  ".3gp",
-  ".3g2",
-  ".flv",
 ];
 
 const storage = multerS3({
