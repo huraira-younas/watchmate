@@ -49,10 +49,12 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 
   Future<String> _uploadThumbnail() async {
+    if (_video == null) return "";
+
     final res = await _api.upload(
+      folder: "videos/${_video!.id}",
       url: ApiRoutes.file.upload,
       filePath: _thumbnail!,
-      folder: "thumbnails",
       userId: _uid,
     );
 
@@ -98,8 +100,8 @@ class _UploadScreenState extends State<UploadScreen> {
     _controller.text = title;
     _video = video.copyWith(
       visibility: _visibility,
-      title: title,
       userId: _uid,
+      title: title,
     );
   }
 

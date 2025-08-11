@@ -40,7 +40,7 @@ void _processQueue() {
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     content: MyText(text: message, family: AppFonts.medium),
     backgroundColor: AppColors.darkBorder,
-    duration: const Duration(seconds: 5),
+    duration: const Duration(seconds: 3),
     behavior: SnackBarBehavior.floating,
     margin: const EdgeInsets.all(12),
   );

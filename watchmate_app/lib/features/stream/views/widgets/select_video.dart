@@ -12,6 +12,7 @@ import 'package:video_player/video_player.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:io' show File;
 
 class SelectVideo extends StatefulWidget {
@@ -75,7 +76,7 @@ class _SelectVideoState extends State<SelectVideo> {
 
     setState(() => _loading = false);
 
-    if (thumbPath != null) {
+    if (thumbPath != null && _videoController != null) {
       final fileSize = await File(file).length();
       widget.onSelect(
         DownloadedVideo(
@@ -83,9 +84,9 @@ class _SelectVideoState extends State<SelectVideo> {
           duration: _videoController!.value.duration,
           width: _videoController!.value.size.width,
           createdAt: DateTime.now(),
+          id: const Uuid().v4(),
           size: fileSize,
           userId: "",
-          id: "",
         ),
         thumbPath,
         file,
