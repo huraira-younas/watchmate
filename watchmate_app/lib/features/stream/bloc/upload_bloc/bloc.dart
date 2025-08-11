@@ -177,6 +177,7 @@ class UploaderBloc extends Bloc<UploaderEvent, UploaderState> {
     for (final upload in items) {
       final task = UploadTask.fromFile(
         headers: {'userid': _userId!, 'folder': "videos/${upload.video.id}"},
+        updates: Updates.statusAndProgress,
         file: File(upload.filePath),
         taskId: upload.id,
         url: upload.url,
