@@ -1,12 +1,14 @@
 import 'package:watchmate_app/features/stream/views/widgets/platform_selection.dart';
+import 'package:watchmate_app/features/stream/views/widgets/select_video.dart';
 import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
 import 'package:watchmate_app/router/routes/stream_routes.dart';
+import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:watchmate_app/common/widgets/custom_card.dart';
 import 'package:watchmate_app/common/widgets/custom_chip.dart';
-import 'package:watchmate_app/features/stream/bloc/bloc.dart';
+import 'package:watchmate_app/features/stream/bloc/link_bloc/bloc.dart';
 import 'package:watchmate_app/common/widgets/text_field.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/utils/validator_builder.dart';
@@ -22,23 +24,31 @@ class UploadScreen extends StatefulWidget {
 }
 
 class _UploadScreenState extends State<UploadScreen> {
-  final _dControllers = List.generate(2, (_) => TextEditingController());
-  final _dKeys = List.generate(2, (_) => GlobalKey<FormState>());
-
   final _controller = TextEditingController();
   final _key = GlobalKey<FormState>();
 
   VideoVisibility _visibility = VideoVisibility.public;
+  String? _pickedFile, _thumbnail;
 
   @override
   void dispose() {
-    _dControllers.asMap().forEach((_, v) => v.dispose());
     _controller.dispose();
     super.dispose();
   }
 
-  void _startLink() {
+  void _startUpload() {
     FocusScope.of(context).unfocus();
+    if (_pickedFile == null || _thumbnail == null) {
+      showAppSnackBar("Please select a video");
+      return;
+    }
+  }
+
+  Future<void> _onSelect(String file, String thumbnail) async {
+    setState(() {
+      _thumbnail = thumbnail;
+      _pickedFile = file;
+    });
   }
 
   @override
@@ -88,53 +98,28 @@ class _UploadScreenState extends State<UploadScreen> {
                 ),
                 20.h,
                 Form(
-                  key: _dKeys[0],
+                  key: _key,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: CustomTextField(
-                    showTitle: true,
+                    hint: "Please enter the title of the video",
+                    prefixIcon: const Icon(Icons.title),
+                    controller: _controller,
                     label: "Video Title",
+                    showTitle: true,
                     validator: ValidatorBuilder.chain()
                         .required()
                         .min(6)
                         .build(),
-                    hint: "Please enter the title of the video",
-                    prefixIcon: const Icon(Icons.title),
-                    controller: _dControllers[0],
                   ),
                 ),
-                20.h,
-                Form(
-                  key: _dKeys[1],
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: CustomTextField(
-                    validator: ValidatorBuilder.chain().required().build(),
-                    hint: "Please enter the url of the thumbnail",
-                    prefixIcon: const Icon(Icons.image_outlined),
-                    controller: _dControllers[1],
-                    label: "Thumbnail Url",
-                    showTitle: true,
-                  ),
-                ),
-                20.h,
-                Form(
-                  key: _key,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: CustomTextField(
-                    validator: ValidatorBuilder.chain().required().build(),
-                    hint: "Please enter a video URL",
-                    prefixIcon: const Icon(Icons.link),
-                    controller: _controller,
-                    label: "Video URL",
-                    showTitle: true,
-                  ),
-                ),
+                SelectVideo(onSelect: _onSelect),
                 50.h,
               ],
             ),
           ).expanded(),
           BlocBuilder<LinkBloc, LinkState>(
             builder: (context, state) {
-              return CustomButton(onPressed: _startLink, text: "Add Link");
+              return CustomButton(onPressed: _startUpload, text: "Upload File");
             },
           ).padOnly(
             l: AppConstants.padding - 10,

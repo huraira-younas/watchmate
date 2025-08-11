@@ -1,6 +1,7 @@
 import 'package:watchmate_app/features/stream/views/widgets/platform_selection.dart';
 import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart';
 import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
+import 'package:watchmate_app/features/stream/bloc/link_bloc/bloc.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/common/widgets/video_preview.dart';
@@ -10,7 +11,6 @@ import 'package:watchmate_app/router/routes/stream_routes.dart';
 import 'package:watchmate_app/common/widgets/custom_card.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/common/widgets/custom_chip.dart';
-import 'package:watchmate_app/features/stream/bloc/bloc.dart';
 import 'package:watchmate_app/common/widgets/text_field.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/utils/validator_builder.dart';

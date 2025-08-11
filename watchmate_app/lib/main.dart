@@ -2,7 +2,7 @@ import 'package:watchmate_app/common/cubits/navigation_cubit.dart';
 import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:watchmate_app/common/cubits/video_cubit.dart';
-import 'package:watchmate_app/features/stream/bloc/bloc.dart';
+import 'package:watchmate_app/features/stream/bloc/link_bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_assets.dart';

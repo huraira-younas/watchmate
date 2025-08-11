@@ -17,6 +17,7 @@ class CustomCard extends StatelessWidget {
     return Container(
       padding:  EdgeInsets.all(padding),
       margin: EdgeInsets.all(margin),
+      clipBehavior: Clip.antiAlias,
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),

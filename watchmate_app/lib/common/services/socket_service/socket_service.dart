@@ -7,8 +7,7 @@ import 'dart:async' show Timer;
 enum NamespaceType { stream, notifications, chat, auth }
 
 class SocketNamespaceService {
-  final _eventStreams =
-      <NamespaceType, BehaviorSubject<Map<String, dynamic>>>{};
+  final _eventStreams = <NamespaceType, BehaviorSubject<Map<String, dynamic>>>{};
   final _emitQueue = <NamespaceType, List<_EmitQueueItem>>{};
   final _pingWatchers = <NamespaceType, Timer>{};
   final _sockets = <NamespaceType, io.Socket>{};
