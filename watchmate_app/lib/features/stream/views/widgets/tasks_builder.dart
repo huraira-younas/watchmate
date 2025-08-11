@@ -1,4 +1,8 @@
 import 'package:watchmate_app/features/stream/bloc/upload_bloc/bloc.dart';
+import 'package:watchmate_app/features/stream/bloc/link_bloc/bloc.dart';
+import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
+import 'package:watchmate_app/common/models/video_model/exports.dart';
+import 'package:watchmate_app/common/widgets/custom_checkbox.dart';
 import 'package:watchmate_app/common/widgets/cache_image.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
@@ -12,16 +16,100 @@ class TasksBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        MyText(
+        const MyText(
           family: AppFonts.semibold,
           size: AppConstants.title,
           text: "Tasks",
         ),
-        _BuildUploadTasks(),
+        10.h,
+        const _BuildUploadTasks(),
+        const _BuildLinkTask(VideoType.youtube),
+        const _BuildLinkTask(VideoType.direct),
       ],
+    );
+  }
+}
+
+class _BuildLinkTask extends StatelessWidget {
+  const _BuildLinkTask(this.type);
+  final VideoType type;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = context.theme.hintColor;
+
+    return BlocBuilder<LinkBloc, LinkState>(
+      buildWhen: (p, c) {
+        if (type == VideoType.direct) {
+          return p.direct != c.direct;
+        } else {
+          return p.yt != c.yt;
+        }
+      },
+      builder: (context, state) {
+        final isDirect = type == VideoType.direct;
+        final process = isDirect ? state.direct : state.yt;
+        if (process.isLoading) return const SizedBox.shrink();
+
+        if (process.isError) {
+          return CustomLabelWidget(
+            icon: Icons.running_with_errors_rounded,
+            title: "Server Response Error!",
+            text: process.error,
+            iconSize: 80,
+          ).center().padOnly(t: 40);
+        }
+
+        return _LinkTaskSection(
+          color: color,
+          video: process.isDownloading
+              ? process.downloadingVideo
+              : process.downloadedVideo,
+        );
+      },
+    );
+  }
+}
+
+class _LinkTaskSection extends StatelessWidget {
+  final BaseVideo? video;
+  final Color color;
+
+  const _LinkTaskSection({required this.color, required this.video});
+
+  @override
+  Widget build(BuildContext context) {
+    if (video == null) return const SizedBox.shrink();
+    final isDownloading = video is DownloadingVideo;
+
+    return ListTile(
+      horizontalTitleGap: 8,
+      subtitle: isDownloading
+          ? LinearProgressIndicator(
+              value: (video as DownloadingVideo).percent / 100,
+              backgroundColor: color.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(10),
+              minHeight: 6,
+            )
+          : MyText(text: "Completed", color: color, size: 11),
+      trailing: const CustomCheckBox(isChecked: true, isCircle: true),
+      contentPadding: EdgeInsets.zero,
+      leading: ClipRRect(
+        borderRadius: BorderRadiusGeometry.circular(10),
+        child: SizedBox(
+          height: 90,
+          width: 100,
+          child: CacheImage(url: video!.thumbnailURL),
+        ),
+      ),
+      title: MyText(
+        overflow: TextOverflow.ellipsis,
+        text: video!.title,
+        maxLines: 2,
+      ),
     );
   }
 }
@@ -76,7 +164,7 @@ class _BuildUploadTasks extends StatelessWidget {
               subtitleBuilder: (task) =>
                   MyText(text: "Completed", color: color, size: 11),
               trailingBuilder: (_) =>
-                  const Icon(Icons.check_circle, color: Colors.green),
+                  const CustomCheckBox(isChecked: true, isCircle: true),
             ),
           ],
         );
