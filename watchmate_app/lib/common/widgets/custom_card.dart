@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
+  final BoxConstraints? constraints;
   final double padding;
   final double margin;
   final Widget child;
@@ -8,6 +9,7 @@ class CustomCard extends StatelessWidget {
     required this.child,
     this.padding = 10.0,
     this.margin = 10.0,
+    this.constraints,
     super.key,
   });
 
@@ -15,6 +17,7 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
+      constraints: constraints,
       padding:  EdgeInsets.all(padding),
       margin: EdgeInsets.all(margin),
       clipBehavior: Clip.antiAlias,

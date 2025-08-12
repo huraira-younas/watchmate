@@ -5,6 +5,7 @@ import 'package:watchmate_app/features/player/views/player_screen.dart';
 import 'package:watchmate_app/features/stream/views/stream_screen.dart';
 import 'package:watchmate_app/features/stream/views/link_screen.dart';
 import 'package:flutter/material.dart' show Icons;
+import 'package:watchmate_app/router/not_found_page.dart';
 import 'app_route_model.dart';
 
 abstract class StreamRoutes {
@@ -31,12 +32,17 @@ abstract class StreamRoutes {
     path: '/player',
     name: 'Player',
     pageBuilder: (context, state) {
-      final extra = state.extra as Map<String, dynamic>;
+      final extra = state.extra as Map<String, dynamic>?;
       return bottomUpTransition(
-        child: PlayerScreen(
-          tagPrefix: extra['tagPrefix'] ?? 'home',
-          video: extra['video'] as DownloadedVideo,
-        ),
+        child: extra == null
+            ? const NotFoundPage(
+                message: "The link is invalid or the shared video is removed",
+                title: "Something went wrong",
+              )
+            : PlayerScreen(
+                tagPrefix: extra['tagPrefix'] ?? 'home',
+                video: extra['video'] as DownloadedVideo,
+              ),
         key: state.pageKey,
       );
     },

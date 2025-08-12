@@ -20,42 +20,53 @@ class PlayerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(context: context, title: "Player"),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          CustomVideoPlayer(
-            thumbnailURL: video.thumbnailURL,
-            tagPrefix: tagPrefix,
-            url: video.videoURL,
-          ),
-          CustomChip(
-            icon: Icons.private_connectivity_rounded,
-            text: video.visibility.name.capitalize,
-          ).padOnly(l: AppConstants.padding - 6, t: 10),
-          CustomCard(
-            child: MyText(
-              size: AppConstants.subtitle,
-              family: AppFonts.semibold,
-              text: video.title,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            CustomVideoPlayer(
+              thumbnailURL: video.thumbnailURL,
+              tagPrefix: tagPrefix,
+              url: video.videoURL,
             ),
-          ),
-          Row(
-            children: <Widget>[
-              const CustomChip(icon: Icons.thumb_up_alt_outlined, text: "1.2k"),
-              4.w,
-              const CustomChip(icon: Icons.share_outlined, text: "Share"),
-              4.w,
-              const CustomChip(icon: Icons.download_outlined, text: "Download"),
-            ],
-          ).padSym(h: AppConstants.padding - 6),
-          const CustomCard(
-            child: CustomLabelWidget(
-              text: "Senpai is building this. Please have a seat",
-              title: "RealTime Chat Area",
-              icon: Icons.chair,
+            CustomChip(
+              icon: Icons.private_connectivity_rounded,
+              text: video.visibility.name.capitalize,
+            ).padOnly(l: AppConstants.padding - 6, t: 10),
+            CustomCard(
+              child: MyText(
+                size: AppConstants.subtitle,
+                family: AppFonts.semibold,
+                text: video.title,
+              ),
             ),
-          ).expanded(),
-        ],
+            Row(
+              children: <Widget>[
+                const CustomChip(
+                  icon: Icons.thumb_up_alt_outlined,
+                  text: "1.2k",
+                ),
+                4.w,
+                const CustomChip(icon: Icons.share_outlined, text: "Share"),
+                4.w,
+                const CustomChip(
+                  icon: Icons.download_outlined,
+                  text: "Download",
+                ),
+              ],
+            ).padSym(h: AppConstants.padding - 6),
+            CustomCard(
+              constraints: BoxConstraints(
+                minHeight: context.screenHeight * 0.3,
+              ),
+              child: const CustomLabelWidget(
+                text: "Senpai is building this. Please have a seat",
+                title: "RealTime Chat Area",
+                icon: Icons.chair,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

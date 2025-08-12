@@ -32,14 +32,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
 
             <!-- App Link sample -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="watchmate.hurairayounas.com" android:pathPrefix="/player" />
+                <data android:scheme="https" android:host="watchmate.hurairayounas.com" />
             </intent-filter>
             
             <!-- Deep Link sample -->

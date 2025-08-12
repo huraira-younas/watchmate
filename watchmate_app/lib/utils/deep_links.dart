@@ -3,8 +3,10 @@ import 'package:watchmate_app/common/services/api_service/api_routes.dart';
 import 'package:watchmate_app/common/services/api_service/dio_client.dart';
 import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:flutter/services.dart' show PlatformException;
+import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/router/routes/exports.dart';
 import 'package:watchmate_app/utils/logger.dart';
+import 'package:watchmate_app/di/locator.dart';
 import 'dart:async' show StreamSubscription;
 import 'package:go_router/go_router.dart';
 import 'package:app_links/app_links.dart';
@@ -41,26 +43,37 @@ class DeepLinkHandler {
     Logger.info(message: "Incoming Link: $uri", tag: "App_Links");
 
     final path = uri.pathSegments.isNotEmpty ? uri.pathSegments.first : '';
-    if (path != StreamRoutes.player.path) return;
+    Logger.info(message: "Incoming Path: $path", tag: "App_Links");
+
+    if ("/$path" != StreamRoutes.player.path) return;
 
     final id = uri.queryParameters['id']?.trim();
+    Logger.info(message: "Incoming Id: $id", tag: "App_Links");
+
     if (id == null || id.isEmpty) {
       showAppSnackBar("Invalid link: missing video ID");
       return;
     }
 
     try {
+      final uid = getIt<AuthBloc>().user?.id;
+      if (uid == null) {
+        return _router.go(AuthRoutes.login.path);
+      }
+
       final res = await _api.post(
         ApiRoutes.video.getVideo,
-        data: {'userId': "", "id": id},
+        data: {"userId": uid, "id": id},
       );
+
+      Logger.info(message: "Incoming Res: $res", tag: "App_Links");
 
       if (res.statusCode != 200 || res.body == null) {
         showAppSnackBar(res.error ?? "Failed to get video $id");
         return;
       }
 
-      _router.go(
+      _router.push(
         StreamRoutes.player.path,
         extra: {
           'video': DownloadedVideo.fromJson(res.body),

@@ -66,8 +66,8 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
         _chewieController == null ||
         !_chewieController!.videoPlayerController.value.isInitialized;
 
-    return AspectRatio(
-      aspectRatio: _aspectRatio ?? (16 / 9),
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: context.screenHeight * 0.43),
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
