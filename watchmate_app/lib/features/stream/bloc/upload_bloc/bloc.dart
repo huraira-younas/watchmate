@@ -49,24 +49,15 @@ class UploaderBloc extends Bloc<UploaderEvent, UploaderState> {
         .registerCallbacks(taskNotificationTapCallback: (task, type) {})
         .configureNotificationForGroup(
           FileDownloader.defaultGroup,
-          running: const TaskNotification(
-            'Download {filename}',
-            'File: {filename} - {progress} - speed {networkSpeed} and {timeRemaining} remaining',
-          ),
-          complete: const TaskNotification(
-            '{displayName} download {filename}',
-            'Download complete',
-          ),
-          error: const TaskNotification(
-            'Download {filename}',
-            'Download failed',
-          ),
-          paused: const TaskNotification(
-            'Download {filename}',
-            'Paused with metadata {metadata}',
-          ),
-          canceled: const TaskNotification('Download {filename}', 'Canceled'),
+          paused: const TaskNotification('{filename}', 'Paused {metadata}'),
+          complete: const TaskNotification('{filename}', 'Task complete'),
+          error: const TaskNotification('{filename}', 'Task failed'),
+          canceled: const TaskNotification('{filename}', 'Canceled'),
           progressBar: true,
+          running: const TaskNotification(
+            '{filename}',
+            '{progress} - {networkSpeed} - {timeRemaining} remaining',
+          ),
         )
         .configureNotificationForGroup(
           'bunch',
@@ -83,10 +74,7 @@ class UploaderBloc extends Bloc<UploaderEvent, UploaderState> {
           progressBar: false,
         )
         .configureNotification(
-          complete: const TaskNotification(
-            'Download {filename}',
-            'Download complete',
-          ),
+          complete: const TaskNotification('{filename}', 'Task complete'),
           tapOpensFile: false,
         );
 
