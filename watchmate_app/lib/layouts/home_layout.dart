@@ -1,5 +1,6 @@
 import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
-import 'package:watchmate_app/common/widgets/dialog_boxs.dart' show errorDialogue;
+import 'package:watchmate_app/common/widgets/dialog_boxs.dart'
+    show errorDialogue;
 import 'package:watchmate_app/common/widgets/loading/loading_screen.dart';
 import 'package:watchmate_app/common/widgets/custom_bottom_nav_bar.dart';
 import 'package:watchmate_app/common/cubits/navigation_cubit.dart';
@@ -8,7 +9,9 @@ import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/router/routes/exports.dart';
 import 'package:watchmate_app/constants/app_assets.dart';
+import 'package:watchmate_app/router/route_config.dart';
 import 'package:watchmate_app/extensions/exports.dart';
+import 'package:watchmate_app/utils/deep_links.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:go_router/go_router.dart';
@@ -33,6 +36,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   @override
   void initState() {
     super.initState();
+    DeepLinkHandler(appRouter).init();
     _socketService.connect(
       query: {"userId": _authBloc.user?.id},
       type: NamespaceType.auth,

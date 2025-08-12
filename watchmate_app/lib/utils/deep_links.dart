@@ -3,15 +3,15 @@ import 'package:watchmate_app/common/services/api_service/api_routes.dart';
 import 'package:watchmate_app/common/services/api_service/dio_client.dart';
 import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:flutter/services.dart' show PlatformException;
-import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/router/routes/exports.dart';
+import 'package:watchmate_app/utils/shared_prefs.dart';
 import 'package:watchmate_app/utils/logger.dart';
-import 'package:watchmate_app/di/locator.dart';
 import 'dart:async' show StreamSubscription;
 import 'package:go_router/go_router.dart';
 import 'package:app_links/app_links.dart';
 
 class DeepLinkHandler {
+  final _sp = SharedPrefs.instance;
   StreamSubscription? _linkSub;
   final _api = ApiService();
   final GoRouter _router;
@@ -56,7 +56,7 @@ class DeepLinkHandler {
     }
 
     try {
-      final uid = getIt<AuthBloc>().user?.id;
+      final uid = _sp.getLoggedUser();
       if (uid == null) {
         return _router.go(AuthRoutes.login.path);
       }
