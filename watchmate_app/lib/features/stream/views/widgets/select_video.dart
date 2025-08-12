@@ -31,7 +31,7 @@ class _SelectVideoState extends State<SelectVideo> {
 
   Future<void> _pickFile() async {
     final result = await FilePicker.platform.pickFiles(
-      allowedExtensions: <String>['mkv', 'mov', 'mp4', 'avi'],
+      allowedExtensions: <String>['mkv', 'mov', 'mp4', 'mpeg', 'webm', 'avi'],
       type: FileType.custom,
       allowMultiple: false,
     );

@@ -20,6 +20,8 @@ const allowedMimes = [
   "video/x-matroska",
   "video/quicktime",
   "video/x-msvideo",
+  "video/webm",
+  "video/mpeg",
   "image/jpeg",
   "image/webp",
   "video/mp4",
@@ -29,6 +31,8 @@ const allowedMimes = [
 const allowedExts = [
   ".jpeg",
   ".webp",
+  ".webm",
+  ".mpeg",
   ".png",
   ".mkv",
   ".jpg",
@@ -50,8 +54,14 @@ const storage = multerS3({
         return cb(new Error("userid is required"));
       }
 
-      const fileName = `${userid}/${folder}/${file.originalname}`;
-      cb(null, fileName);
+      const ext = path.extname(file.originalname).toLowerCase();
+      let filename;
+
+      if (file.mimetype.startsWith("video/")) filename = `video${ext}`;
+      else filename = file.originalname;
+
+      const filePath = `${userid}/${folder}/${filename}`;
+      cb(null, filePath);
     } catch (error) {
       logger.error(`Error in uploading: ${error.message}`);
       cb(error);
@@ -67,7 +77,7 @@ const uploadToR2 = multer({
     const isMimeAllowed = allowedMimes.includes(file.mimetype);
     const isExtAllowed = allowedExts.includes(ext);
 
-    if (!isMimeAllowed && !isExtAllowed) {
+    if (!isMimeAllowed || !isExtAllowed) {
       const e = `Invalid file type: ${file.originalname} (${file.mimetype})`;
       return cb(new Error(e));
     }

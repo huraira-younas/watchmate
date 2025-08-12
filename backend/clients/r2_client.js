@@ -71,28 +71,30 @@ class R2Client {
     const response = await axios.get(this.url, { responseType: "stream" });
     const contentType = response.headers["content-type"] || "video/mp4";
 
-    const filename = `${title}.${contentType.split("/")[1] || "mp4"}`;
     const size = parseInt(response.headers["content-length"] || 0, 10);
+    const extension = contentType.split("/")[1] || "mp4";
+    const filename = `video.${extension}`;
 
-    const key = `${this.user.id}/direct/${filename}`;
+    const id = uuid();
+    const key = `${this.user.id}/direct/${id}/${filename}`;
 
     this.videoData = {
       videoURL: `${process.env.R2_PUBLIC_BASE_URL}/${key}`,
+      title: sanitize(title),
       userId: this.user.id,
       thumbnailURL: "",
-      title: filename,
       type: "direct",
       duration: 0,
-      id: uuid(),
       visibility,
       height: 0,
       width: 0,
       size,
+      id,
     };
 
     await Promise.all([
       this._uploadToR2(response.data, key, contentType, size),
-      this._uploadThumbnail(thumbnail, title),
+      this._uploadThumbnail(thumbnail, id),
     ]);
   }
 
@@ -126,11 +128,11 @@ class R2Client {
     console.log(`[R2] Uploaded: ${key}`);
   }
 
-  async _uploadThumbnail(url, title) {
+  async _uploadThumbnail(url, id) {
     if (!url) return;
 
     const response = await axios.get(url, { responseType: "arraybuffer" });
-    const key = `${this.user.id}/thumbnails/${title}.jpg`;
+    const key = `${this.user.id}/direct/${id}/thumbnail.jpg`;
 
     await r2.send(
       new Upload({
@@ -160,11 +162,14 @@ class R2Client {
 
       const sockets = await io.of("/stream").fetchSockets();
       const socketId = await getMemberFromHash(key);
-      
-      console.log('Sockets in /stream:', sockets.map(s => s.id));
+
+      console.log(
+        "Sockets in /stream:",
+        sockets.map((s) => s.id)
+      );
       this.socket = sockets.find((s) => s.id === socketId);
       console.log("Current SocketId: ", socketId);
-            
+
       if (!this.socket) {
         logger.warn(`Socket not found: ${percent}`);
         return;
