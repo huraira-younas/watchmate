@@ -1,6 +1,5 @@
-import 'package:watchmate_app/extensions/animate_extensions.dart';
-import 'package:watchmate_app/extensions/context_extensions.dart';
 import 'package:watchmate_app/common/widgets/cache_image.dart';
+import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/utils/logger.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
@@ -61,27 +60,24 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
     final loading =
         _chewieController == null ||
         !_chewieController!.videoPlayerController.value.isInitialized;
 
     return AspectRatio(
       aspectRatio: _aspectRatio ?? (16 / 9),
-      child: loading
-          ? ColoredBox(
-              color: theme.cardColor,
-              child: Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  CacheImage(
-                    url: widget.thumbnailURL,
-                  ).hero(widget.thumbnailURL),
-                  const Center(child: CircularProgressIndicator()),
-                ],
-              ),
-            )
-          : Chewie(controller: _chewieController!),
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          CacheImage(url: widget.thumbnailURL).hero(widget.thumbnailURL),
+          AnimatedSwitcher(
+            duration: 300.millis,
+            child: loading
+                ? const Center(child: CircularProgressIndicator())
+                : Chewie(controller: _chewieController!),
+          ),
+        ],
+      ),
     );
   }
 }
