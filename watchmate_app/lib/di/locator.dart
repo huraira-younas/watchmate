@@ -1,3 +1,4 @@
+import 'package:watchmate_app/features/my_list/locator.dart';
 import 'package:watchmate_app/features/stream/locator.dart';
 import 'package:watchmate_app/features/auth/locator.dart';
 import 'package:watchmate_app/common/locator.dart';
@@ -9,6 +10,8 @@ void setupLocator() {
   setupCommonLocator();
   setupAuthLocator();
 
-  // STREAM: Depends on Socket and Auth Locator
+
+  // NOTE: DONT CHANGE THE ALIGNMENT OR ROWS
   setupStreamLocator();
+  setupListLocator();
 }

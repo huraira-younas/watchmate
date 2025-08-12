@@ -21,7 +21,10 @@ class PlayerScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          CustomVideoPlayer(url: video.videoURL),
+          CustomVideoPlayer(
+            thumbnailURL: video.thumbnailURL,
+            url: video.videoURL,
+          ),
           CustomChip(
             icon: Icons.private_connectivity_rounded,
             text: video.visibility.name.capitalize,

@@ -2,6 +2,7 @@ import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart'
 import 'package:watchmate_app/common/models/video_model/base_video.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/video_preview.dart';
+import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:watchmate_app/common/cubits/video_cubit.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
@@ -22,8 +23,6 @@ class _HomeScreenState extends State<HomeScreen>
   final _vidCubit = getIt<VideoCubit>();
   final _authBloc = getIt<AuthBloc>();
 
-  final _key = VideoVisibility.public.name;
-
   @override
   void initState() {
     super.initState();
@@ -32,8 +31,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<void> _refresh() async {
     await _vidCubit.getAllVideos(
+      visibility: VideoVisibility.public.name,
       userId: _authBloc.user!.id,
-      visibility: _key,
       refresh: true,
     );
   }
@@ -44,26 +43,15 @@ class _HomeScreenState extends State<HomeScreen>
 
     return RefreshIndicator(
       onRefresh: _refresh,
-      child: BlocBuilder<VideoCubit, Map<String, VideoState>>(
-        buildWhen: (p, c) => c[_key] != p[_key],
+      child: BlocBuilder<VideoCubit, VideoState>(
         builder: (context, state) {
-          final st = state[_key];
-          if (st == null) return const SizedBox.shrink();
+          final loading = state.loading;
+          final error = state.error;
 
-          final loading = st.loading;
-          final error = st.error;
-
-          if (error != null) {
-            return CustomLabelWidget(
-              icon: Icons.streetview_sharp,
-              text: error.message,
-              title: error.title,
-            ).fadeIn();
-          }
-
+          if (error != null) showAppSnackBar(error.message);
           if (loading != null) return const VideoCardSkeleton().fadeIn();
 
-          final pagination = st.pagination;
+          final pagination = state.pagination;
           if (pagination.videos.isEmpty) {
             return const CustomLabelWidget(
               text:

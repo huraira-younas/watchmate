@@ -16,13 +16,11 @@ const deleteVideo = async (req, res) => {
 };
 
 const getAllVideos = async (req, res) => {
-  validateReq(req.body, ["visibility"]);
-  const { visibility, cursor = null, limit = 10, search } = req.body;
+  validateReq(req.body, ["visibility", "isHome"]);
+  const { visibility, cursor = null, isHome, limit = 10, search } = req.body;
 
   const conditions = { visibility };
-  if (visibility === "private") {
-    conditions.userId = req.body.userId;
-  }
+  if (!isHome) conditions.userId = req.body.userId;
 
   const videos = await Video.pagination({
     conditions,

@@ -102,6 +102,7 @@ class _LinkTaskSection extends StatelessWidget {
       ),
       title: MyText(
         overflow: TextOverflow.ellipsis,
+        family: AppFonts.semibold,
         text: video!.title,
         maxLines: 2,
       ),
@@ -226,8 +227,10 @@ class _TaskSection extends StatelessWidget {
               ),
               title: MyText(
                 overflow: TextOverflow.ellipsis,
+                family: AppFonts.semibold,
                 text: task.filename,
                 maxLines: 2,
+                size: 12,
               ),
             ),
           )

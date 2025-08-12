@@ -1,13 +1,10 @@
+import 'package:watchmate_app/common/repositories/video_repository.dart';
+import 'package:watchmate_app/features/my_list/bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
 
-final GetIt diAuth = GetIt.instance;
-
-// void setupAuthLocator() {
-//   if (!diAuth.isRegistered<AuthRepository>()) {
-//     diAuth.registerLazySingleton(() => AuthRepository());
-//   }
-
-//   if (!diAuth.isRegistered<AuthBloc>()) {
-//     diAuth.registerLazySingleton(() => AuthBloc(diAuth<AuthRepository>()));
-//   }
-// }
+void setupListLocator() {
+  final di = GetIt.instance;
+  if (!di.isRegistered<ListBloc>()) {
+    di.registerLazySingleton(() => ListBloc(di<VideoRepository>()));
+  }
+}

@@ -4,22 +4,22 @@ import 'package:watchmate_app/common/models/custom_state_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
-class VideoCubit extends Cubit<Map<String, VideoState>> {
+class VideoCubit extends Cubit<VideoState> {
   final VideoRepository _repo;
 
-  VideoCubit(this._repo) : super({});
+  VideoCubit(this._repo) : super(const VideoState());
 
   Future<void> getAllVideos({
     required String visibility,
     required String userId,
     bool refresh = false,
   }) async {
+    final pagination = state.pagination;
     final type = visibility;
-    final pagination = state[type]?.pagination ?? const PaginatedVideos();
 
     try {
       final hasMore = pagination.hasMore;
-      if (!refresh && !hasMore) return;
+      if (!refresh && pagination.videos.isNotEmpty && !hasMore) return;
 
       _emit(
         type: type,
@@ -33,6 +33,7 @@ class VideoCubit extends Cubit<Map<String, VideoState>> {
       final payload = await _repo.getAll({
         "visibility": type,
         "userId": userId,
+        "isHome": true,
         "cursor": !refresh && hasMore
             ? pagination.videos.last.createdAt.toIso8601String()
             : null,
@@ -52,10 +53,7 @@ class VideoCubit extends Cubit<Map<String, VideoState>> {
     CustomState? loading,
     CustomState? error,
   }) {
-    emit({
-      ...state,
-      type: VideoState(pagination: pagination, loading: loading, error: error),
-    });
+    emit(VideoState(pagination: pagination, loading: loading, error: error));
   }
 }
 

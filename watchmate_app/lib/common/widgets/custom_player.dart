@@ -1,11 +1,19 @@
+import 'package:watchmate_app/extensions/animate_extensions.dart';
 import 'package:watchmate_app/extensions/context_extensions.dart';
+import 'package:watchmate_app/common/widgets/cache_image.dart';
 import 'package:watchmate_app/utils/logger.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 
 class CustomVideoPlayer extends StatefulWidget {
-  const CustomVideoPlayer({required this.url, super.key});
+  const CustomVideoPlayer({
+    required this.thumbnailURL,
+    required this.url,
+    super.key,
+  });
+
+  final String thumbnailURL;
   final String url;
 
   @override
@@ -63,7 +71,15 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
       child: loading
           ? ColoredBox(
               color: theme.cardColor,
-              child: const Center(child: CircularProgressIndicator()),
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  CacheImage(
+                    url: widget.thumbnailURL,
+                  ).hero(widget.thumbnailURL),
+                  const Center(child: CircularProgressIndicator()),
+                ],
+              ),
             )
           : Chewie(controller: _chewieController!),
     );
