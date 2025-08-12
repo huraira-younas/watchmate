@@ -11,6 +11,7 @@ import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/router/route_config.dart';
 import 'package:watchmate_app/utils/shared_prefs.dart';
 import 'package:watchmate_app/utils/pre_loader.dart';
+import 'package:watchmate_app/utils/deep_links.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
@@ -64,12 +65,13 @@ class _AppView extends StatelessWidget {
 
 Future<void> _initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   setupLocator();
 
   await Future.wait([
     dotenv.load(fileName: ".env"),
     SharedPrefs.instance.init(),
   ]);
+
+  DeepLinkHandler(appRouter).init();
   AppAssets.registerPreloads();
 }
