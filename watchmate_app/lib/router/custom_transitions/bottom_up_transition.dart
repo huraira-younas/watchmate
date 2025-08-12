@@ -17,15 +17,12 @@ CustomTransitionPage<T> bottomUpTransition<T>({
         parent: animation,
       );
 
-      return FadeTransition(
-        opacity: curvedAnimation,
-        child: SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, 1),
-            end: Offset.zero,
-          ).animate(curvedAnimation),
-          child: child,
-        ),
+      return SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0, 1),
+          end: Offset.zero,
+        ).animate(curvedAnimation),
+        child: child,
       );
     },
   );
