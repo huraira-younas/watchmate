@@ -144,7 +144,7 @@ class _SelectVideoState extends State<SelectVideo> {
         child: Chewie(controller: _chewieController!),
       );
     } else if (_thumbnail != null) {
-      return CacheImage(url: _thumbnail!);
+      return CacheImage(url: _thumbnail!, fit: BoxFit.contain);
     } else {
       return Center(
         child: Column(

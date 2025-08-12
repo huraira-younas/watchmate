@@ -21,3 +21,17 @@ class FetchVideos extends ListEvent {
     super.onError,
   });
 }
+
+class DeleteVideo extends ListEvent {
+  final ListType type;
+  final String userId;
+  final String id;
+
+  const DeleteVideo({
+    required this.userId,
+    required this.type,
+    required this.id,
+    super.onSuccess,
+    super.onError,
+  });
+}

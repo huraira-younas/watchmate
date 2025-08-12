@@ -6,6 +6,7 @@ class VideoApi {
     _endpoint = '$pre/$_name';
   }
 
+  String get deleteVideo => "$_endpoint/delete_video";
   String get addVideo => "$_endpoint/add_video";
   String get getVideo => "$_endpoint/get_video";
   String get getAll => "$_endpoint/get_all";

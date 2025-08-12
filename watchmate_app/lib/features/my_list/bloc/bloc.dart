@@ -14,6 +14,7 @@ class ListBloc extends Bloc<ListEvent, Map<ListType, ListState>> {
 
   ListBloc(this._repo) : super({}) {
     on<FetchVideos>(_onFetchVideos);
+    on<DeleteVideo>(_onDeleteVideo);
   }
 
   Future<void> _onFetchVideos(
@@ -44,6 +45,29 @@ class ListBloc extends Bloc<ListEvent, Map<ListType, ListState>> {
     } catch (e) {
       final err = CustomState(message: e.toString(), title: "Error");
       _emit(emit: emit, pagination: pagination, type: type, error: err);
+      event.onError?.call(err);
+    } finally {
+      event.onSuccess?.call();
+    }
+  }
+
+  Future<void> _onDeleteVideo(
+    DeleteVideo event,
+    Emitter<Map<ListType, ListState>> emit,
+  ) async {
+    final type = event.type;
+    final pagination = state[type]?.pagination;
+    if (pagination == null) return;
+
+    try {
+      await _repo.deleteVideo({"userId": event.userId, "id": event.id});
+      pagination.videos.removeWhere((v) => v.id == event.id);
+
+      _emit(emit: emit, pagination: pagination, type: type);
+    } catch (e) {
+      final err = CustomState(message: e.toString(), title: "Error");
+      _emit(emit: emit, pagination: pagination, type: type, error: err);
+      event.onError?.call(err);
     } finally {
       event.onSuccess?.call();
     }

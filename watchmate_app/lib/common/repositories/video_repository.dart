@@ -16,4 +16,9 @@ class VideoRepository {
     final response = await _api.post(ApiRoutes.video.addVideo, data: data);
     if (response.error != null) throw response.error!;
   }
+
+  Future<void> deleteVideo(Map<String, dynamic> data) async {
+    final response = await _api.post(ApiRoutes.video.deleteVideo, data: data);
+    if (response.error != null) throw response.error!;
+  }
 }

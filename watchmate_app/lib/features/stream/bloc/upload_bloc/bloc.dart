@@ -1,9 +1,10 @@
-import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/common/repositories/video_repository.dart';
+import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async' show StreamSubscription;
 import 'package:path/path.dart' as path;
+import 'dart:convert' show jsonDecode;
 import 'dart:io' show File;
 
 import 'package:watchmate_app/utils/logger.dart';
@@ -93,7 +94,8 @@ class UploaderBloc extends Bloc<UploaderEvent, UploaderState> {
       if (u is TaskStatusUpdate) {
         switch (u.status) {
           case TaskStatus.complete:
-            final url = u.responseBody;
+            if (u.responseBody == null) return;
+            final url = jsonDecode(u.responseBody!);
             add(UploadCompleted(taskId: u.task.taskId, url: url!));
             break;
           case TaskStatus.failed:

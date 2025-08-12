@@ -1,11 +1,13 @@
 import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart';
 import 'package:watchmate_app/features/my_list/widgets/video_card_preview.dart';
 import 'package:watchmate_app/features/my_list/widgets/custom_list_tabs.dart';
+import 'package:watchmate_app/common/widgets/custom_bottom_sheet.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:watchmate_app/features/my_list/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
+import 'package:watchmate_app/utils/share_service.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
@@ -21,8 +23,8 @@ class MyListScreen extends StatefulWidget {
 
 class _MyListScreenState extends State<MyListScreen>
     with AutomaticKeepAliveClientMixin {
+  final _uid = getIt<AuthBloc>().user!.id;
   final _listBloc = getIt<ListBloc>();
-  final _authBloc = getIt<AuthBloc>();
 
   ListType _key = ListType.public;
 
@@ -37,8 +39,8 @@ class _MyListScreenState extends State<MyListScreen>
     _listBloc.add(
       FetchVideos(
         onSuccess: () => completer.complete(),
-        userId: _authBloc.user!.id,
         refresh: refresh,
+        userId: _uid,
         type: _key,
       ),
     );
@@ -93,9 +95,36 @@ class _MyListScreenState extends State<MyListScreen>
                   vertical: AppConstants.padding - 10,
                 ),
                 itemBuilder: (context, idx) {
+                  final video = pagination.videos[idx];
                   return VideoCardPreview(
-                    video: pagination.videos[idx],
-                    onMenuTap: () {},
+                    video: video,
+                    onMenuTap: () {
+                      showCustomBottomSheet(
+                        context: context,
+                        items: <BottomSheetItem>[
+                          BottomSheetItem(
+                            onTap: () => ShareService.shareVideoLink(video.id),
+                            icon: Icons.share,
+                            title: "Share",
+                          ),
+                          BottomSheetItem(
+                            onTap: () => _listBloc.add(
+                              DeleteVideo(
+                                userId: _uid,
+                                id: video.id,
+                                type: _key,
+                                onError: (e) => showAppSnackBar(e.message),
+                                onSuccess: () => showAppSnackBar(
+                                  "Video deleted successfully",
+                                ),
+                              ),
+                            ),
+                            icon: Icons.delete,
+                            title: "Delete",
+                          ),
+                        ],
+                      );
+                    },
                   );
                 },
               );

@@ -71,19 +71,23 @@ class _UploadScreenState extends State<UploadScreen> {
     }
 
     setState(() => _loading = true);
+    try {
+      final thumbnail = await _uploadThumbnail();
+      _uploader.add(
+        AddUpload(
+          uploadUrl: NetworkUtils.baseUrl + ApiRoutes.file.upload,
+          video: _video!.copyWith(thumbnailURL: thumbnail),
+          file: _pickedFile!,
+        ),
+      );
 
-    final thumbnail = await _uploadThumbnail();
-    _uploader.add(
-      AddUpload(
-        uploadUrl: NetworkUtils.baseUrl + ApiRoutes.file.upload,
-        video: _video!.copyWith(thumbnailURL: thumbnail),
-        file: _pickedFile!,
-      ),
-    );
-
-    if (!mounted) return;
-    showAppSnackBar("Task added");
-    context.pop();
+      if (!mounted) return;
+      showAppSnackBar("Task added");
+      context.pop();
+    } catch (err) {
+      setState(() => _loading = false);
+      showAppSnackBar("Failed: $err");
+    }
   }
 
   Future<void> _onSelect(
