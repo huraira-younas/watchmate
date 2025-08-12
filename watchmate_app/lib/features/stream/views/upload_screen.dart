@@ -1,9 +1,9 @@
-import 'package:watchmate_app/features/stream/views/widgets/platform_selection.dart';
-import 'package:watchmate_app/features/stream/views/widgets/select_video.dart';
-import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
+import 'package:watchmate_app/features/stream/widgets/platform_selection.dart';
 import 'package:watchmate_app/common/services/api_service/dio_client.dart';
 import 'package:watchmate_app/common/services/api_service/api_routes.dart';
 import 'package:watchmate_app/features/stream/bloc/upload_bloc/bloc.dart';
+import 'package:watchmate_app/features/stream/widgets/select_video.dart';
+import 'package:watchmate_app/features/stream/widgets/build_title.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';

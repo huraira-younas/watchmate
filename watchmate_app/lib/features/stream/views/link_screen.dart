@@ -1,6 +1,6 @@
-import 'package:watchmate_app/features/stream/views/widgets/platform_selection.dart';
 import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart';
-import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
+import 'package:watchmate_app/features/stream/widgets/platform_selection.dart';
+import 'package:watchmate_app/features/stream/widgets/build_title.dart';
 import 'package:watchmate_app/features/stream/bloc/link_bloc/bloc.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';

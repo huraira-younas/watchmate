@@ -1,5 +1,5 @@
-import 'package:watchmate_app/features/stream/views/widgets/build_title.dart';
 import 'package:watchmate_app/common/models/video_model/base_video.dart';
+import 'package:watchmate_app/features/stream/widgets/build_title.dart';
 import 'package:watchmate_app/common/widgets/custom_checkbox.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
