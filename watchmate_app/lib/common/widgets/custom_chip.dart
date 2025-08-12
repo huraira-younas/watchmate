@@ -16,9 +16,10 @@ class CustomChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = theme.cardColor.withValues(alpha: 0.2);
+    final color = theme.cardColor;
 
     return MaterialButton(
+      elevation: 0.0,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       disabledColor: color,

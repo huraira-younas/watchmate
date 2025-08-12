@@ -1,68 +1,63 @@
-import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
+import 'package:watchmate_app/features/player/widgets/build_title_tile.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
+import 'package:watchmate_app/features/player/widgets/room_chat.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/common/widgets/custom_player.dart';
-import 'package:watchmate_app/common/widgets/custom_card.dart';
-import 'package:watchmate_app/common/widgets/custom_chip.dart';
-import 'package:watchmate_app/common/widgets/text_widget.dart';
-import 'package:watchmate_app/constants/app_constants.dart';
-import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter/material.dart';
 
-class PlayerScreen extends StatelessWidget {
+class PlayerScreen extends StatefulWidget {
   const PlayerScreen({required this.tagPrefix, required this.video, super.key});
 
   final DownloadedVideo video;
   final String tagPrefix;
 
   @override
+  State<PlayerScreen> createState() => _PlayerScreenState();
+}
+
+class _PlayerScreenState extends State<PlayerScreen> {
+  final _expandedHeight = ValueNotifier<bool>(false);
+  final _expanded = ValueNotifier<bool>(false);
+
+  void toggleExpand() {
+    _expanded.value = !_expanded.value;
+    Future.delayed(
+      400.millis,
+      () => _expandedHeight.value = !_expandedHeight.value,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(context: context, title: "Player"),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           CustomVideoPlayer(
-            thumbnailURL: video.thumbnailURL,
-            tagPrefix: tagPrefix,
-            url: video.videoURL,
+            thumbnailURL: widget.video.thumbnailURL,
+            tagPrefix: widget.tagPrefix,
+            url: widget.video.videoURL,
           ),
-          CustomChip(
-            icon: Icons.private_connectivity_rounded,
-            text: video.visibility.name.capitalize,
-          ).padOnly(l: AppConstants.padding - 6, t: 10),
-          CustomCard(
-            child: MyText(
-              size: AppConstants.subtitle,
-              family: AppFonts.semibold,
-              text: video.title,
-            ),
-          ),
-          Row(
-            children: <Widget>[
-              const CustomChip(
-                icon: Icons.thumb_up_alt_outlined,
-                text: "1.2k",
-              ),
-              4.w,
-              const CustomChip(icon: Icons.share_outlined, text: "Share"),
-              4.w,
-              const CustomChip(
-                icon: Icons.download_outlined,
-                text: "Download",
-              ),
-            ],
-          ).padSym(h: AppConstants.padding - 6),
-          CustomCard(
-            constraints: BoxConstraints(
-              minHeight: context.screenHeight * 0.3,
-            ),
-            child: const CustomLabelWidget(
-              text: "Senpai is building this. Please have a seat",
-              title: "RealTime Chat Area",
-              icon: Icons.chair,
-            ),
+          ValueListenableBuilder<bool>(
+            valueListenable: _expanded,
+            builder: (_, expand, _) {
+              return Column(
+                children: <Widget>[
+                  BuildTitleTile(video: widget.video, expand: !expand),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: _expandedHeight,
+                    builder: (_, expandedHeight, _) {
+                      return RoomChat(
+                        expandHeight: expandedHeight,
+                        onExpand: toggleExpand,
+                        expand: expand,
+                      ).expanded();
+                    },
+                  ),
+                ],
+              );
+            },
           ).expanded(),
         ],
       ),
