@@ -3,7 +3,6 @@ import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async' show StreamSubscription;
-import 'package:path/path.dart' as path;
 import 'dart:convert' show jsonDecode;
 import 'dart:io' show File;
 
@@ -120,7 +119,7 @@ class UploaderBloc extends Bloc<UploaderEvent, UploaderState> {
     _userId ??= event.video.userId;
     final newItem = UploadItem(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      filename: path.basename(event.file),
+      filename: event.video.title,
       filePath: event.file,
       url: event.uploadUrl,
       video: event.video,

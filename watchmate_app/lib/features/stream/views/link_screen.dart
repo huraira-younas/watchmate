@@ -136,6 +136,7 @@ class _LinkScreenState extends State<LinkScreen> {
                       validator: ValidatorBuilder.chain()
                           .required()
                           .min(6)
+                          .max(50)
                           .build(),
                     ),
                   ),

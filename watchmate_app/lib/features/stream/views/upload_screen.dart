@@ -163,10 +163,14 @@ class _UploadScreenState extends State<UploadScreen> {
                       hint: "Please enter the title of the video",
                       prefixIcon: const Icon(Icons.title),
                       controller: _controller,
+                      onChange: (title) {
+                        _video = _video?.copyWith(title: title);
+                      },
                       label: "Video Title",
                       showTitle: true,
                       validator: ValidatorBuilder.chain()
                           .required()
+                          .max(50)
                           .min(6)
                           .build(),
                     ),

@@ -1,4 +1,3 @@
-import 'package:watchmate_app/common/widgets/cache_image.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/utils/logger.dart';
 import 'package:video_player/video_player.dart';
@@ -62,26 +61,34 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.theme;
     final loading =
         _chewieController == null ||
         !_chewieController!.videoPlayerController.value.isInitialized;
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: context.screenHeight * 0.43),
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          CacheImage(
-            url: widget.thumbnailURL,
-          ).hero("${widget.tagPrefix}:${widget.thumbnailURL}"),
-          AnimatedSwitcher(
-            duration: 300.millis,
-            child: loading
-                ? const Center(child: CircularProgressIndicator())
-                : Chewie(controller: _chewieController!),
-          ),
-        ],
+    final double maxHeight = context.screenHeight * 0.43;
+
+    final double heightFromAspectRatio =
+        context.screenWidth / (_aspectRatio ?? (16 / 9));
+
+    final double finalHeight = heightFromAspectRatio < maxHeight
+        ? heightFromAspectRatio
+        : maxHeight;
+
+    return AnimatedContainer(
+      height: loading ? maxHeight : finalHeight,
+      width: context.screenWidth,
+      duration: 100.millis,
+      decoration: BoxDecoration(
+        image: DecorationImage(image: NetworkImage(widget.thumbnailURL)),
+        color: theme.cardColor.withValues(alpha: 0.2),
       ),
-    );
+      child: loading
+          ? const Center(child: CircularProgressIndicator())
+          : AspectRatio(
+              aspectRatio: _aspectRatio ?? (16 / 9),
+              child: Chewie(controller: _chewieController!),
+            ),
+    ).hero("${widget.tagPrefix}:${widget.thumbnailURL}");
   }
 }
