@@ -18,6 +18,7 @@ class VideoPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDownloading = video is DownloadingVideo;
     final theme = context.theme;
+    final tagPrefix = "home";
 
     return Container(
       clipBehavior: Clip.antiAlias,
@@ -32,7 +33,9 @@ class VideoPreview extends StatelessWidget {
             aspectRatio: 16 / 9,
             child: Stack(
               children: <Widget>[
-                CacheImage(url: video.thumbnailURL),
+                CacheImage(
+                  url: video.thumbnailURL,
+                ).hero("$tagPrefix:${video.thumbnailURL}"),
                 if (video.duration.inSeconds != 0)
                   Positioned(
                     right: 3,
@@ -62,7 +65,10 @@ class VideoPreview extends StatelessWidget {
       ),
     ).onTap(
       () => !isDownloading
-          ? context.push(StreamRoutes.player.path, extra: video.id)
+          ? context.push(
+              StreamRoutes.player.path,
+              extra: {"video": video, "tagPrefix": tagPrefix},
+            )
           : null,
     );
   }

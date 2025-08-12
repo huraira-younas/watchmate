@@ -1,5 +1,5 @@
 import 'package:watchmate_app/common/widgets/cache_image.dart';
-import 'package:watchmate_app/extensions/int_extensions.dart';
+import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/utils/logger.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +8,13 @@ import 'package:chewie/chewie.dart';
 class CustomVideoPlayer extends StatefulWidget {
   const CustomVideoPlayer({
     required this.thumbnailURL,
+    required this.tagPrefix,
     required this.url,
     super.key,
   });
 
   final String thumbnailURL;
+  final String tagPrefix;
   final String url;
 
   @override
@@ -69,7 +71,9 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          CacheImage(url: widget.thumbnailURL),
+          CacheImage(
+            url: widget.thumbnailURL,
+          ).hero("${widget.tagPrefix}:${widget.thumbnailURL}"),
           AnimatedSwitcher(
             duration: 300.millis,
             child: loading
