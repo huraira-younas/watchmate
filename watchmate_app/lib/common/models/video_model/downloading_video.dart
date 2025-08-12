@@ -11,6 +11,7 @@ class DownloadingVideo extends BaseVideo {
     required super.height,
     required super.width,
     required super.size,
+    required super.id,
 
     super.thumbnailURL,
     super.visibility,
@@ -35,6 +36,7 @@ class DownloadingVideo extends BaseVideo {
     double? height,
     double? width,
     String? title,
+    String? id,
     int? size,
   }) {
     return DownloadingVideo(
@@ -50,6 +52,7 @@ class DownloadingVideo extends BaseVideo {
       size: size ?? this.size,
       user: user ?? this.user,
       type: type ?? this.type,
+      id: id ?? this.id,
     );
   }
 
@@ -67,6 +70,7 @@ class DownloadingVideo extends BaseVideo {
       size: json['size'] ?? 0,
       userId: json['userId'],
       title: json['title'],
+      id: json['id'],
     );
   }
 

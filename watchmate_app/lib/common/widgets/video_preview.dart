@@ -62,7 +62,7 @@ class VideoPreview extends StatelessWidget {
       ),
     ).onTap(
       () => !isDownloading
-          ? context.push(StreamRoutes.player.path, extra: video)
+          ? context.push(StreamRoutes.player.path, extra: video.id)
           : null,
     );
   }

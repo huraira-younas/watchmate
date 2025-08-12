@@ -20,8 +20,9 @@ class VideoCardPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
+
     return ListTile(
-      onTap: () => context.push(StreamRoutes.player.path, extra: video),
+      onTap: () => context.push(StreamRoutes.player.path, extra: video.id),
       horizontalTitleGap: 8,
       contentPadding: EdgeInsets.zero,
       leading: ClipRRect(
@@ -29,7 +30,7 @@ class VideoCardPreview extends StatelessWidget {
         child: SizedBox(
           height: 90,
           width: 100,
-          child: CacheImage(url: video.thumbnailURL).hero(video.thumbnailURL),
+          child: CacheImage(url: video.thumbnailURL),
         ),
       ),
       trailing: IconButton(

@@ -7,12 +7,21 @@ const addVideo = async (req, res) => {
 };
 
 const deleteVideo = async (req, res) => {
-  validateReq(req.params, ["id"]);
-  const id = req.params.id;
+  validateReq(req.body, ["id"]);
+  const id = req.body.id;
 
   const del = await Video.findByIdAndDelete(id);
   if (!del) throw new AppError("Video not found", 400);
   res.json({ message: "Video deleted successfully" });
+};
+
+const getVideo = async (req, res) => {
+  validateReq(req.body, ["id"]);
+  const id = req.body.id;
+
+  const video = await Video.findById(id);
+  if (!video) throw new AppError("Video not found", 400);
+  res.json(video);
 };
 
 const getAllVideos = async (req, res) => {
@@ -32,4 +41,4 @@ const getAllVideos = async (req, res) => {
   res.json(videos);
 };
 
-module.exports = { getAllVideos, addVideo, deleteVideo };
+module.exports = { getAllVideos, addVideo, getVideo, deleteVideo };

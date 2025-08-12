@@ -26,6 +26,7 @@ abstract class BaseVideo extends Equatable {
   final double height;
   final String title;
   final double width;
+  final String id;
   final int size;
 
   const BaseVideo({
@@ -38,6 +39,7 @@ abstract class BaseVideo extends Equatable {
     required this.width,
     this.videoURL = "",
     required this.size,
+    required this.id,
     this.title = "",
     this.user,
   });
@@ -53,6 +55,7 @@ abstract class BaseVideo extends Equatable {
     'width': width,
     'title': title,
     'size': size,
+    'id': id,
   };
 
   @override
@@ -68,6 +71,7 @@ abstract class BaseVideo extends Equatable {
     user,
     type,
     size,
+    id,
   ];
 
   String get sizeFormat {

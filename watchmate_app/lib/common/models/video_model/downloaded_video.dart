@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart' show immutable;
 class DownloadedVideo extends BaseVideo {
   final DateTime createdAt;
   final bool deleted;
-  final String id;
 
   const DownloadedVideo({
     required super.height,
@@ -14,6 +13,7 @@ class DownloadedVideo extends BaseVideo {
     required super.width,
     required super.size,
     super.thumbnailURL,
+    required super.id,
     super.visibility,
     super.videoURL,
     super.duration,
@@ -23,7 +23,6 @@ class DownloadedVideo extends BaseVideo {
 
     required this.createdAt,
     this.deleted = false,
-    required this.id,
   });
 
   factory DownloadedVideo.fromJson(Map<String, dynamic> json) {
