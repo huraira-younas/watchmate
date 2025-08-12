@@ -2,7 +2,6 @@ import 'package:watchmate_app/common/services/socket_service/socket_service.dart
 import 'package:watchmate_app/features/profile/views/widgets/user_tile.dart';
 import 'package:watchmate_app/features/profile/views/widgets/my_tile.dart';
 import 'package:watchmate_app/common/cubits/theme_cubit.dart';
-import 'package:watchmate_app/features/auth/bloc/events.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/router/routes/exports.dart';
 import 'package:watchmate_app/extensions/exports.dart';

@@ -5,7 +5,6 @@ import 'package:watchmate_app/common/widgets/custom_bottom_nav_bar.dart';
 import 'package:watchmate_app/common/cubits/navigation_cubit.dart';
 import 'package:watchmate_app/router/routes/app_route_model.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
-import 'package:watchmate_app/features/auth/bloc/states.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/router/routes/exports.dart';
 import 'package:watchmate_app/constants/app_assets.dart';

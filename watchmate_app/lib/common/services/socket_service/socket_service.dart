@@ -1,5 +1,6 @@
 import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:rxdart/rxdart.dart' show BehaviorSubject;
 import 'package:watchmate_app/utils/network_utils.dart';
 import 'package:watchmate_app/utils/logger.dart';
@@ -8,7 +9,8 @@ import 'dart:async' show Timer;
 enum NamespaceType { stream, notifications, chat, auth }
 
 class SocketNamespaceService {
-  final _eventStreams = <NamespaceType, BehaviorSubject<Map<String, dynamic>>>{};
+  final _eventStreams =
+      <NamespaceType, BehaviorSubject<Map<String, dynamic>>>{};
   final _emitQueue = <NamespaceType, List<_EmitQueueItem>>{};
   final _pingWatchers = <NamespaceType, Timer>{};
   final _sockets = <NamespaceType, io.Socket>{};
@@ -40,13 +42,13 @@ class SocketNamespaceService {
       ..connect()
       ..onConnect((_) {
         Logger.info(tag: 'SOCKET:$namespace', message: 'Connected');
-        showAppSnackBar("Socket connected");
+        if (kDebugMode) showAppSnackBar("Socket connected");
         _flush(type);
         _startPing(type, pingInterval);
       })
       ..onDisconnect((_) {
         Logger.warn(tag: 'SOCKET:$namespace', message: 'Disconnected');
-        showAppSnackBar("Socket disconnected");
+        if (kDebugMode) showAppSnackBar("Socket disconnected");
 
         _stopPing(type);
       })

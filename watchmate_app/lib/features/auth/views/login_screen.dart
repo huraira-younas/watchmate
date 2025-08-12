@@ -4,8 +4,6 @@ import 'package:watchmate_app/router/routes/layout_routes.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/common/widgets/dialog_boxs.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
-import 'package:watchmate_app/features/auth/bloc/events.dart';
-import 'package:watchmate_app/features/auth/bloc/states.dart';
 import 'package:watchmate_app/common/widgets/text_field.dart';
 import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:watchmate_app/constants/app_constants.dart';

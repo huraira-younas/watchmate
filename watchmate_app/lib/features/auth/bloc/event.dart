@@ -1,4 +1,4 @@
-import 'package:watchmate_app/features/auth/bloc/states.dart';
+part of "bloc.dart";
 
 abstract class AuthEvent {
   final Function(CustomState error)? onError;

@@ -2,7 +2,6 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:watchmate_app/router/routes/layout_routes.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
-import 'package:watchmate_app/features/auth/bloc/events.dart';
 import 'package:watchmate_app/router/routes/auth_routes.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';

@@ -1,5 +1,4 @@
-import 'package:watchmate_app/common/models/custom_state_model.dart';
-import '../model/user_model.dart';
+part of "bloc.dart";
 
 class AuthState {
   final CustomState? loading;

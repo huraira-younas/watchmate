@@ -1,6 +1,5 @@
 import 'package:watchmate_app/common/widgets/profile_avt.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
-import 'package:watchmate_app/features/auth/bloc/states.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';

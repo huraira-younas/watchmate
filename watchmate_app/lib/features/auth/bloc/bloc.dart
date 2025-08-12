@@ -1,8 +1,9 @@
 import 'package:watchmate_app/features/auth/repository/repository.dart';
+import 'package:watchmate_app/common/models/custom_state_model.dart';
 import 'package:watchmate_app/features/auth/model/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'events.dart';
-import 'states.dart';
+part 'event.dart';
+part 'state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository repo;
