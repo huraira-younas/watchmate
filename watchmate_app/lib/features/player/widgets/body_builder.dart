@@ -38,7 +38,7 @@ class _BodyBuilderState extends State<BodyBuilder> {
     final joined = widget.joined;
     final theme = context.theme;
 
-    if (joined == 1 || joined == -1 && messages.isEmpty) {
+    if ((joined == 1 || joined == -1) && messages.isEmpty) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
