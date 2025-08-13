@@ -26,8 +26,8 @@ class RoomChat extends StatelessWidget {
         margin: 0.0,
         constraints: BoxConstraints(minHeight: context.screenHeight * 0.3),
         child: Stack(
-          clipBehavior: Clip.none,
           alignment: Alignment.center,
+          clipBehavior: Clip.none,
           children: <Widget>[
             const CustomLabelWidget(
               text: "Senpai is building this. Please have a seat",
