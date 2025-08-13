@@ -8,6 +8,7 @@ class FileApi {
     _endpoint = '$pre/$_name';
   }
 
+  String get presignedUrl => "$_endpoint/presigned_url";
   String get upload => "$_endpoint/upload";
 
   String getFile({required String url, required String userId}) {

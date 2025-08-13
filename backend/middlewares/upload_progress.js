@@ -1,3 +1,5 @@
+const logger = require("../methods/logger");
+
 function _getRandomStep(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -14,13 +16,13 @@ function uploadProgress(req, _, next) {
       const progress = Math.floor((uploadedBytes / contentLength) * 100);
 
       if (progress >= nextLogAt) {
-        console.log(`Upload progress: ${progress}%`);
+        logger.info(`Upload progress: ${progress}%`);
         nextLogAt = progress + _getRandomStep(3, 8);
       }
     }
   });
 
-  req.on("end", () => console.log("Upload complete"));
+  req.on("end", () => logger.info("Upload complete"));
   next();
 }
 

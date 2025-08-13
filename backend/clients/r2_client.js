@@ -1,6 +1,7 @@
 const { SocketResponse } = require("../methods/socket/socket_methods");
 const { getMemberFromHash } = require("../redis/redis_methods");
 const Video = require("../database/models/video_model");
+const { socketKey } = require("../redis/admin_keys");
 const { Upload } = require("@aws-sdk/lib-storage");
 const sanitize = require("sanitize-filename");
 const { getIO } = require("./socket_client");
@@ -10,7 +11,6 @@ const { PassThrough } = require("stream");
 const { s3 } = require("./s3_client");
 const { v4: uuid } = require("uuid");
 const axios = require("axios");
-const { socketKey } = require("../redis/admin_keys");
 
 class R2Client {
   constructor({ user, socket, url, event }) {

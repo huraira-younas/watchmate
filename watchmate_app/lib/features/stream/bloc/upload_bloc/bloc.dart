@@ -169,6 +169,7 @@ class UploaderBloc extends Bloc<UploaderEvent, UploaderState> {
         updates: Updates.statusAndProgress,
         displayName: upload.video.title,
         file: File(upload.filePath),
+        httpRequestMethod: "post",
         taskId: upload.id,
         url: upload.url,
         retries: 3,
