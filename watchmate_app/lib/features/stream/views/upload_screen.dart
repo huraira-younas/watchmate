@@ -76,8 +76,11 @@ class _UploadScreenState extends State<UploadScreen> {
       _uploader.add(
         AddUpload(
           uploadUrl: NetworkUtils.baseUrl + ApiRoutes.file.upload,
-          video: _video!.copyWith(thumbnailURL: thumbnail),
           file: _pickedFile!,
+          video: _video!.copyWith(
+            thumbnailURL: thumbnail,
+            visibility: _visibility,
+          ),
         ),
       );
 
@@ -102,11 +105,7 @@ class _UploadScreenState extends State<UploadScreen> {
 
     final title = path.basename(file);
     _controller.text = title;
-    _video = video.copyWith(
-      visibility: _visibility,
-      userId: _uid,
-      title: title,
-    );
+    _video = video.copyWith(userId: _uid, title: title);
   }
 
   @override
