@@ -381,10 +381,18 @@ const countKeysByPattern = async (pattern) => {
 
 // ----------------------------------------------------------------
 //? Set methods
-const addToSet = async (key, value) => {
+const addToSet = async (key, value, expire) => {
   try {
     logger.info(`Adding to set in redis: ${key}`);
     await redis.sadd(key, JSON.stringify(value));
+
+    const pipeline = redis.pipeline();
+    pipeline.sadd(key, JSON.stringify(value));
+    
+    if (expire > 0) pipeline.expire(key, expire * 60);
+
+    const [res] = await pipeline.exec();
+    if (res) logger.info(`Data set successfully ${res}`);
   } catch (err) {
     logger.error(`Redis Error: ${err}`);
   }

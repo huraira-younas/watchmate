@@ -14,7 +14,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   final _eventSubs = <String, StreamSubscription>{};
   final SocketNamespaceService _socket;
   final _type = NamespaceType.video;
-  String? partId;
+  String? partyId;
 
   PlayerBloc(this._socket, String userId) : super(const PlayerState()) {
     on<CreateParty>(_onCreateParty);
@@ -25,7 +25,12 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _joinNamespace(String userId) {
-    _socket.connect(query: {"userId": userId}, type: _type);
+    _socket.connect(
+      onReconnect: () => _handleReconnect(userId),
+      query: {"userId": userId},
+      type: _type,
+    );
+
     _eventSubs[SocketEvents.video.joinParty] = _socket
         .onEvent(type: _type, event: SocketEvents.video.joinParty)
         .listen((d) => _handlePartyEvent(d, userId));
@@ -35,11 +40,19 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         .listen((d) => _handlePartyEvent(d, userId));
   }
 
+  void _handleReconnect(String userId) {
+    Logger.info(tag: _type.name, message: "Rejoining party $partyId");
+    if (partyId == null) return;
+
+    Logger.info(tag: _type.name, message: "Rejoined party");
+    add(JoinParty(userId: userId, partyId: partyId!));
+  }
+
   void _handlePartyEvent(Map<String, dynamic> data, String userId) {
     final res = data['data'];
-    Logger.info(tag: _type.name, message: res.toString());
+    if (res == null) return;
 
-    if (res == null || res['userId'] == userId) return;
+    Logger.info(tag: _type.name, message: res.toString());
     add(HandleParty(data: res, count: res['joined'], isJoined: true));
   }
 
@@ -55,10 +68,12 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
   void _onCreateParty(CreateParty event, Emitter<PlayerState> emit) {
     _socket.emit(_type, SocketEvents.video.createParty, event.toJson());
+    partyId = event.userId;
   }
 
   void _onJoinParty(JoinParty event, Emitter<PlayerState> emit) {
     _socket.emit(_type, SocketEvents.video.joinParty, event.toJson());
+    partyId = event.userId;
   }
 
   void _onHandleParty(HandleParty event, Emitter<PlayerState> emit) {

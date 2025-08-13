@@ -1,8 +1,11 @@
 import 'package:watchmate_app/features/player/model/party_message_model.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
+import 'package:watchmate_app/common/widgets/profile_avt.dart';
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
+import 'package:watchmate_app/constants/app_constants.dart';
+import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/utils/share_service.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,8 +34,10 @@ class _BodyBuilderState extends State<BodyBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    final messages = widget.messages;
     final theme = context.theme;
-    if (widget.joined == 1) {
+
+    if (widget.joined == 1 && messages.isEmpty) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -51,7 +56,34 @@ class _BodyBuilderState extends State<BodyBuilder> {
         ],
       );
     }
-    return const Column(children: <Widget>[]);
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(vertical: 25),
+      separatorBuilder: (_, _) => 12.h,
+      itemCount: messages.length,
+      itemBuilder: (_, idx) {
+        final msg = messages[idx];
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Row(
+            spacing: 8,
+            children: <Widget>[
+              ProfileAvt(size: 40, url: msg.profileURL),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  MyText(
+                    size: AppConstants.subtitle,
+                    text: msg.name.capitalize,
+                    family: AppFonts.bold,
+                  ),
+                  MyText(text: msg.message),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _createParty() async {

@@ -76,8 +76,14 @@ const joinParty = async ({ event, socket, io, data }) => {
   const party = await getMemberFromHash(key);
   if (!party) throw new SocketError("Watch party not found", 400);
 
-  party.joinee.push(userId);
-  const user = await User.findById(userId, ["name", "profileURL", "id"]);
+  const promises = [User.findById(userId, ["name", "profileURL", "id"])];
+
+  if (!party.joinee.includes(userId)) {
+    promises.push(addToHash(key, party, expire.party_room));
+    party.joinee.push(userId);
+  }
+  
+  const [user] = await Promise.all(promises);
 
   const message = `${user.name} joined party: ${partyId}`;
   socket.partyId = partyId;

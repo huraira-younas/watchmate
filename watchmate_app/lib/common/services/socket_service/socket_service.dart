@@ -9,9 +9,9 @@ import 'dart:async' show Timer;
 enum NamespaceType { stream, chat, auth, video }
 
 class SocketNamespaceService {
-  final _eventStreams =
-      <NamespaceType, BehaviorSubject<Map<String, dynamic>>>{};
+  final _eventStreams = <NamespaceType, BehaviorSubject<Map<String, dynamic>>>{};
   final _emitQueue = <NamespaceType, List<_EmitQueueItem>>{};
+  final _reconnectCb = <NamespaceType, Function()>{};
   final _pingWatchers = <NamespaceType, Timer>{};
   final _sockets = <NamespaceType, io.Socket>{};
 
@@ -20,8 +20,12 @@ class SocketNamespaceService {
     Duration pingInterval = const Duration(seconds: 15),
     required Map<String, dynamic> query,
     required NamespaceType type,
+    Function()? onReconnect,
   }) {
     if (_sockets.containsKey(type)) return;
+    if (onReconnect != null) {
+      _reconnectCb[type] = onReconnect;
+    }
 
     final namespace = _ns(type);
     final url = '${NetworkUtils.baseUrl}/$namespace';
@@ -54,6 +58,7 @@ class SocketNamespaceService {
       })
       ..onReconnect((_) {
         Logger.info(tag: 'SOCKET:$namespace', message: 'Reconnected');
+        _reconnectCb[type]?.call();
       })
       ..onError((err) {
         Logger.error(tag: 'SOCKET:$namespace', message: 'Error: $err');
@@ -85,6 +90,7 @@ class SocketNamespaceService {
 
   void disconnect(NamespaceType type) {
     _eventStreams.remove(type)?.close();
+    _reconnectCb.remove(type);
     _emitQueue.remove(type);
     _stopPing(type);
 
