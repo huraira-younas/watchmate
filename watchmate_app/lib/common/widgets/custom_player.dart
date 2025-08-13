@@ -41,8 +41,8 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
 
             _chewieController = ChewieController(
               videoPlayerController: _videoPlayerController,
-              allowFullScreen: true,
               aspectRatio: _aspectRatio ?? (16 / 9),
+              allowFullScreen: true,
               showOptions: false,
               allowMuting: true,
               looping: false,

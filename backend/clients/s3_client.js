@@ -48,7 +48,7 @@ const storage = multerS3({
   key: (req, file, cb) => {
     try {
       const folder = req.headers.folder || "default";
-      const userid = req.headers.userid || "senpai";
+      const userid = req.headers.userid;
       if (!userid) {
         logger.error("userid is required");
         return cb(new Error("userid is required"));

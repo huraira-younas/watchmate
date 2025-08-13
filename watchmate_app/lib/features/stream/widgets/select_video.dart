@@ -71,9 +71,9 @@ class _SelectVideoState extends State<SelectVideo> {
     await _videoController!.initialize();
 
     _chewieController = ChewieController(
+      aspectRatio: _videoController!.value.aspectRatio,
       videoPlayerController: _videoController!,
       allowFullScreen: true,
-      aspectRatio: 16 / 9,
       showControls: true,
       showOptions: false,
       allowMuting: true,
