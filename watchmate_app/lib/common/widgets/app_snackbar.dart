@@ -1,5 +1,5 @@
+import 'package:watchmate_app/extensions/context_extensions.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
-import 'package:watchmate_app/constants/app_themes.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'dart:collection';
@@ -38,8 +38,8 @@ void _processQueue() {
 
   final snackBar = SnackBar(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    backgroundColor: scaffoldKey.currentContext?.theme.cardColor,
     content: MyText(text: message, family: AppFonts.medium),
-    backgroundColor: AppColors.darkBorder,
     duration: const Duration(seconds: 3),
     behavior: SnackBarBehavior.floating,
     margin: const EdgeInsets.all(12),

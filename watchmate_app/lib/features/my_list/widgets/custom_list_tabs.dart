@@ -19,11 +19,11 @@ class CustomListTabs extends StatelessWidget {
     final theme = context.theme;
     return Row(
       spacing: 8,
-      children: List.generate(
-        ListType.values.length,
-        (idx) => Chip(
+      children: List.generate(ListType.values.length, (idx) {
+        final active = current == ListType.values[idx];
+        return Chip(
           color: WidgetStateColor.resolveWith(
-            (_) => current != ListType.values[idx]
+            (_) => !active
                 ? theme.cardColor.withValues(alpha: 0.2)
                 : theme.primaryColor,
           ),
@@ -34,12 +34,13 @@ class CustomListTabs extends StatelessWidget {
           ),
           label: MyText(
             text: ListType.values[idx].name.capitalize,
-            family: current == ListType.values[idx]
-                ? AppFonts.semibold
-                : AppFonts.regular,
+            color: !active
+                ? theme.textTheme.bodyLarge!.color ?? Colors.black
+                : Colors.white,
+            family: active ? AppFonts.semibold : AppFonts.regular,
           ),
-        ).onTap(() => onChange(ListType.values[idx])),
-      ),
+        ).onTap(() => onChange(ListType.values[idx]));
+      }),
     ).padSym(h: AppConstants.padding - 10);
   }
 }

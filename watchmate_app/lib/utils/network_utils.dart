@@ -5,5 +5,5 @@ class NetworkUtils {
   static final _defaultLocalUrl = dotenv.get("DEV_URL", fallback: "");
   static String get prodUrl => dotenv.get("PROD_URL", fallback: "");
 
-  static String get baseUrl => kDebugMode ? _defaultLocalUrl : prodUrl;
+  static String get baseUrl => !kDebugMode ? _defaultLocalUrl : prodUrl;
 }
