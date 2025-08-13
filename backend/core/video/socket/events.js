@@ -19,17 +19,10 @@ const events = (io) => {
     _handleKey(socket.handshake.query.userId, socket.id);
     socket.on("disconnect", () => _handleKey(socket.handshake.query.userId));
 
-    socket.on(event.DOWNLOAD_YT, (data) =>
+    socket.on(event.CREATE_PARTY, (data) =>
       socketHandler(
-        methods.download,
-        new SocketParams({ event: event.DOWNLOAD_YT, socket, data, io })
-      )
-    );
-
-    socket.on(event.DOWNLOAD_DIR, (data) =>
-      socketHandler(
-        methods.download,
-        new SocketParams({ event: event.DOWNLOAD_DIR, socket, data, io })
+        methods.createParty,
+        new SocketParams({ event: event.CREATE_PARTY, socket, data, io })
       )
     );
   });

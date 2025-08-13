@@ -1,13 +1,9 @@
+import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
 
-final GetIt diAuth = GetIt.instance;
-
-// void setupAuthLocator() {
-//   if (!diAuth.isRegistered<AuthRepository>()) {
-//     diAuth.registerLazySingleton(() => AuthRepository());
-//   }
-
-//   if (!diAuth.isRegistered<AuthBloc>()) {
-//     diAuth.registerLazySingleton(() => AuthBloc(diAuth<AuthRepository>()));
-//   }
-// }
+void setupPlayerLocator() {
+  final di = GetIt.instance;
+  if (!di.isRegistered<PlayerBloc>()) {
+    di.registerLazySingleton(() => PlayerBloc());
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:watchmate_app/features/my_list/locator.dart';
+import 'package:watchmate_app/features/player/locator.dart';
 import 'package:watchmate_app/features/stream/locator.dart';
 import 'package:watchmate_app/features/auth/locator.dart';
 import 'package:watchmate_app/common/locator.dart';
@@ -13,5 +14,6 @@ void setupLocator() {
 
   // NOTE: DONT CHANGE THE ALIGNMENT OR ROWS
   setupStreamLocator();
+  setupPlayerLocator();
   setupListLocator();
 }

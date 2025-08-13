@@ -2,8 +2,8 @@ const {
   validateEvent,
   SocketResponse,
 } = require("../../../methods/socket/socket_methods.js");
-const R2Client = require("../../../clients/r2_client.js");
 const User = require("../../../database/models/user_model");
+const R2Client = require("../../../clients/r2_client.js");
 const logger = require("../../../methods/logger");
 
 const download = async ({ event, socket, data }) => {
@@ -26,48 +26,4 @@ const download = async ({ event, socket, data }) => {
   }
 };
 
-const pauseDownload = ({ event, socket, data }) => {
-  validateEvent(data, ["id"]);
-  const { id } = data;
-  const download = DownloadManager.get(id);
-  if (download) download.pause();
-  else {
-    socket.emit(
-      event,
-      new SocketResponse({ message: "Download not found", code: 404 })
-    );
-  }
-};
-
-const resumeDownload = ({ event, socket, data }) => {
-  validateEvent(data, ["id"]);
-  const { id } = data;
-  const download = DownloadManager.get(id);
-  if (download) download.resume();
-  else {
-    socket.emit(
-      event,
-      new SocketResponse({ message: "Download not found", code: 404 })
-    );
-  }
-};
-
-const stopDownload = ({ event, socket, data }) => {
-  validateEvent(data, ["id"]);
-  const { id } = data;
-  const download = DownloadManager.get(id);
-  if (download) download.stop();
-  else {
-    socket.emit(
-      event,
-      new SocketResponse({ message: "Download not found", code: 404 })
-    );
-  }
-};
-
-module.exports = {
-  resumeDownload,
-  pauseDownload,
-  stopDownload,
-  download,
-};
+module.exports = { download };

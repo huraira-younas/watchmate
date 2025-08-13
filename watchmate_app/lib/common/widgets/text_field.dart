@@ -17,7 +17,9 @@ class CustomTextField extends StatelessWidget {
   final bool obsecure;
   final String? value;
   final String? label;
+  final int? minLines;
   final int? maxLines;
+  final double radius;
   final bool enabled;
   final String hint;
 
@@ -28,6 +30,7 @@ class CustomTextField extends StatelessWidget {
     this.enabled = true,
     required this.hint,
     this.maxLines = 1,
+    this.radius = 30,
     this.prefixIcon,
     this.controller,
     this.suffixIcon,
@@ -35,6 +38,7 @@ class CustomTextField extends StatelessWidget {
     this.focusNode,
     this.onChange,
     this.onSubmit,
+    this.minLines,
     this.border,
     this.label,
     this.value,
@@ -61,23 +65,25 @@ class CustomTextField extends StatelessWidget {
             context,
           ).copyWith(textScaler: TextScaler.linear(textScaleFactor(context))),
           child: TextFormField(
+            style: myStyle(size: AppConstants.subtitle, color: textColor),
+            onFieldSubmitted: (_) => onSubmit?.call(),
+            onTapOutside: (_) => onSubmit?.call(),
+            onSaved: (_) => onSubmit?.call(),
             controller: controller,
             obscureText: obsecure,
             focusNode: focusNode,
             validator: validator,
             onChanged: onChange,
-            onFieldSubmitted: (_) => onSubmit?.call(),
-            onSaved: (_) => onSubmit?.call(),
-            onTapOutside: (_) => onSubmit?.call(),
             initialValue: value,
+            minLines: minLines,
             keyboardType: type,
-            enabled: enabled,
             maxLines: maxLines,
-            style: myStyle(size: AppConstants.subtitle, color: textColor),
+            enabled: enabled,
             decoration: customInputDecoration(
-              context: context,
               prefixIcon: prefixIcon,
               suffixIcon: suffixIcon,
+              context: context,
+              radius: radius,
               border: border,
               hint: hint,
             ),
@@ -93,6 +99,7 @@ InputDecoration customInputDecoration({
   InputBorder? border,
   Widget? prefixIcon,
   Widget? suffixIcon,
+  double radius = 30,
   String? label,
   String? hint,
 }) {
@@ -103,12 +110,12 @@ InputDecoration customInputDecoration({
 
   final defaultBorderStyle = OutlineInputBorder(
     borderSide: BorderSide(color: theme.highlightColor),
-    borderRadius: BorderRadius.circular(30),
+    borderRadius: BorderRadius.circular(radius),
   );
 
   final activeBorderStyle = OutlineInputBorder(
     borderSide: BorderSide(color: theme.primaryColor),
-    borderRadius: BorderRadius.circular(30),
+    borderRadius: BorderRadius.circular(radius),
   );
 
   return InputDecoration(

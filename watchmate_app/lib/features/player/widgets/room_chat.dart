@@ -1,3 +1,4 @@
+import 'package:watchmate_app/features/player/widgets/bottom_builder.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/custom_card.dart';
 import 'package:watchmate_app/extensions/exports.dart';
@@ -24,15 +25,23 @@ class RoomChat extends StatelessWidget {
       padding: EdgeInsetsGeometry.all(expandHeight ? 0.0 : 10.0),
       child: CustomCard(
         margin: 0.0,
+        padding: 8,
         constraints: BoxConstraints(minHeight: context.screenHeight * 0.3),
         child: Stack(
-          alignment: Alignment.center,
           clipBehavior: Clip.none,
           children: <Widget>[
-            const CustomLabelWidget(
-              text: "Senpai is building this. Please have a seat",
-              title: "RealTime Chat Area",
-              icon: Icons.chair,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                const SingleChildScrollView(
+                  child: CustomLabelWidget(
+                    text: "Senpai is building this. Please have a seat",
+                    title: "RealTime Chat Area",
+                    icon: Icons.chair,
+                  ),
+                ).expanded(),
+                const BottomBuilder(),
+              ],
             ),
             Positioned(
               top: -10,
