@@ -132,7 +132,10 @@ class R2Client {
     if (!url) return;
 
     const response = await axios.get(url, { responseType: "arraybuffer" });
-    const key = `${this.user.id}/direct/${id}/thumbnail.jpg`;
+    const contentType = response.headers["content-type"];
+
+    const ext = contentType.split("/")[1] || "jpg";
+    const key = `${this.user.id}/direct/${id}/thumbnail.${ext}`;
 
     await r2.send(
       new Upload({
@@ -140,7 +143,7 @@ class R2Client {
         params: {
           Body: Buffer.from(response.data),
           Bucket: process.env.R2_BUCKET,
-          ContentType: "image/jpeg",
+          ContentType: contentType,
           Key: key,
         },
       })

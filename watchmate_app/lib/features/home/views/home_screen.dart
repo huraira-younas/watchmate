@@ -1,11 +1,13 @@
 import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart';
 import 'package:watchmate_app/common/models/video_model/base_video.dart';
+import 'package:watchmate_app/common/widgets/custom_bottom_sheet.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/video_preview.dart';
 import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:watchmate_app/common/cubits/video_cubit.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
+import 'package:watchmate_app/utils/share_service.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
@@ -34,6 +36,20 @@ class _HomeScreenState extends State<HomeScreen>
       visibility: VideoVisibility.public.name,
       userId: _authBloc.user!.id,
       refresh: true,
+    );
+  }
+
+  void handleBottomSheet(String videoId) {
+    showCustomBottomSheet(
+      context: context,
+      items: <BottomSheetItem>[
+        BottomSheetItem(
+          onTap: () => ShareService.shareVideoLink(videoId),
+          icon: Icons.share,
+          title: "Share",
+        ),
+        BottomSheetItem(onTap: () {}, icon: Icons.download, title: "Download"),
+      ],
     );
   }
 
@@ -69,7 +85,11 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             separatorBuilder: (_, _) => const SizedBox(height: 10),
             itemBuilder: (context, idx) {
-              return VideoPreview(video: pagination.videos[idx]);
+              final video = pagination.videos[idx];
+              return VideoPreview(
+                onMenuTap: () => handleBottomSheet(video.id),
+                video: video,
+              );
             },
           );
         },

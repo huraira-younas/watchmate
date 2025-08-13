@@ -1,3 +1,5 @@
+import 'package:watchmate_app/common/widgets/dialog_boxs.dart'
+    show confirmDialogue;
 import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart';
 import 'package:watchmate_app/features/my_list/widgets/video_card_preview.dart';
 import 'package:watchmate_app/features/my_list/widgets/custom_list_tabs.dart';
@@ -58,6 +60,24 @@ class _MyListScreenState extends State<MyListScreen>
     _fetchList(refresh: false);
   }
 
+  void confirmDelete(String title, String id) async {
+    final del = await confirmDialogue(
+      message: "Are you sure want to delete '$title'?",
+      title: "Delete Video",
+      context: context,
+    );
+    if (!del) return;
+    _listBloc.add(
+      DeleteVideo(
+        onSuccess: () => showAppSnackBar("Video deleted successfully"),
+        onError: (e) => showAppSnackBar(e.message),
+        userId: _uid,
+        type: _key,
+        id: id,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -108,17 +128,12 @@ class _MyListScreenState extends State<MyListScreen>
                             title: "Share",
                           ),
                           BottomSheetItem(
-                            onTap: () => _listBloc.add(
-                              DeleteVideo(
-                                userId: _uid,
-                                id: video.id,
-                                type: _key,
-                                onError: (e) => showAppSnackBar(e.message),
-                                onSuccess: () => showAppSnackBar(
-                                  "Video deleted successfully",
-                                ),
-                              ),
-                            ),
+                            icon: Icons.download,
+                            title: "Download",
+                            onTap: () {},
+                          ),
+                          BottomSheetItem(
+                            onTap: () => confirmDelete(video.title, video.id),
                             icon: Icons.delete,
                             title: "Delete",
                           ),

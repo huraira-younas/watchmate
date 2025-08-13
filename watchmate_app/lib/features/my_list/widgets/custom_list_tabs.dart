@@ -1,6 +1,7 @@
 import 'package:watchmate_app/features/my_list/bloc/bloc.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
+import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +32,12 @@ class CustomListTabs extends StatelessWidget {
             borderRadius: BorderRadiusGeometry.circular(10),
             side: BorderSide(color: theme.cardColor),
           ),
-          label: MyText(text: ListType.values[idx].name.capitalize),
+          label: MyText(
+            text: ListType.values[idx].name.capitalize,
+            family: current == ListType.values[idx]
+                ? AppFonts.semibold
+                : AppFonts.regular,
+          ),
         ).onTap(() => onChange(ListType.values[idx])),
       ),
     ).padSym(h: AppConstants.padding - 10);

@@ -32,7 +32,7 @@ Future<void> showCustomBottomSheet({
           children: List.generate(items.length * 2 - 1, (i) {
             if (i.isOdd) {
               return Divider(
-                color: theme.disabledColor.withValues(alpha: 0.1),
+                color: theme.disabledColor.withValues(alpha: 0.03),
                 height: 1,
               );
             }

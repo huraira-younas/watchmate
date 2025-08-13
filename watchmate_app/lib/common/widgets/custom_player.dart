@@ -68,15 +68,11 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
 
     final double maxHeight = context.screenHeight * 0.43;
 
-    final double heightFromAspectRatio =
-        context.screenWidth / (_aspectRatio ?? (16 / 9));
-
-    final double finalHeight = heightFromAspectRatio < maxHeight
-        ? heightFromAspectRatio
-        : maxHeight;
+    final double arHeight = context.screenWidth / (_aspectRatio ?? (16 / 9));
+    final double finalHeight = arHeight < maxHeight ? arHeight : maxHeight;
 
     return AnimatedContainer(
-      height: loading ? maxHeight : finalHeight,
+      height: loading ? arHeight : finalHeight,
       width: context.screenWidth,
       duration: 100.millis,
       decoration: BoxDecoration(

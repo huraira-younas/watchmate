@@ -48,13 +48,13 @@ class UploaderBloc extends Bloc<UploaderEvent, UploaderState> {
         .registerCallbacks(taskNotificationTapCallback: (task, type) {})
         .configureNotificationForGroup(
           FileDownloader.defaultGroup,
-          paused: const TaskNotification('{filename}', 'Paused {metadata}'),
-          complete: const TaskNotification('{filename}', 'Task complete'),
-          error: const TaskNotification('{filename}', 'Task failed'),
-          canceled: const TaskNotification('{filename}', 'Canceled'),
+          paused: const TaskNotification('{displayName}', 'Paused {metadata}'),
+          complete: const TaskNotification('{displayName}', 'Task complete'),
+          error: const TaskNotification('{displayName}', 'Task failed'),
+          canceled: const TaskNotification('{displayName}', 'Canceled'),
           progressBar: true,
           running: const TaskNotification(
-            '{filename}',
+            '{displayName}',
             '{progress} - {networkSpeed} - {timeRemaining} remaining',
           ),
         )
@@ -73,7 +73,7 @@ class UploaderBloc extends Bloc<UploaderEvent, UploaderState> {
           progressBar: false,
         )
         .configureNotification(
-          complete: const TaskNotification('{filename}', 'Task complete'),
+          complete: const TaskNotification('{displayName}', 'Task complete'),
           tapOpensFile: false,
         );
 
@@ -167,6 +167,7 @@ class UploaderBloc extends Bloc<UploaderEvent, UploaderState> {
       final task = UploadTask.fromFile(
         headers: {'userid': _userId!, 'folder': "videos/${upload.video.id}"},
         updates: Updates.statusAndProgress,
+        displayName: upload.video.title,
         file: File(upload.filePath),
         taskId: upload.id,
         url: upload.url,
