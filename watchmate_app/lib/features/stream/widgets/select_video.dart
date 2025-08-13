@@ -42,6 +42,12 @@ class _SelectVideoState extends State<SelectVideo> {
       return;
     }
 
+    final fileSize = await File(file).length();
+    const twoGB = 2147400000;
+    if (fileSize > twoGB) {
+      showAppSnackBar("Can't select file over 2 GB");
+    }
+
     setState(() => _loading = true);
     final uint8list = await VideoThumbnail.thumbnailData(
       imageFormat: ImageFormat.JPEG,
@@ -76,9 +82,7 @@ class _SelectVideoState extends State<SelectVideo> {
     );
 
     setState(() => _loading = false);
-
     if (thumbPath != null && _videoController != null) {
-      final fileSize = await File(file).length();
       widget.onSelect(
         DownloadedVideo(
           height: _videoController!.value.size.height,
