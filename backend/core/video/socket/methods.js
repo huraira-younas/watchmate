@@ -34,7 +34,7 @@ const createParty = async ({ event, socket, data }) => {
   );
 };
 
-const leaveParty = async ({ event, socket, data }) => {
+const leaveParty = async ({ event, socket, io, data }) => {
   validateEvent(data, ["userId", "partyId"]);
   const { partyId, userId } = data;
 
@@ -43,23 +43,32 @@ const leaveParty = async ({ event, socket, data }) => {
   if (!party) return;
 
   party.joinee = party.joinee.filter((r) => r !== userId);
+  const user = await User.findById(userId, ["name", "profileURL", "id"]);
   if (party.joinee.length === 0) {
     await deleteFromHash(key);
   }
 
+  const message = `${user.name} leaved party: ${partyId}`;
+  delete socket.partyId;
   socket.leave(partyId);
-  logger.info(`Party leaved: ${partyId}`);
+  logger.info(message);
 
-  socket.emit(
+  io.to(partyId).emit(
     event,
     new SocketResponse({
-      message: "Party leaved successfully",
-      data: party,
+      message,
+      data: {
+        profileURL: user.profileURL ?? "",
+        message: `${user.name} left`,
+        joined: party.joinee.length,
+        name: user.name,
+        userId: user.id,
+      },
     })
   );
 };
 
-const joinParty = async ({ event, socket, data }) => {
+const joinParty = async ({ event, socket, io, data }) => {
   validateEvent(data, ["userId", "partyId"]);
   const { partyId, userId } = data;
 
@@ -70,16 +79,19 @@ const joinParty = async ({ event, socket, data }) => {
   party.joinee.push(userId);
   const user = await User.findById(userId, ["name", "profileURL", "id"]);
 
-  logger.info(`${user.name} joined party: ${partyId}`);
+  const message = `${user.name} joined party: ${partyId}`;
   socket.partyId = partyId;
   socket.join(partyId);
+  logger.info(message);
 
-  socket.emit(
+  io.to(partyId).emit(
     event,
     new SocketResponse({
-      message: "Party leaved successfully",
+      message,
       data: {
-        profileURL: user.profileURL,
+        profileURL: user.profileURL ?? "",
+        message: `${user.name} joined`,
+        joined: party.joinee.length,
         name: user.name,
         userId: user.id,
       },

@@ -15,6 +15,20 @@ class CreateParty extends PlayerEvent {
   Map<String, String> toJson() => {"userId": userId, "partyId": userId};
 }
 
+class HandleParty extends PlayerEvent {
+  final Map<String, dynamic> data;
+  final bool isJoined;
+  final int count;
+
+  const HandleParty({
+    required this.isJoined,
+    required this.count,
+    required this.data,
+    super.onSuccess,
+    super.onError,
+  });
+}
+
 class JoinParty extends PlayerEvent {
   final String partyId;
   final String userId;
