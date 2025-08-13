@@ -1,13 +1,90 @@
 const {
   validateEvent,
   SocketResponse,
+  SocketError,
 } = require("../../../methods/socket/socket_methods.js");
+const {
+  addToHash,
+  deleteFromHash,
+  getMemberFromHash,
+} = require("../../../redis/redis_methods.js");
 const User = require("../../../database/models/user_model");
-const R2Client = require("../../../clients/r2_client.js");
+const expire = require("../../../redis/redis_expire.js");
+const Keys = require("../../../redis/admin_keys.js");
 const logger = require("../../../methods/logger");
 
 const createParty = async ({ event, socket, data }) => {
-  
+  validateEvent(data, ["userId", "partyId"]);
+  const { partyId, userId } = data;
+
+  const key = Keys.partyKey(partyId);
+  socket.partyId = partyId;
+
+  const party = { owner: userId, partyId, joinee: [userId] };
+  await addToHash(key, party, expire.party_room);
+  socket.join(partyId);
+
+  logger.info(`Party created: ${partyId}`);
+  socket.emit(
+    event,
+    new SocketResponse({
+      message: "Created Party Successfully",
+      data: party,
+    })
+  );
 };
 
-module.exports = { createParty };
+const leaveParty = async ({ event, socket, data }) => {
+  validateEvent(data, ["userId", "partyId"]);
+  const { partyId, userId } = data;
+
+  const key = Keys.partyKey(partyId);
+  const party = await getMemberFromHash(key);
+  if (!party) return;
+
+  party.joinee = party.joinee.filter((r) => r !== userId);
+  if (party.joinee.length === 0) {
+    await deleteFromHash(key);
+  }
+
+  socket.leave(partyId);
+  logger.info(`Party leaved: ${partyId}`);
+
+  socket.emit(
+    event,
+    new SocketResponse({
+      message: "Party leaved successfully",
+      data: party,
+    })
+  );
+};
+
+const joinParty = async ({ event, socket, data }) => {
+  validateEvent(data, ["userId", "partyId"]);
+  const { partyId, userId } = data;
+
+  const key = Keys.partyKey(partyId);
+  const party = await getMemberFromHash(key);
+  if (!party) throw new SocketError("Watch party not found", 400);
+
+  party.joinee.push(userId);
+  const user = await User.findById(userId, ["name", "profileURL", "id"]);
+
+  logger.info(`${user.name} joined party: ${partyId}`);
+  socket.partyId = partyId;
+  socket.join(partyId);
+
+  socket.emit(
+    event,
+    new SocketResponse({
+      message: "Party leaved successfully",
+      data: {
+        profileURL: user.profileURL,
+        name: user.name,
+        userId: user.id,
+      },
+    })
+  );
+};
+
+module.exports = { createParty, leaveParty, joinParty };

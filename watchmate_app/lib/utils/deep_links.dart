@@ -48,6 +48,7 @@ class DeepLinkHandler {
     if ("/$path" != StreamRoutes.player.path) return;
 
     final id = uri.queryParameters['id']?.trim();
+    final partyId = uri.queryParameters['partyId']?.trim();
     Logger.info(message: "Incoming Id: $id", tag: "App_Links");
 
     if (id == null || id.isEmpty) {
@@ -78,6 +79,7 @@ class DeepLinkHandler {
         extra: {
           'video': DownloadedVideo.fromJson(res.body),
           'tabPrefix': "home",
+          'partyId': partyId,
         },
       );
     } catch (e) {

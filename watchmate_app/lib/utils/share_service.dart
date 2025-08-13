@@ -10,8 +10,9 @@ class ShareService {
     );
   }
 
-  static void shareRoomLink(String roomId) {
-    final customLink = "${NetworkUtils.baseUrl}/player?id=$roomId";
+  static void sharePartyLink(String videoId, String partyId) {
+    final customLink =
+        "${NetworkUtils.baseUrl}/player?id=$videoId&watchId=$partyId";
 
     SharePlus.instance.share(
       ShareParams(text: 'Join this watch party $customLink'),

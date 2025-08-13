@@ -6,6 +6,7 @@ const _validator = (pre, name, key) => {
 
 const Keys = {
   socketKey: (name, key) => _validator("socket", name, key),
+  partyKey: (key) => _validator("party", key),
   queueConfig: "admin:queue_config",
   jobConfig: "admin:job_config",
 };

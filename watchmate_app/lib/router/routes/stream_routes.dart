@@ -42,6 +42,7 @@ abstract class StreamRoutes {
             : PlayerScreen(
                 tagPrefix: extra['tagPrefix'] ?? 'home',
                 video: extra['video'] as DownloadedVideo,
+                partyId: extra['partyId'],
               ),
         key: state.pageKey,
       );

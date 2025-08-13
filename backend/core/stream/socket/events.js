@@ -14,7 +14,7 @@ const events = (io) => {
   };
 
   io.on(event.CONNECTION, (socket) => {
-    logger.info(`[SOCKET:${namespace.toUpperCase()}]: Connected: ${socket.id}`);
+    logger.warn(`[SOCKET:${namespace.toUpperCase()}]: Connected: ${socket.id}`);
 
     _handleKey(socket.handshake.query.userId, socket.id);
     socket.on("disconnect", () => _handleKey(socket.handshake.query.userId));

@@ -60,7 +60,7 @@ async function loadEvents(moduleName, eventsPath, io) {
     const event = require(eventsPath);
     event(namespace);
 
-    logger.info(`🦋 Events Loaded for Module: ${moduleName}`);
+    logger.info(`🦋 Namespace Loaded for Module: ${moduleName}`);
   } catch (err) {
     if (err.message.includes("Events not found")) return;
     logger.warn(`❌ Module ${moduleName}: ${err.message}`);

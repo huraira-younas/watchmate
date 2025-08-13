@@ -1,6 +1,13 @@
 part of 'bloc.dart';
 
 @immutable
-sealed class PlayerState {}
+class PlayerState {
+  final List<PartyMessageModel> messages;
+  final int joined;
 
-final class PlayerInitial extends PlayerState {}
+  const PlayerState({this.messages = const [], this.joined = 1});
+}
+
+final class CustomState extends BaseCustomState {
+  CustomState({required super.message, required super.title});
+}

@@ -45,6 +45,7 @@ void _processQueue() {
     margin: const EdgeInsets.all(12),
   );
 
+  if (scaffoldKey.currentState == null) return;
   scaffoldKey.currentState?.showSnackBar(snackBar).closed.then((_) {
     _isShowing = false;
     _processQueue();

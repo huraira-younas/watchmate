@@ -13,16 +13,44 @@ const events = (io) => {
     else await deleteFromHash(key);
   };
 
+  const _leaveParty = (userId, socket) => {
+    if (!socket.partyId) return;
+
+    const data = { partyId: socket.partyId, userId };
+    socketHandler(
+      methods.leaveParty,
+      new SocketParams({ event: event.LEAVE_PARTY, socket, data, io })
+    );
+  };
+
   io.on(event.CONNECTION, (socket) => {
-    logger.info(`[SOCKET:${namespace.toUpperCase()}]: Connected: ${socket.id}`);
+    logger.warn(`[SOCKET:${namespace.toUpperCase()}]: Connected: ${socket.id}`);
 
     _handleKey(socket.handshake.query.userId, socket.id);
-    socket.on("disconnect", () => _handleKey(socket.handshake.query.userId));
+    socket.on("disconnect", () => {
+      const userId = socket.handshake.query.userId;
+      _leaveParty(userId, socket);
+      _handleKey(userId);
+    });
 
     socket.on(event.CREATE_PARTY, (data) =>
       socketHandler(
         methods.createParty,
         new SocketParams({ event: event.CREATE_PARTY, socket, data, io })
+      )
+    );
+
+    socket.on(event.LEAVE_PARTY, (data) =>
+      socketHandler(
+        methods.leaveParty,
+        new SocketParams({ event: event.LEAVE_PARTY, socket, data, io })
+      )
+    );
+    
+    socket.on(event.JOIN_PARTY, (data) =>
+      socketHandler(
+        methods.joinParty,
+        new SocketParams({ event: event.JOIN_PARTY, socket, data, io })
       )
     );
   });

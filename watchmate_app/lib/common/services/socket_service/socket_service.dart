@@ -6,7 +6,7 @@ import 'package:watchmate_app/utils/network_utils.dart';
 import 'package:watchmate_app/utils/logger.dart';
 import 'dart:async' show Timer;
 
-enum NamespaceType { stream, notifications, chat, auth }
+enum NamespaceType { stream, chat, auth, video }
 
 class SocketNamespaceService {
   final _eventStreams =
@@ -42,13 +42,13 @@ class SocketNamespaceService {
       ..connect()
       ..onConnect((_) {
         Logger.info(tag: 'SOCKET:$namespace', message: 'Connected');
-        if (kDebugMode) showAppSnackBar("Socket connected");
+        if (kDebugMode) showAppSnackBar("Socket $namespace connected");
         _flush(type);
         _startPing(type, pingInterval);
       })
       ..onDisconnect((_) {
         Logger.warn(tag: 'SOCKET:$namespace', message: 'Disconnected');
-        if (kDebugMode) showAppSnackBar("Socket disconnected");
+        if (kDebugMode) showAppSnackBar("Socket $namespace disconnected");
 
         _stopPing(type);
       })
@@ -79,7 +79,7 @@ class SocketNamespaceService {
       socket!.emit(event, data);
     } else {
       _emitQueue.putIfAbsent(type, () => []).add(_EmitQueueItem(event, data));
-      Logger.info(tag: '[SOCKET:${_ns(type)}]', message: 'Queued → $event');
+      Logger.info(tag: 'SOCKET:${_ns(type)}', message: 'Queued → $event');
     }
   }
 
@@ -106,6 +106,7 @@ class SocketNamespaceService {
     final socket = _sockets[type];
 
     if (socket?.connected != true || queue == null) return;
+    Logger.info(tag: type.name, message: "Flushed Queue");
     for (final item in queue) {
       socket!.emit(item.event, item.data);
     }

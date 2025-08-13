@@ -60,6 +60,14 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   }
 
   @override
+  void setState(VoidCallback fn) {
+    if (!mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      super.setState(fn);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = context.theme;
     final loading =

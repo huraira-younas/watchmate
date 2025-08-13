@@ -3,7 +3,6 @@ import 'package:watchmate_app/features/stream/bloc/link_bloc/bloc.dart';
 import 'package:watchmate_app/common/cubits/navigation_cubit.dart';
 import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:watchmate_app/features/my_list/bloc/bloc.dart';
-import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:watchmate_app/common/cubits/theme_cubit.dart';
 import 'package:watchmate_app/common/cubits/video_cubit.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
@@ -31,7 +30,6 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => getIt<NavigationCubit>()),
         BlocProvider(create: (_) => getIt<UploaderBloc>()),
-        BlocProvider(create: (_) => getIt<PlayerBloc>()),
         BlocProvider(create: (_) => getIt<ThemeCubit>()),
         BlocProvider(create: (_) => getIt<VideoCubit>()),
         BlocProvider(create: (_) => getIt<ListBloc>()),

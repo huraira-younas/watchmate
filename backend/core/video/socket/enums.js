@@ -2,7 +2,8 @@ const namespace = "video";
 
 const event = {
   CREATE_PARTY: `${namespace}:create_party`,
-  CLOSE_PARTY: `${namespace}:close_party`,
+  LEAVE_PARTY: `${namespace}:leave_party`,
+  JOIN_PARTY: `${namespace}:join_party`,
   CONNECTION: "connection",
 };
 
