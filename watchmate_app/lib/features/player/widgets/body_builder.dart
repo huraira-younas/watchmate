@@ -35,16 +35,21 @@ class _BodyBuilderState extends State<BodyBuilder> {
   @override
   Widget build(BuildContext context) {
     final messages = widget.messages;
+    final joined = widget.joined;
     final theme = context.theme;
 
-    if (widget.joined == 1 && messages.isEmpty) {
+    if (joined == 1 || joined == -1 && messages.isEmpty) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           30.h,
-          const CustomLabelWidget(
-            text: "Share link with your friends to watch together",
-            title: "Watch with friends",
+          CustomLabelWidget(
+            text: joined == -1
+                ? "Create new watch party and share link with your friends to watch together"
+                : "Share link with your friends to watch together",
+            title: joined == -1
+                ? "Watch party disclosed"
+                : "Watch with friends",
             icon: Icons.signpost,
             iconSize: 50,
           ),

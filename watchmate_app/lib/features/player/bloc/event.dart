@@ -18,11 +18,13 @@ class CreateParty extends PlayerEvent {
 class HandleParty extends PlayerEvent {
   final Map<String, dynamic> data;
   final bool isJoined;
+  final bool reset;
   final int count;
 
   const HandleParty({
     required this.isJoined,
     required this.count,
+    this.reset = false,
     required this.data,
     super.onSuccess,
     super.onError,

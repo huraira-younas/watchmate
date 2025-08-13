@@ -49,11 +49,15 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _handlePartyEvent(Map<String, dynamic> data, String userId) {
+    Logger.info(tag: _type.name, message: data.toString());
+    if (data['code'] != 200) {
+      add(const HandleParty(isJoined: true, count: -1, data: {}, reset: true));
+      return;
+    }
+
     final res = data['data'];
     if (res == null) return;
-
-    Logger.info(tag: _type.name, message: res.toString());
-    add(HandleParty(data: res, count: res['joined'], isJoined: true));
+    add(HandleParty(count: res['joined'], isJoined: true, data: res));
   }
 
   @override
@@ -77,6 +81,10 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _onHandleParty(HandleParty event, Emitter<PlayerState> emit) {
+    if (event.reset) {
+      return emit(PlayerState(joined: event.count, messages: const []));
+    }
+
     final message = PartyMessageModel.fromJson(event.data);
     final messages = [...state.messages, message];
 
