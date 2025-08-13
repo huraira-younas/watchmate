@@ -17,11 +17,6 @@ router
     uploadProgress,
     uploadToR2.single("file"),
     asyncHandler(file.handleUpload)
-  )
-  .post(
-    "/presigned_url",
-    validateRole("userId", [ROLES.ADMIN, ROLES.USER]),
-    asyncHandler(file.getPresignedUrl)
   );
 
 module.exports = router;
