@@ -12,7 +12,7 @@ class ShareService {
 
   static void sharePartyLink(String videoId, String partyId) {
     final customLink =
-        "${NetworkUtils.baseUrl}/player?id=$videoId&watchId=$partyId";
+        "${NetworkUtils.baseUrl}/player?id=$videoId&partyId=$partyId";
 
     SharePlus.instance.share(
       ShareParams(text: 'Join this watch party $customLink'),
