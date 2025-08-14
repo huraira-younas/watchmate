@@ -57,7 +57,7 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
     final pos = controller.value.position;
     final diff = pos - _lastPosition;
 
-    if (playing == _lastIsPlaying && diff.inSeconds.abs() <= 2) {
+    if (playing == _lastIsPlaying && diff.inSeconds.abs() <= 5) {
       return;
     }
 

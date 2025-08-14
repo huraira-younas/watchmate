@@ -179,6 +179,7 @@ class _VideoControlsOverlay extends StatelessWidget {
                 child: MyText(
                   overflow: TextOverflow.ellipsis,
                   family: AppFonts.bold,
+                  color: Colors.white,
                   text: title,
                   maxLines: 1,
                 ),
@@ -197,6 +198,7 @@ class _VideoControlsOverlay extends StatelessWidget {
                 text:
                     "${formatDuration(value.position)} / ${formatDuration(value.duration)}",
                 family: AppFonts.medium,
+                color: Colors.white,
                 size: 11,
               ).padSym(h: 20),
               VideoProgressIndicator(

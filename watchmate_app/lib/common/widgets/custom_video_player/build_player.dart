@@ -30,7 +30,7 @@ class BuildPlayer extends StatelessWidget {
         final currentPos = videoPlayer.value.position;
         final diff = (videoState.position - currentPos).inMilliseconds.abs();
 
-        if (diff > 300) {
+        if (diff > 5000) {
           videoPlayer.seekTo(videoState.position);
         }
 

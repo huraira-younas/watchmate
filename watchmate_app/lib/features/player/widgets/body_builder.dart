@@ -101,7 +101,7 @@ class _BodyBuilderState extends State<BodyBuilder> {
                       if (isOwner && !isMe)
                         Image.asset(AppAssets.icons.crownIcon, height: 14),
                     ],
-                  ),
+                  ).flexible(),
                   MyText(text: msg.message),
                 ],
               ),
