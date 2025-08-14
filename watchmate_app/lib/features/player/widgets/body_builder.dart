@@ -16,12 +16,14 @@ class BodyBuilder extends StatefulWidget {
   const BodyBuilder({
     required this.messages,
     required this.partyId,
+    required this.videoId,
     required this.joined,
     super.key,
   });
 
   final List<PartyMessageModel> messages;
   final String? partyId;
+  final String videoId;
   final int joined;
 
   @override
@@ -129,7 +131,7 @@ class _BodyBuilderState extends State<BodyBuilder> {
 
   Future<void> _createParty() async {
     _playerBloc.add(CreateParty(userId: _userId));
-    ShareService.sharePartyLink(_userId, _userId);
+    ShareService.sharePartyLink(widget.videoId, _userId);
   }
 
   @override

@@ -13,6 +13,7 @@ class RoomChat extends StatelessWidget {
     required this.expandHeight,
     required this.onExpand,
     required this.partyId,
+    required this.videoId,
     required this.expand,
     super.key,
   });
@@ -20,6 +21,7 @@ class RoomChat extends StatelessWidget {
   final VoidCallback onExpand;
   final bool expandHeight;
   final String? partyId;
+  final String videoId;
   final bool expand;
 
   @override
@@ -44,6 +46,7 @@ class RoomChat extends StatelessWidget {
                   children: <Widget>[
                     BodyBuilder(
                       messages: state.messages,
+                      videoId: videoId,
                       partyId: partyId,
                       joined: joined,
                     ).expanded(),

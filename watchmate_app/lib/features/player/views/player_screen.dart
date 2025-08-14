@@ -95,6 +95,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       builder: (_, expandedHeight, _) {
                         return RoomChat(
                           expandHeight: expandedHeight,
+                          videoId: widget.video.id,
                           onExpand: toggleExpand,
                           partyId: partyId,
                           expand: expand,

@@ -49,6 +49,8 @@ class DeepLinkHandler {
 
     final id = uri.queryParameters['id']?.trim();
     final partyId = uri.queryParameters['partyId']?.trim();
+    
+    Logger.info(message: "Incoming partyId: $partyId", tag: "App_Links");
     Logger.info(message: "Incoming Id: $id", tag: "App_Links");
 
     if (id == null || id.isEmpty) {
