@@ -1,9 +1,8 @@
 import 'package:watchmate_app/features/player/widgets/bottom_builder.dart';
 import 'package:watchmate_app/features/player/widgets/body_builder.dart';
-import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/common/widgets/custom_card.dart';
+import 'package:watchmate_app/common/widgets/custom_chip.dart';
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
-import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -60,16 +59,15 @@ class RoomChat extends StatelessWidget {
                     onPressed: onExpand,
                     icon: Icon(
                       expand
-                          ? Icons.expand_more_outlined
-                          : Icons.expand_less_outlined,
+                          ? Icons.fullscreen_exit
+                          : Icons.fullscreen,
                       color: theme.hintColor,
                     ),
                   ),
                 ),
-                MyText(
+                CustomChip(
                   text: "Joined ${joined == -1 ? 0 : joined}",
-                  family: AppFonts.semibold,
-                  color: theme.hintColor,
+                  icon: Icons.supervised_user_circle_sharp,
                 ),
               ],
             );

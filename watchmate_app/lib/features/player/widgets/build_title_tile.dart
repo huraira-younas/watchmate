@@ -26,14 +26,18 @@ class BuildTitleTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               CustomChip(
-                icon: Icons.private_connectivity_rounded,
+                icon: video.visibility.name == "public"
+                    ? Icons.language
+                    : Icons.private_connectivity_rounded,
                 text: video.visibility.name.capitalize,
               ).padOnly(l: AppConstants.padding - 6, t: 10),
               CustomCard(
                 child: MyText(
+                  overflow: TextOverflow.ellipsis,
                   size: AppConstants.subtitle,
                   family: AppFonts.semibold,
                   text: video.title,
+                  maxLines: 1,
                 ),
               ),
               Row(

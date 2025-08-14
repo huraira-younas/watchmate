@@ -79,6 +79,7 @@ class _BodyBuilderState extends State<BodyBuilder> {
           alignment: isMe ? Alignment.topRight : Alignment.topLeft,
           child: Row(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8,
             children: <Widget>[
               if (!isMe) ProfileAvt(size: 40, url: msg.profileURL),
@@ -101,10 +102,10 @@ class _BodyBuilderState extends State<BodyBuilder> {
                       if (isOwner && !isMe)
                         Image.asset(AppAssets.icons.crownIcon, height: 14),
                     ],
-                  ).flexible(),
+                  ),
                   MyText(text: msg.message),
                 ],
-              ),
+              ).flexible(),
               if (isMe) ProfileAvt(size: 40, url: msg.profileURL),
             ],
           ),
