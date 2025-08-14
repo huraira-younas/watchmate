@@ -60,6 +60,13 @@ const events = (io) => {
         new SocketParams({ event: event.JOIN_PARTY, socket, data, io })
       )
     );
+
+    socket.on(event.VIDEO_ACTION, (data) =>
+      socketHandler(
+        methods.videoAction,
+        new SocketParams({ event: event.VIDEO_ACTION, socket, data, io })
+      )
+    );
   });
 };
 

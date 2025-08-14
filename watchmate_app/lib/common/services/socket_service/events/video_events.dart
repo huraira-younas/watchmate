@@ -6,6 +6,7 @@ class VideoEvents {
 
   String get partyMessage => '$_namespace:party_message';
   String get createParty => '$_namespace:create_party';
+  String get videoState => '$_namespace:video_action';
   String get leaveParty => '$_namespace:leave_party';
   String get joinParty => '$_namespace:join_party';
 }

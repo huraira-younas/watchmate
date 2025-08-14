@@ -112,7 +112,7 @@ const sendMessage = async ({ event, socket, io, data }) => {
   const key = Keys.partyKey(partyId);
   const party = await getMemberFromHash(key);
   if (!party) throw new SocketError("Watch party not found", 400);
-  
+
   logger.info(`Message: ${message}`);
   socket.partyId = partyId;
   io.to(partyId).emit(
@@ -124,4 +124,29 @@ const sendMessage = async ({ event, socket, io, data }) => {
   );
 };
 
-module.exports = { createParty, leaveParty, joinParty, sendMessage };
+const videoAction = async ({ event, socket, io, data }) => {
+  validateEvent(data, ["videoState", "partyId"]);
+  const { partyId, videoState } = data;
+
+  const key = Keys.partyKey(partyId);
+  const party = await getMemberFromHash(key);
+  if (!party) throw new SocketError("Watch party not found", 400);
+
+  logger.info(`VideoState: ${JSON.stringify(videoState)}`);
+  socket.partyId = partyId;
+  io.to(partyId).emit(
+    event,
+    new SocketResponse({
+      message: "Incoming new action",
+      data: videoState,
+    })
+  );
+};
+
+module.exports = {
+  createParty,
+  sendMessage,
+  videoAction,
+  leaveParty,
+  joinParty,
+};

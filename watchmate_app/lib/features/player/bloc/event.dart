@@ -17,12 +17,14 @@ class CreateParty extends PlayerEvent {
 
 class HandleParty extends PlayerEvent {
   final Map<String, dynamic> data;
+  final bool isVideoState;
   final bool isJoined;
   final bool reset;
   final int count;
 
   const HandleParty({
-    required this.isJoined,
+    this.isVideoState = false,
+    this.isJoined = true,
     required this.count,
     this.reset = false,
     required this.data,
@@ -58,6 +60,23 @@ class PartyMessage extends PlayerEvent {
 
   Map<String, dynamic> toJson() => {
     "message": message.toJson(),
+    "partyId": partyId,
+  };
+}
+
+class HandleVideoState extends PlayerEvent {
+  final VideoState videoState;
+  final String partyId;
+
+  const HandleVideoState({
+    required this.videoState,
+    required this.partyId,
+    super.onSuccess,
+    super.onError,
+  });
+
+  Map<String, dynamic> toJson() => {
+    "videoState": videoState.toJson(),
     "partyId": partyId,
   };
 }
