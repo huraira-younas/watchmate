@@ -64,8 +64,8 @@ class RoomChat extends StatelessWidget {
                   ),
                 ),
                 MyText(
+                  text: "Joined ${joined == -1 ? 0 : joined}",
                   family: AppFonts.semibold,
-                  text: "Joined $joined",
                   color: theme.hintColor,
                 ),
               ],

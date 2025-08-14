@@ -4,6 +4,7 @@ class VideoEvents {
     _namespace = namespace;
   }
 
+  String get partyMessage => '$_namespace:party_message';
   String get createParty => '$_namespace:create_party';
   String get leaveParty => '$_namespace:leave_party';
   String get joinParty => '$_namespace:join_party';

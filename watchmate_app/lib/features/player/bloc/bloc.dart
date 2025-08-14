@@ -17,6 +17,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   String? partyId;
 
   PlayerBloc(this._socket, String userId) : super(const PlayerState()) {
+    on<PartyMessage>(_onPartyMessage);
     on<CreateParty>(_onCreateParty);
     on<HandleParty>(_onHandleParty);
     on<JoinParty>(_onJoinParty);
@@ -38,6 +39,16 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     _eventSubs[SocketEvents.video.leaveParty] = _socket
         .onEvent(type: _type, event: SocketEvents.video.leaveParty)
         .listen((d) => _handlePartyEvent(d, userId));
+
+    _eventSubs[SocketEvents.video.partyMessage] = _socket
+        .onEvent(type: _type, event: SocketEvents.video.partyMessage)
+        .listen((data) => _handleMessage(data));
+  }
+
+  void _handleMessage(Map<String, dynamic> data) {
+    final res = data['data'];
+    if (res == null) return;
+    add(HandleParty(count: state.joined, isJoined: true, data: res));
   }
 
   void _handleReconnect(String userId) {
@@ -77,7 +88,12 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
   void _onJoinParty(JoinParty event, Emitter<PlayerState> emit) {
     _socket.emit(_type, SocketEvents.video.joinParty, event.toJson());
-    partyId = event.userId;
+    partyId = event.partyId;
+  }
+
+  void _onPartyMessage(PartyMessage event, Emitter<PlayerState> emit) {
+    _socket.emit(_type, SocketEvents.video.partyMessage, event.toJson());
+    partyId = event.partyId;
   }
 
   void _onHandleParty(HandleParty event, Emitter<PlayerState> emit) {

@@ -46,7 +46,14 @@ const events = (io) => {
         new SocketParams({ event: event.LEAVE_PARTY, socket, data, io })
       )
     );
-    
+
+    socket.on(event.PARTY_MESSAGE, (data) =>
+      socketHandler(
+        methods.sendMessage,
+        new SocketParams({ event: event.PARTY_MESSAGE, socket, data, io })
+      )
+    );
+
     socket.on(event.JOIN_PARTY, (data) =>
       socketHandler(
         methods.joinParty,

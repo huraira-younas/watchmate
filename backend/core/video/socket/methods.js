@@ -59,8 +59,8 @@ const leaveParty = async ({ event, socket, io, data }) => {
       message,
       data: {
         profileURL: user.profileURL ?? "",
-        message: `${user.name} left`,
         joined: party.joinee.length,
+        message: `Left the party`,
         name: user.name,
         userId: user.id,
       },
@@ -82,7 +82,7 @@ const joinParty = async ({ event, socket, io, data }) => {
     promises.push(addToHash(key, party, expire.party_room));
     party.joinee.push(userId);
   }
-  
+
   const [user] = await Promise.all(promises);
 
   const message = `${user.name} joined party: ${partyId}`;
@@ -96,8 +96,8 @@ const joinParty = async ({ event, socket, io, data }) => {
       message,
       data: {
         profileURL: user.profileURL ?? "",
-        message: `${user.name} joined`,
         joined: party.joinee.length,
+        message: `Joined the party`,
         name: user.name,
         userId: user.id,
       },
@@ -105,4 +105,23 @@ const joinParty = async ({ event, socket, io, data }) => {
   );
 };
 
-module.exports = { createParty, leaveParty, joinParty };
+const sendMessage = async ({ event, socket, io, data }) => {
+  validateEvent(data, ["message", "partyId"]);
+  const { partyId, message } = data;
+
+  const key = Keys.partyKey(partyId);
+  const party = await getMemberFromHash(key);
+  if (!party) throw new SocketError("Watch party not found", 400);
+  
+  logger.info(`Message: ${message}`);
+  socket.partyId = partyId;
+  io.to(partyId).emit(
+    event,
+    new SocketResponse({
+      message: "Recieved a message",
+      data: message,
+    })
+  );
+};
+
+module.exports = { createParty, leaveParty, joinParty, sendMessage };

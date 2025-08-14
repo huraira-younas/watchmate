@@ -13,8 +13,8 @@ class PartyMessageModel extends Equatable {
     required this.profileURL,
     required this.message,
     required this.userId,
-    required this.reply,
     required this.name,
+    this.reply,
   });
 
   PartyMessageModel copyWith({

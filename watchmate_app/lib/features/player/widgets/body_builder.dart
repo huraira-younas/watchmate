@@ -5,6 +5,7 @@ import 'package:watchmate_app/common/widgets/profile_avt.dart';
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
+import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/utils/share_service.dart';
 import 'package:watchmate_app/extensions/exports.dart';
@@ -30,6 +31,7 @@ class BodyBuilder extends StatefulWidget {
 
 class _BodyBuilderState extends State<BodyBuilder> {
   late final _playerBloc = context.read<PlayerBloc>();
+  late final _scroller = ScrollController();
   final _userId = getIt<AuthBloc>().user!.id;
 
   @override
@@ -53,6 +55,7 @@ class _BodyBuilderState extends State<BodyBuilder> {
             icon: Icons.signpost,
             iconSize: 50,
           ),
+          5.h,
           TextButton(
             onPressed: _createParty,
             style: TextButton.styleFrom(backgroundColor: theme.cardColor),
@@ -65,30 +68,64 @@ class _BodyBuilderState extends State<BodyBuilder> {
       padding: const EdgeInsets.symmetric(vertical: 25),
       separatorBuilder: (_, _) => 12.h,
       itemCount: messages.length,
+      controller: _scroller,
       itemBuilder: (_, idx) {
         final msg = messages[idx];
+        final isMe = msg.userId == _userId;
+        final isOwner = _playerBloc.partyId == msg.userId;
+
         return Align(
-          alignment: Alignment.topLeft,
+          alignment: isMe ? Alignment.topRight : Alignment.topLeft,
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             spacing: 8,
             children: <Widget>[
-              ProfileAvt(size: 40, url: msg.profileURL),
+              if (!isMe) ProfileAvt(size: 40, url: msg.profileURL),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: isMe
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
                 children: <Widget>[
-                  MyText(
-                    size: AppConstants.subtitle,
-                    text: msg.name.capitalize,
-                    family: AppFonts.bold,
+                  Row(
+                    spacing: 4,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      if (isOwner && isMe)
+                        Image.asset(AppAssets.icons.crownIcon, height: 14),
+                      MyText(
+                        size: AppConstants.subtitle,
+                        text: msg.name.capitalize,
+                        family: AppFonts.bold,
+                      ),
+                      if (isOwner && !isMe)
+                        Image.asset(AppAssets.icons.crownIcon, height: 14),
+                    ],
                   ),
                   MyText(text: msg.message),
                 ],
               ),
+              if (isMe) ProfileAvt(size: 40, url: msg.profileURL),
             ],
           ),
         );
       },
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant BodyBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.messages.length != oldWidget.messages.length) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scroller.hasClients) {
+          _scroller.animateTo(
+            _scroller.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
   }
 
   Future<void> _createParty() async {

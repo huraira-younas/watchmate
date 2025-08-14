@@ -1,8 +1,8 @@
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
-import 'package:flutter/material.dart';
 import 'package:watchmate_app/extensions/exports.dart';
+import 'package:flutter/material.dart';
 
 class CustomLabelWidget extends StatelessWidget {
   const CustomLabelWidget({
@@ -24,7 +24,7 @@ class CustomLabelWidget extends StatelessWidget {
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children: <Widget>[
         Icon(icon, color: theme.highlightColor, size: iconSize),
         const SizedBox(height: 24),
         MyText(
@@ -41,7 +41,6 @@ class CustomLabelWidget extends StatelessWidget {
           isCenter: true,
           text: text,
         ),
-        const SizedBox(height: 30),
       ],
     ).padSym(h: 20);
   }

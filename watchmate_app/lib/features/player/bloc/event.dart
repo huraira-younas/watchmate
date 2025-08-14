@@ -44,3 +44,20 @@ class JoinParty extends PlayerEvent {
 
   Map<String, String> toJson() => {"userId": userId, "partyId": partyId};
 }
+
+class PartyMessage extends PlayerEvent {
+  final PartyMessageModel message;
+  final String partyId;
+
+  const PartyMessage({
+    required this.message,
+    required this.partyId,
+    super.onSuccess,
+    super.onError,
+  });
+
+  Map<String, dynamic> toJson() => {
+    "message": message.toJson(),
+    "partyId": partyId,
+  };
+}

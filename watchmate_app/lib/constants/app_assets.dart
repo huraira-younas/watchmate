@@ -12,9 +12,16 @@ class AppIcons {
   String get passwordIcon => '$_base/password.png';
   String get appIcon => '$_base/app_icon.png';
   String get emailIcon => '$_base/email.png';
+  String get crownIcon => '$_base/crown.png';
   String get codeIcon => '$_base/code.png';
 
-  List<String> get preloadList => [appIcon, codeIcon, emailIcon, passwordIcon];
+  List<String> get preloadList => [
+    passwordIcon,
+    emailIcon,
+    crownIcon,
+    codeIcon,
+    appIcon,
+  ];
 }
 
 class AppBackgrounds {
