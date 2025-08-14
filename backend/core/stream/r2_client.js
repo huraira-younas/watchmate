@@ -1,14 +1,17 @@
-const { SocketResponse } = require("../methods/socket/socket_methods");
-const { getMemberFromHash } = require("../redis/redis_methods");
-const Video = require("../database/models/video_model");
-const { socketKey } = require("../redis/admin_keys");
+const {
+  SocketResponse,
+  SocketError,
+} = require("../../methods/socket/socket_methods");
+const { getMemberFromHash } = require("../../redis/redis_methods");
+const Video = require("../../database/models/video_model");
+const { getIO } = require("../../clients/socket_client");
+const { socketKey } = require("../../redis/admin_keys");
 const { Upload } = require("@aws-sdk/lib-storage");
+const { s3 } = require("../../clients/s3_client");
+const logger = require("../../methods/logger");
 const sanitize = require("sanitize-filename");
-const { getIO } = require("./socket_client");
-const logger = require("../methods/logger");
 const ytdl = require("@distube/ytdl-core");
 const { PassThrough } = require("stream");
-const { s3 } = require("./s3_client");
 const { v4: uuid } = require("uuid");
 const axios = require("axios");
 
@@ -72,6 +75,10 @@ class R2Client {
     const contentType = response.headers["content-type"] || "video/mp4";
 
     const size = parseInt(response.headers["content-length"] || 0, 10);
+    if (size <= 0) {
+      throw new SocketError("Invalid Format. Use direct url of a video", 400);
+    }
+
     const extension = contentType.split("/")[1] || "mp4";
     const filename = `video.${extension}`;
 
@@ -137,18 +144,17 @@ class R2Client {
     const ext = contentType.split("/")[1] || "jpg";
     const key = `${this.user.id}/direct/${id}/thumbnail.${ext}`;
 
-    await r2.send(
-      new Upload({
-        client: r2,
-        params: {
-          Body: Buffer.from(response.data),
-          Bucket: process.env.R2_BUCKET,
-          ContentType: contentType,
-          Key: key,
-        },
-      })
-    );
+    const upload = new Upload({
+      client: s3,
+      params: {
+        Body: Buffer.from(response.data),
+        Bucket: process.env.R2_BUCKET,
+        ContentType: contentType,
+        Key: key,
+      },
+    });
 
+    await upload.done();
     this.videoData.thumbnailURL = `${process.env.R2_PUBLIC_BASE_URL}/${key}`;
   }
 
