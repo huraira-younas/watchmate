@@ -3,6 +3,7 @@ import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
+import 'dart:async' show Timer;
 
 class CustomVideoControls extends StatefulWidget {
   final VideoPlayerController controller;
@@ -26,66 +27,165 @@ class CustomVideoControls extends StatefulWidget {
 
 class _CustomVideoControlsState extends State<CustomVideoControls> {
   late final controller = widget.controller;
+
+  bool _showSeekOverlay = false;
+  bool _controlsVisible = true;
+  String? _seekOverlayText;
+  Timer? _overlayTimer;
+  Timer? _hideTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(_onVideoUpdate);
+    _startHideTimer();
+  }
+
+  void _onVideoUpdate() {
+    if (mounted) setState(() {});
+  }
+
+  void _startHideTimer() {
+    _hideTimer?.cancel();
+    if (!mounted) return;
+    _hideTimer = Timer(const Duration(seconds: 3), () {
+      if (mounted) setState(() => _controlsVisible = false);
+    });
+  }
+
+  void _toggleControls() {
+    setState(() => _controlsVisible = !_controlsVisible);
+    if (_controlsVisible) _startHideTimer();
+  }
+
   void _seekBy(Duration offset) {
     final currentPos = controller.value.position;
     final targetPos = currentPos + offset;
-
     final duration = controller.value.duration;
+
     final clampedPos = targetPos < Duration.zero
         ? Duration.zero
         : (targetPos > duration ? duration : targetPos);
 
     controller.seekTo(clampedPos);
+
+    _seekOverlayText = offset.inSeconds > 0
+        ? "+ ${offset.inSeconds.abs()}s"
+        : "- ${offset.inSeconds.abs()}s";
+
+    setState(() => _showSeekOverlay = true);
+
+    _overlayTimer?.cancel();
+    _overlayTimer = Timer(const Duration(milliseconds: 700), () {
+      if (mounted) setState(() => _showSeekOverlay = false);
+    });
   }
 
   String _formatDuration(Duration duration) {
-    twoDigits(int n) => n.toString().padLeft(2, '0');
-
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
     return '${duration.inHours > 0 ? '${twoDigits(duration.inHours)}:' : ''}$minutes:$seconds';
   }
 
   @override
-  void initState() {
-    super.initState();
-    controller.addListener(_update);
-  }
-
-  void _update() => WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (!mounted) return;
-    setState(() {});
-  });
-
-  @override
   void dispose() {
-    controller.removeListener(_update);
+    controller.removeListener(_onVideoUpdate);
+    _overlayTimer?.cancel();
+    _hideTimer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final value = controller.value;
-    final theme = context.theme;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: _toggleControls,
+      onDoubleTapDown: (details) {
+        if (!widget.isOwner) return;
+        final box = context.findRenderObject() as RenderBox;
+        final tapPos = box.globalToLocal(details.globalPosition);
 
+        _seekBy(
+          tapPos.dx < box.size.width / 2
+              ? const Duration(seconds: -10)
+              : const Duration(seconds: 10),
+        );
+      },
+      child: Stack(
+        children: [
+          AnimatedOpacity(
+            duration: 200.millis,
+            opacity: _controlsVisible ? 1 : 0,
+            child: _VideoControlsOverlay(
+              onToggleScreen: widget.toggleScreen,
+              formatDuration: _formatDuration,
+              seekPad: widget.seekPad,
+              isOwner: widget.isOwner,
+              value: controller.value,
+              controller: controller,
+              title: widget.title,
+              onSeek: _seekBy,
+              onPlayPause: () {
+                controller.value.isPlaying
+                    ? controller.pause()
+                    : controller.play();
+                _startHideTimer();
+              },
+            ),
+          ),
+          if (_seekOverlayText != null)
+            _SeekOverlay(text: _seekOverlayText!, visible: _showSeekOverlay),
+        ],
+      ),
+    );
+  }
+}
+
+class _VideoControlsOverlay extends StatelessWidget {
+  final String Function(Duration) formatDuration;
+  final VideoPlayerController controller;
+  final VoidCallback onToggleScreen;
+  final Function(Duration) onSeek;
+  final VoidCallback onPlayPause;
+  final VideoPlayerValue value;
+  final double seekPad;
+  final String title;
+  final bool isOwner;
+
+  const _VideoControlsOverlay({
+    required this.onToggleScreen,
+    required this.formatDuration,
+    required this.onPlayPause,
+    required this.controller,
+    required this.seekPad,
+    required this.isOwner,
+    required this.onSeek,
+    required this.title,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return ColoredBox(
       color: Colors.black45,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
+        children: [
           Row(
-            children: <Widget>[
+            children: [
               Expanded(
                 child: MyText(
                   overflow: TextOverflow.ellipsis,
                   family: AppFonts.bold,
-                  text: widget.title,
+                  text: title,
                   maxLines: 1,
                 ),
               ),
               IconButton(
                 icon: const Icon(Icons.fullscreen, color: Colors.white),
-                onPressed: widget.toggleScreen,
+                onPressed: onToggleScreen,
               ),
             ],
           ).padSym(h: 12),
@@ -94,21 +194,21 @@ class _CustomVideoControlsState extends State<CustomVideoControls> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               MyText(
-                text: "${_formatDuration(value.position)} / ${_formatDuration(value.duration)}",
+                text:
+                    "${formatDuration(value.position)} / ${formatDuration(value.duration)}",
                 family: AppFonts.medium,
                 size: 11,
               ).padSym(h: 20),
               VideoProgressIndicator(
                 controller,
-                allowScrubbing: widget.isOwner,
+                allowScrubbing: isOwner,
                 colors: VideoProgressColors(
                   bufferedColor: theme.primaryColorDark.withValues(alpha: 0.4),
                   backgroundColor: theme.canvasColor,
                   playedColor: theme.primaryColor,
                 ),
-              ).padSym(h: widget.seekPad),
-
-              if (widget.isOwner)
+              ).padSym(h: seekPad),
+              if (isOwner)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -118,7 +218,7 @@ class _CustomVideoControlsState extends State<CustomVideoControls> {
                         color: Colors.white,
                         size: 25,
                       ),
-                      onPressed: () => _seekBy(const Duration(seconds: -10)),
+                      onPressed: () => onSeek(const Duration(seconds: -10)),
                     ),
                     IconButton(
                       icon: Icon(
@@ -126,11 +226,7 @@ class _CustomVideoControlsState extends State<CustomVideoControls> {
                         color: Colors.white,
                         size: 30,
                       ),
-                      onPressed: () {
-                        value.isPlaying
-                            ? controller.pause()
-                            : controller.play();
-                      },
+                      onPressed: onPlayPause,
                     ),
                     IconButton(
                       icon: const Icon(
@@ -138,13 +234,37 @@ class _CustomVideoControlsState extends State<CustomVideoControls> {
                         color: Colors.white,
                         size: 25,
                       ),
-                      onPressed: () => _seekBy(const Duration(seconds: 10)),
+                      onPressed: () => onSeek(const Duration(seconds: 10)),
                     ),
                   ],
                 ),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SeekOverlay extends StatelessWidget {
+  const _SeekOverlay({required this.text, required this.visible});
+  final bool visible;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: AnimatedOpacity(
+        duration: 150.millis,
+        opacity: visible ? 1.0 : 0.0,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.black54,
+          ),
+          child: MyText(text: text, size: 20),
+        ).center(),
       ),
     );
   }
