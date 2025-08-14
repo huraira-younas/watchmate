@@ -120,6 +120,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     PlayerState newState;
 
     if (event.reset) {
+      partyId = null;
       newState = PlayerState(
         videoState: videoState,
         joined: event.count,
