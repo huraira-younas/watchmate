@@ -79,8 +79,8 @@ const joinParty = async ({ event, socket, io, data }) => {
   const promises = [User.findById(userId, ["name", "profileURL", "id"])];
 
   if (!party.joinee.includes(userId)) {
-    promises.push(addToHash(key, party, expire.party_room));
     party.joinee.push(userId);
+    promises.push(addToHash(key, party, expire.party_room));
   }
 
   const [user] = await Promise.all(promises);
