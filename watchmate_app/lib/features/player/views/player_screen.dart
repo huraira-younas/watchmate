@@ -13,8 +13,8 @@ import 'package:flutter/material.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({
-    this.partyId = "327253c5-1b57-413a-bc88-930e23029cd6",
     required this.tagPrefix,
+    required this.partyId,
     required this.video,
     super.key,
   });
@@ -31,17 +31,49 @@ class _PlayerScreenState extends State<PlayerScreen> {
   final _expandedHeight = ValueNotifier<bool>(false);
   final _expanded = ValueNotifier<bool>(false);
 
-  final _uid = getIt<AuthBloc>().user!.id;
-  final _socket = getIt<SocketNamespaceService>();
-  late final _playerBloc = PlayerBloc(_socket, _uid);
+  late final SocketNamespaceService _socket;
+  late final PlayerBloc _playerBloc;
+  late final String _uid;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _socket = getIt<SocketNamespaceService>();
+    _uid = getIt<AuthBloc>().user!.id;
+    _unregisterPlayerBloc();
+
+    _playerBloc = PlayerBloc(_socket, _uid);
+    getIt.registerLazySingleton<PlayerBloc>(() => _playerBloc);
+  }
+
+  @override
+  void dispose() {
+    _unregisterPlayerBloc();
+    super.dispose();
+  }
+
+  void _unregisterPlayerBloc() {
+    if (getIt.isRegistered<PlayerBloc>()) {
+      getIt<PlayerBloc>().close();
+      getIt.unregister<PlayerBloc>();
+    }
+  }
+
+  void toggleExpand() {
+    _expanded.value = !_expanded.value;
+    Future.delayed(
+      400.millis,
+      () => _expandedHeight.value = !_expandedHeight.value,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final partyId = "327253c5-1b57-413a-bc88-930e23029cd6";
+    final partyId = widget.partyId;
 
-    return BlocProvider<PlayerBloc>(
-      create: (_) => _playerBloc,
-      lazy: false,
+    return BlocProvider.value(
+      value: _playerBloc,
       child: Scaffold(
         appBar: customAppBar(context: context, title: "Player"),
         body: Column(
@@ -76,20 +108,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _playerBloc.close();
-    super.dispose();
-  }
-
-  void toggleExpand() {
-    _expanded.value = !_expanded.value;
-    Future.delayed(
-      400.millis,
-      () => _expandedHeight.value = !_expandedHeight.value,
     );
   }
 }

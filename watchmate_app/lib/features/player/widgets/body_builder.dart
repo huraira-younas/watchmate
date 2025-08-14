@@ -9,7 +9,6 @@ import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/utils/share_service.dart';
 import 'package:watchmate_app/extensions/exports.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:flutter/material.dart';
 
@@ -30,9 +29,9 @@ class BodyBuilder extends StatefulWidget {
 }
 
 class _BodyBuilderState extends State<BodyBuilder> {
-  late final _playerBloc = context.read<PlayerBloc>();
-  late final _scroller = ScrollController();
   final _userId = getIt<AuthBloc>().user!.id;
+  late final _scroller = ScrollController();
+  final _playerBloc = getIt<PlayerBloc>();
 
   @override
   Widget build(BuildContext context) {

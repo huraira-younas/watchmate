@@ -1,5 +1,6 @@
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:watchmate_app/di/locator.dart';
 import 'package:flutter/material.dart';
 import 'custom_video_controls.dart';
 import 'package:chewie/chewie.dart';
@@ -43,7 +44,7 @@ class BuildPlayer extends StatelessWidget {
           videoPlayer.setPlaybackSpeed(videoState.playbackSpeed);
         }
       },
-      
+
       child: Chewie(
         controller: controller.copyWith(
           customControls: CustomVideoControls(
@@ -53,10 +54,13 @@ class BuildPlayer extends StatelessWidget {
             seekPad: 0,
             toggleScreen: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => FullScreenWrapper(
-                  controller: controller,
-                  isOwner: isOwner,
-                  title: title,
+                builder: (_) => BlocProvider.value(
+                  value: getIt<PlayerBloc>(),
+                  child: FullScreenWrapper(
+                    controller: controller,
+                    isOwner: isOwner,
+                    title: title,
+                  ),
                 ),
               ),
             ),

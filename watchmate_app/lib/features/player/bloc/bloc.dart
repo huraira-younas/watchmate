@@ -86,10 +86,11 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   @override
   Future<void> close() async {
     _socket.disconnect(_type);
-    for (final sub in _eventSubs.values) {
+    _eventSubs.forEach((key, sub) async {
+      Logger.info(tag: _type.name, message: "Released $key");
       await sub.cancel();
-    }
-    Logger.info(tag: _type.name, message: "Released Listeners");
+    });
+
     return super.close();
   }
 

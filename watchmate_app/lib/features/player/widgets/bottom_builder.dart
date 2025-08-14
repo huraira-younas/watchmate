@@ -3,7 +3,6 @@ import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:watchmate_app/common/widgets/text_field.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
 import 'package:watchmate_app/extensions/exports.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:flutter/material.dart';
 
@@ -15,8 +14,8 @@ class BottomBuilder extends StatefulWidget {
 }
 
 class _BottomBuilderState extends State<BottomBuilder> {
-  late final _playerBloc = context.read<PlayerBloc>();
   final _controller = TextEditingController();
+  final _playerBloc = getIt<PlayerBloc>();
   final _user = getIt<AuthBloc>().user!;
 
   void _onSubmit() {
