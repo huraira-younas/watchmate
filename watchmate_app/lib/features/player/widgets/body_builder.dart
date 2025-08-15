@@ -1,3 +1,4 @@
+import 'package:watchmate_app/common/widgets/custom_card.dart';
 import 'package:watchmate_app/features/player/model/party_message_model.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
@@ -66,7 +67,7 @@ class _BodyBuilderState extends State<BodyBuilder> {
       );
     }
     return ListView.separated(
-      padding: const EdgeInsets.only(top: 35, bottom: 10),
+      padding: const EdgeInsets.only(top: 35, bottom: 20),
       separatorBuilder: (_, _) => 12.h,
       itemCount: messages.length,
       controller: _scroller,
@@ -75,39 +76,69 @@ class _BodyBuilderState extends State<BodyBuilder> {
         final isMe = msg.userId == _userId;
         final isOwner = _playerBloc.partyId == msg.userId;
 
+        final reply = msg.reply;
+        final replyToMe = msg.reply?.userId == _userId;
+
         return Align(
-          alignment: isMe ? Alignment.topRight : Alignment.topLeft,
+          alignment: Alignment.topLeft,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8,
             children: <Widget>[
-              if (!isMe) ProfileAvt(size: 40, url: msg.profileURL),
+              ProfileAvt(
+                borderColor: Colors.amber,
+                url: msg.profileURL,
+                showBorder: isOwner,
+                size: 40,
+              ),
               Column(
-                crossAxisAlignment: isMe
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
+                spacing: 4,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Row(
                     spacing: 4,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      if (isOwner && isMe)
+                      if (isOwner)
                         Image.asset(AppAssets.icons.crownIcon, height: 14),
                       MyText(
                         text: isMe ? "You" : msg.name.capitalize,
                         size: AppConstants.subtitle,
                         family: AppFonts.bold,
                       ),
-                      if (isOwner && !isMe)
-                        Image.asset(AppAssets.icons.crownIcon, height: 14),
                     ],
                   ),
                   MyText(text: msg.message),
+                  if (msg.reply != null)
+                    CustomCard(
+                      margin: 0,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 4,
+                        children: <Widget>[
+                          MyText(
+                            text:
+                                "Replied to ${replyToMe ? "yourself" : reply!.name}",
+                            family: AppFonts.semibold,
+                            color: theme.hintColor,
+                            size: 10,
+                          ),
+                          MyText(
+                            color: theme.hintColor,
+                            text: reply!.message,
+                            size: 12,
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ).flexible(),
-              if (isMe) ProfileAvt(size: 40, url: msg.profileURL),
             ],
+          ),
+        ).onGesture(
+          onDoubleTap: () => _playerBloc.add(
+            ReplyMessage(message: msg, partyId: widget.partyId!),
           ),
         );
       },

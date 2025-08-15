@@ -3,6 +3,7 @@ part of 'bloc.dart';
 @immutable
 class PlayerState {
   final List<PartyMessageModel> messages;
+  final PartyMessageModel? reply;
   final VideoState? videoState;
   final int joined;
 
@@ -10,7 +11,15 @@ class PlayerState {
     this.messages = const [],
     this.joined = 1,
     this.videoState,
+    this.reply,
   });
+
+  PlayerState copyWith({PartyMessageModel? reply}) => PlayerState(
+    videoState: videoState,
+    messages: messages,
+    joined: joined,
+    reply: reply,
+  );
 }
 
 final class CustomState extends BaseCustomState {

@@ -21,6 +21,7 @@ class CustomTextField extends StatelessWidget {
   final int? maxLines;
   final double radius;
   final bool enabled;
+  final bool filled;
   final String hint;
 
   const CustomTextField({
@@ -28,6 +29,7 @@ class CustomTextField extends StatelessWidget {
     this.showTitle = false,
     this.obsecure = false,
     this.enabled = true,
+    this.filled = true,
     required this.hint,
     this.maxLines = 1,
     this.radius = 30,
@@ -87,6 +89,7 @@ class CustomTextField extends StatelessWidget {
               context: context,
               radius: radius,
               border: border,
+              filled: filled,
               hint: hint,
             ),
           ),
@@ -99,6 +102,7 @@ class CustomTextField extends StatelessWidget {
 InputDecoration customInputDecoration({
   required BuildContext context,
   InputBorder? border,
+  bool filled = true,
   Widget? prefixIcon,
   Widget? suffixIcon,
   double radius = 30,
@@ -136,7 +140,7 @@ InputDecoration customInputDecoration({
     labelText: label,
     errorMaxLines: 3,
     hintText: hint,
+    filled: filled,
     isDense: true,
-    filled: true,
   );
 }

@@ -47,7 +47,7 @@ class JoinParty extends PlayerEvent {
   Map<String, String> toJson() => {"userId": userId, "partyId": partyId};
 }
 
-class PartyMessage extends PlayerEvent {
+abstract class PartyMessage extends PlayerEvent {
   final PartyMessageModel message;
   final String partyId;
 
@@ -62,6 +62,14 @@ class PartyMessage extends PlayerEvent {
     "message": message.toJson(),
     "partyId": partyId,
   };
+}
+
+class SendMessage extends PartyMessage {
+  const SendMessage({required super.message, required super.partyId});
+}
+
+class ReplyMessage extends PartyMessage {
+  const ReplyMessage({required super.message, required super.partyId});
 }
 
 class HandleVideoState extends PlayerEvent {

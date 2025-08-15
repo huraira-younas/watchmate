@@ -22,6 +22,19 @@ extension WidgetX on Widget {
     return GestureDetector(onTap: onTap, behavior: behavior, child: this);
   }
 
+  Widget onGesture({
+    HitTestBehavior behavior = HitTestBehavior.opaque,
+    GestureTapCallback? onDoubleTap,
+    GestureTapCallback? onTap,
+  }) {
+    return GestureDetector(
+      onDoubleTap: onDoubleTap,
+      behavior: behavior,
+      onTap: onTap,
+      child: this,
+    );
+  }
+
   Widget expanded({int flex = 1, Key? key}) =>
       Expanded(flex: flex, key: key, child: this);
 

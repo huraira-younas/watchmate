@@ -3,17 +3,19 @@ import 'package:flutter/material.dart';
 
 class ProfileAvt extends StatelessWidget {
   final Color? activeColor;
+  final Color? borderColor;
   final bool showBorder;
   final bool isActive;
   final double size;
   final String url;
 
   const ProfileAvt({
-    this.activeColor,
     this.showBorder = false,
     this.isActive = false,
     required this.size,
     required this.url,
+    this.borderColor,
+    this.activeColor,
     super.key,
   });
 
@@ -21,7 +23,6 @@ class ProfileAvt extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final placeholderColor = theme.iconTheme.color?.withValues(alpha: 0.3);
-    final borderColor = theme.cardColor;
 
     final backgroundColor = theme.colorScheme.surface.withValues(alpha: 0.5);
     final statusColor = activeColor ?? Colors.green;

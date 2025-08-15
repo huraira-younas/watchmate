@@ -109,14 +109,18 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _onJoinParty(JoinParty event, Emitter<PlayerState> emit) {
-    if(_socket.isConnected(_type) && event.partyId == partyId) return;
+    if (_socket.isConnected(_type) && event.partyId == partyId) return;
     _socket.emit(_type, SocketEvents.video.joinParty, event.toJson());
     partyId = event.partyId;
   }
 
   void _onPartyMessage(PartyMessage event, Emitter<PlayerState> emit) {
-    _socket.emit(_type, SocketEvents.video.partyMessage, event.toJson());
     partyId = event.partyId;
+    if (event is SendMessage) {
+      _socket.emit(_type, SocketEvents.video.partyMessage, event.toJson());
+    } else if (event is ReplyMessage) {
+      emit(state.copyWith(reply: event.message));
+    }
   }
 
   void _onHandleParty(HandleParty event, Emitter<PlayerState> emit) {
