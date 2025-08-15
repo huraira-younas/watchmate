@@ -145,6 +145,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   void _onHandleParty(HandleParty event, Emitter<PlayerState> emit) {
     final videoState = state.videoState;
     final messages = state.messages;
+    final reply = state.reply;
     PlayerState newState;
 
     if (event.reset) {
@@ -161,6 +162,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         joined: event.count,
         messages: messages,
         partyId: partyId,
+        reply: reply,
       );
     } else {
       newState = PlayerState(
@@ -168,6 +170,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         videoState: videoState,
         joined: event.count,
         partyId: partyId,
+        reply: reply,
       );
     }
 
