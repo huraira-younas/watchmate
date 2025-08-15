@@ -40,21 +40,24 @@ class _BottomBuilderState extends State<BottomBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    final canSend = _controller.text.trim().isNotEmpty;
     final theme = context.theme;
 
     return CustomTextField(
       prefixIcon: const Icon(Icons.title),
+      onChange: (v) => setState(() {}),
       controller: _controller,
       hint: "Enter message",
       maxLines: 3,
       minLines: 1,
-      suffixIcon: Container(
+      suffixIcon: AnimatedContainer(
         margin: const EdgeInsets.all(6),
+        duration: 200.millis,
         decoration: BoxDecoration(
-          color: theme.primaryColor,
+          color: canSend ? theme.primaryColor : theme.highlightColor,
           shape: BoxShape.circle,
         ),
-        child: const Icon(Icons.send, size: 20),
+        child: const Icon(Icons.send, size: 20, color: Colors.white),
       ).onTap(_onSubmit),
     );
   }

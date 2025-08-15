@@ -46,6 +46,8 @@ const leaveParty = async ({ event, socket, io, data }) => {
   const user = await User.findById(userId, ["name", "profileURL", "id"]);
   if (party.joinee.length === 0) {
     await deleteFromHash(key);
+  } else {
+    await addToHash(key, party, expire.party_room);
   }
 
   const message = `${user.name} leaved party: ${partyId}`;

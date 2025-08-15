@@ -53,9 +53,11 @@ class _CustomVideoControlsState extends State<CustomVideoControls> {
     });
   }
 
-  void _toggleControls() {
+  bool _toggleControls() {
+    final oc = _controlsVisible;
     setState(() => _controlsVisible = !_controlsVisible);
     if (_controlsVisible) _startHideTimer();
+    return oc;
   }
 
   void _seekBy(Duration offset) {
@@ -113,7 +115,7 @@ class _CustomVideoControlsState extends State<CustomVideoControls> {
         );
       },
       child: Stack(
-        children: [
+        children: <Widget>[
           AnimatedOpacity(
             duration: 200.millis,
             opacity: _controlsVisible ? 1 : 0,
@@ -125,8 +127,13 @@ class _CustomVideoControlsState extends State<CustomVideoControls> {
               value: controller.value,
               controller: controller,
               title: widget.title,
-              onSeek: _seekBy,
+              onSeek: (dur) {
+                if (!_toggleControls()) return;
+                _seekBy(dur);
+              },
               onPlayPause: () {
+                if (!_toggleControls()) return;
+
                 controller.value.isPlaying
                     ? controller.pause()
                     : controller.play();
@@ -172,35 +179,35 @@ class _VideoControlsOverlay extends StatelessWidget {
       color: Colors.black45,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: MyText(
-                  overflow: TextOverflow.ellipsis,
-                  family: AppFonts.bold,
-                  color: Colors.white,
-                  text: title,
-                  maxLines: 1,
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.fullscreen, color: Colors.white),
-                onPressed: onToggleScreen,
-              ),
-            ],
-          ).padSym(h: 12),
+        children: <Widget>[
+          MyText(
+            overflow: TextOverflow.ellipsis,
+            family: AppFonts.bold,
+            color: Colors.white,
+            text: title,
+            maxLines: 1,
+          ).padAll(12).align(align: Alignment.topLeft),
 
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              MyText(
-                text:
-                    "${formatDuration(value.position)} / ${formatDuration(value.duration)}",
-                family: AppFonts.medium,
-                color: Colors.white,
-                size: 11,
-              ).padSym(h: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  MyText(
+                    text: formatDuration(value.position),
+                    family: AppFonts.medium,
+                    color: Colors.white,
+                    size: 11,
+                  ),
+                  MyText(
+                    text: formatDuration(value.duration),
+                    family: AppFonts.medium,
+                    color: Colors.white,
+                    size: 11,
+                  ),
+                ],
+              ).padSym(h: 10),
               VideoProgressIndicator(
                 controller,
                 allowScrubbing: isOwner,
@@ -210,36 +217,52 @@ class _VideoControlsOverlay extends StatelessWidget {
                   playedColor: theme.primaryColor,
                 ),
               ).padSym(h: seekPad),
-              if (isOwner)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.replay_10,
-                        color: Colors.white,
-                        size: 25,
-                      ),
-                      onPressed: () => onSeek(const Duration(seconds: -10)),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        value.isPlaying ? Icons.pause : Icons.play_arrow,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                      onPressed: onPlayPause,
-                    ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.forward_10,
-                        color: Colors.white,
-                        size: 25,
-                      ),
-                      onPressed: () => onSeek(const Duration(seconds: 10)),
-                    ),
-                  ],
-                ),
+              Stack(
+                alignment: Alignment.centerRight,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: !isOwner
+                        ? <Widget>[]
+                        : <Widget>[
+                            IconButton(
+                              icon: const Icon(
+                                Icons.replay_10,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                              onPressed: () {
+                                onSeek(const Duration(seconds: -10));
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                value.isPlaying
+                                    ? Icons.pause
+                                    : Icons.play_arrow,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              onPressed: onPlayPause,
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.forward_10,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                              onPressed: () {
+                                onSeek(const Duration(seconds: 10));
+                              },
+                            ),
+                          ],
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.fullscreen, color: Colors.white),
+                    onPressed: onToggleScreen,
+                  ),
+                ],
+              ),
             ],
           ),
         ],

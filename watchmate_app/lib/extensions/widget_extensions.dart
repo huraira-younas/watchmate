@@ -42,4 +42,7 @@ extension WidgetX on Widget {
     bool b = true,
     bool t = true,
   }) => SafeArea(left: l, right: r, top: t, bottom: b, child: this);
+
+  Widget align({required Alignment align}) =>
+      Align(alignment: align, child: this);
 }
