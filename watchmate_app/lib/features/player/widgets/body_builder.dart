@@ -66,7 +66,7 @@ class _BodyBuilderState extends State<BodyBuilder> {
       );
     }
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(vertical: 25),
+      padding: const EdgeInsets.only(top: 35, bottom: 10),
       separatorBuilder: (_, _) => 12.h,
       itemCount: messages.length,
       controller: _scroller,

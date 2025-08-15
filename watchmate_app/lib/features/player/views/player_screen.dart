@@ -30,43 +30,11 @@ class PlayerScreen extends StatefulWidget {
 class _PlayerScreenState extends State<PlayerScreen> {
   final _expandedHeight = ValueNotifier<bool>(false);
   final _expanded = ValueNotifier<bool>(false);
+  final _hide = ValueNotifier<bool>(false);
 
   late final SocketNamespaceService _socket;
   late final PlayerBloc _playerBloc;
   late final String _uid;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _socket = getIt<SocketNamespaceService>();
-    _uid = getIt<AuthBloc>().user!.id;
-    _unregisterPlayerBloc();
-
-    _playerBloc = PlayerBloc(_socket, _uid);
-    getIt.registerLazySingleton<PlayerBloc>(() => _playerBloc);
-  }
-
-  @override
-  void dispose() {
-    _unregisterPlayerBloc();
-    super.dispose();
-  }
-
-  void _unregisterPlayerBloc() {
-    if (getIt.isRegistered<PlayerBloc>()) {
-      getIt<PlayerBloc>().close();
-      getIt.unregister<PlayerBloc>();
-    }
-  }
-
-  void toggleExpand() {
-    _expanded.value = !_expanded.value;
-    Future.delayed(
-      400.millis,
-      () => _expandedHeight.value = !_expandedHeight.value,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +67,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           onExpand: toggleExpand,
                           partyId: partyId,
                           expand: expand,
+                          hide: _hide,
                         ).expanded();
                       },
                     ),
@@ -109,6 +78,43 @@ class _PlayerScreenState extends State<PlayerScreen> {
           ],
         ).safeArea(t: false),
       ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _socket = getIt<SocketNamespaceService>();
+    _uid = getIt<AuthBloc>().user!.id;
+    _unregisterPlayerBloc();
+
+    _playerBloc = PlayerBloc(_socket, _uid);
+    getIt.registerLazySingleton<PlayerBloc>(() => _playerBloc);
+  }
+
+  @override
+  void dispose() {
+    _expandedHeight.dispose();
+    _unregisterPlayerBloc();
+    _expanded.dispose();
+    _hide.dispose();
+    super.dispose();
+  }
+
+  void _unregisterPlayerBloc() {
+    if (getIt.isRegistered<PlayerBloc>()) {
+      getIt<PlayerBloc>().close();
+      getIt.unregister<PlayerBloc>();
+    }
+  }
+
+  void toggleHide() => _hide.value = !_hide.value;
+  void toggleExpand() {
+    _expanded.value = !_expanded.value;
+    Future.delayed(
+      400.millis,
+      () => _expandedHeight.value = !_expandedHeight.value,
     );
   }
 }

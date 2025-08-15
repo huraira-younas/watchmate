@@ -107,8 +107,7 @@ class _ChatOverlayState extends State<ChatOverlay> {
     return IgnorePointer(
       ignoring: true,
       child: BlocListener<PlayerBloc, PlayerState>(
-        listenWhen: (previous, current) =>
-            previous.messages != current.messages,
+        listenWhen: (p, c) => p.messages.length != c.messages.length,
         listener: (context, state) {
           final latest = state.messages.length > 3
               ? state.messages.sublist(state.messages.length - 3)
