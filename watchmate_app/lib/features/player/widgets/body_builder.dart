@@ -1,6 +1,6 @@
-import 'package:watchmate_app/common/widgets/custom_card.dart';
 import 'package:watchmate_app/features/player/model/party_message_model.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
+import 'package:watchmate_app/common/widgets/custom_card.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/common/widgets/profile_avt.dart';
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
