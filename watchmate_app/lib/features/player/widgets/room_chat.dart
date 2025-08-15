@@ -1,11 +1,12 @@
-import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/features/player/widgets/bottom_builder.dart';
 import 'package:watchmate_app/features/player/widgets/body_builder.dart';
+import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/custom_card.dart';
 import 'package:watchmate_app/common/widgets/custom_chip.dart';
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:watchmate_app/di/locator.dart';
 import 'package:flutter/material.dart';
 
 class RoomChat extends StatelessWidget {
@@ -15,6 +16,7 @@ class RoomChat extends StatelessWidget {
     required this.partyId,
     required this.videoId,
     required this.expand,
+    required this.userId,
     required this.hide,
     super.key,
   });
@@ -24,10 +26,12 @@ class RoomChat extends StatelessWidget {
   final bool expandHeight;
   final String? partyId;
   final String videoId;
+  final String userId;
   final bool expand;
 
   @override
   Widget build(BuildContext context) {
+    final isImOwner = userId == partyId;
     final theme = context.theme;
 
     return AnimatedPadding(
@@ -43,6 +47,8 @@ class RoomChat extends StatelessWidget {
               p.messages.length != c.messages.length || p.joined != c.joined,
           builder: (context, state) {
             final joined = state.joined;
+            final isClosed = joined == -1;
+
             return Stack(
               clipBehavior: Clip.none,
               children: <Widget>[
@@ -84,25 +90,38 @@ class RoomChat extends StatelessWidget {
                     ),
                   ),
                 ),
-                Row(
-                  spacing: 10,
-                  children: <Widget>[
-                    CustomChip(
-                      text: "Joined ${joined == -1 ? 0 : joined}",
-                      icon: Icons.supervised_user_circle_sharp,
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: hide,
-                      builder: (_, value, _) {
-                        return CustomChip(
-                          icon: !value
-                              ? Icons.toggle_off_outlined
-                              : Icons.toggle_on,
-                          text: !value ? "Hide" : "Unhide",
-                        ).onTap(() => hide.value = !hide.value);
-                      },
-                    ),
-                  ],
+                AnimatedOpacity(
+                  opacity: isClosed ? 0 : 1,
+                  duration: 100.millis,
+                  child: Row(
+                    spacing: 10,
+                    children: <Widget>[
+                      CustomChip(
+                        text: "Joined ${joined == -1 ? 0 : joined}",
+                        icon: Icons.supervised_user_circle_sharp,
+                      ),
+                      ValueListenableBuilder(
+                        valueListenable: hide,
+                        builder: (_, value, _) {
+                          return CustomChip(
+                            icon: !value
+                                ? Icons.toggle_off_outlined
+                                : Icons.toggle_on,
+                            text: !value ? "Hide" : "Unhide",
+                          ).onTap(() => hide.value = !hide.value);
+                        },
+                      ),
+                      if (isImOwner)
+                        const CustomChip(
+                          text: "Close Party",
+                          icon: Icons.close,
+                        ).onGesture(
+                          onTap: () => getIt<PlayerBloc>().add(
+                            CloseParty(partyId: partyId!, userId: userId),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ],
             );

@@ -67,6 +67,13 @@ const events = (io) => {
         new SocketParams({ event: event.VIDEO_ACTION, socket, data, io })
       )
     );
+
+    socket.on(event.CLOSE_PARTY, (data) =>
+      socketHandler(
+        methods.closeParty,
+        new SocketParams({ event: event.CLOSE_PARTY, socket, data, io })
+      )
+    );
   });
 };
 

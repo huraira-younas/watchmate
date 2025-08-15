@@ -145,10 +145,36 @@ const videoAction = async ({ event, socket, io, data }) => {
   );
 };
 
+const closeParty = async ({ event, socket, io, data }) => {
+  validateEvent(data, ["userId", "partyId"]);
+  const { partyId, userId } = data;
+
+  const key = Keys.partyKey(partyId);
+  const party = await getMemberFromHash(key);
+  if (!party) throw new SocketError("Watch party not found", 400);
+
+  logger.info(`VideoState: ${JSON.stringify(party)}`);
+  if (party.owner !== userId) {
+    throw new SocketError("Only owner can close party", 400);
+  }
+
+  await deleteFromHash(key);
+  delete socket.partyId;
+
+  io.to(partyId).emit(
+    event,
+    new SocketResponse({
+      data: { closeParty: true, partyId },
+      message: "Party has been ended",
+    })
+  );
+};
+
 module.exports = {
   createParty,
   sendMessage,
   videoAction,
   leaveParty,
+  closeParty,
   joinParty,
 };

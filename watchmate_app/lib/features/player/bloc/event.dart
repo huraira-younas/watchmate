@@ -15,6 +15,20 @@ class CreateParty extends PlayerEvent {
   Map<String, String> toJson() => {"userId": userId, "partyId": userId};
 }
 
+class CloseParty extends PlayerEvent {
+  final String partyId;
+  final String userId;
+
+  const CloseParty({
+    required this.partyId,
+    required this.userId,
+    super.onSuccess,
+    super.onError,
+  });
+
+  Map<String, String> toJson() => {"userId": userId, "partyId": partyId};
+}
+
 class HandleParty extends PlayerEvent {
   final Map<String, dynamic> data;
   final bool isVideoState;

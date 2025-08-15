@@ -45,27 +45,33 @@ class BuildPlayer extends StatelessWidget {
         }
       },
 
-      child: Chewie(
-        controller: controller.copyWith(
-          customControls: CustomVideoControls(
-            controller: controller.videoPlayerController,
-            isOwner: isOwner,
-            title: title,
-            seekPad: 0,
-            toggleScreen: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                  value: getIt<PlayerBloc>(),
-                  child: FullScreenWrapper(
-                    controller: controller,
-                    isOwner: isOwner,
-                    title: title,
+      child: BlocBuilder<PlayerBloc, PlayerState>(
+        buildWhen: (p, c) => c.joined == -1,
+        builder: (context, state) {
+          final closed = state.joined == -1;
+          return Chewie(
+            controller: controller.copyWith(
+              customControls: CustomVideoControls(
+                controller: controller.videoPlayerController,
+                isOwner: closed || isOwner,
+                title: title,
+                seekPad: 0,
+                toggleScreen: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => BlocProvider.value(
+                      value: getIt<PlayerBloc>(),
+                      child: FullScreenWrapper(
+                        isOwner: closed || isOwner,
+                        controller: controller,
+                        title: title,
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

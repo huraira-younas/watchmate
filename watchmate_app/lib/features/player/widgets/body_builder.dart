@@ -41,19 +41,18 @@ class _BodyBuilderState extends State<BodyBuilder> {
     final messages = widget.messages;
     final joined = widget.joined;
     final theme = context.theme;
+    final closed = joined == -1;
 
-    if ((joined == 1 || joined == -1) && messages.isEmpty) {
+    if ((joined == 1 || closed) && messages.isEmpty) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           30.h,
           CustomLabelWidget(
-            text: joined == -1
+            text: closed
                 ? "Create new watch party and share link with your friends to watch together"
                 : "Share link with your friends to watch together",
-            title: joined == -1
-                ? "Watch party disclosed"
-                : "Watch with friends",
+            title: closed ? "Admin closed the party" : "Watch with friends",
             icon: Icons.signpost,
             iconSize: 50,
           ),
