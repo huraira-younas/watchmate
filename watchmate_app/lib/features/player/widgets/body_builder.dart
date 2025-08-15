@@ -95,8 +95,8 @@ class _BodyBuilderState extends State<BodyBuilder> {
                       if (isOwner && isMe)
                         Image.asset(AppAssets.icons.crownIcon, height: 14),
                       MyText(
+                        text: isMe ? "You" : msg.name.capitalize,
                         size: AppConstants.subtitle,
-                        text: msg.name.capitalize,
                         family: AppFonts.bold,
                       ),
                       if (isOwner && !isMe)
