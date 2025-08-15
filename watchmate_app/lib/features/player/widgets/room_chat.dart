@@ -31,8 +31,9 @@ class RoomChat extends StatelessWidget {
       duration: 100.millis,
       padding: EdgeInsetsGeometry.all(expandHeight ? 0.0 : 10.0),
       child: CustomCard(
-        margin: 0.0,
         padding: 8,
+        margin: 0.0,
+        radius: expandHeight ? 0 : 10,
         constraints: BoxConstraints(minHeight: context.screenHeight * 0.3),
         child: BlocBuilder<PlayerBloc, PlayerState>(
           builder: (context, state) {
@@ -58,9 +59,7 @@ class RoomChat extends StatelessWidget {
                   child: IconButton(
                     onPressed: onExpand,
                     icon: Icon(
-                      expand
-                          ? Icons.fullscreen_exit
-                          : Icons.fullscreen,
+                      expand ? Icons.fullscreen_exit : Icons.fullscreen,
                       color: theme.hintColor,
                     ),
                   ),

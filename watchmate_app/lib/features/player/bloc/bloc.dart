@@ -27,7 +27,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     _joinNamespace(userId);
   }
 
-  void _joinNamespace(String userId) {
+  Future<void> _joinNamespace(String userId) async {
+    await _disposeListeners();
     _socket.connect(
       onReconnect: () => _handleReconnect(userId),
       query: {"userId": userId},
@@ -83,14 +84,17 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     add(HandleParty(count: res['joined'], data: res));
   }
 
-  @override
-  Future<void> close() async {
+  Future<void> _disposeListeners() async {
     _socket.disconnect(_type);
     _eventSubs.forEach((key, sub) async {
       Logger.info(tag: _type.name, message: "Released $key");
       await sub.cancel();
     });
+  }
 
+  @override
+  Future<void> close() async {
+    await _disposeListeners();
     return super.close();
   }
 

@@ -7,7 +7,6 @@ import 'package:watchmate_app/features/stream/widgets/build_title.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
-import 'package:watchmate_app/router/routes/stream_routes.dart';
 import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:watchmate_app/common/widgets/custom_card.dart';
 import 'package:watchmate_app/common/widgets/custom_chip.dart';
@@ -41,6 +40,7 @@ class _UploadScreenState extends State<UploadScreen> {
   String? _pickedFile, _thumbnail;
   DownloadedVideo? _video;
   bool _loading = false;
+  final _maxLen = 50;
 
   @override
   void dispose() {
@@ -104,15 +104,16 @@ class _UploadScreenState extends State<UploadScreen> {
     });
 
     final title = path.basename(file);
-    _controller.text = title;
-    _video = video.copyWith(userId: _uid, title: title);
+    final trimmed = title.substring(0, _maxLen);
+    _controller.text = trimmed;
+    _video = video.copyWith(userId: _uid, title: trimmed);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-        title: StreamRoutes.upload.name,
+        title: "Upload File",
         centerTitle: false,
         context: context,
       ),
@@ -162,14 +163,16 @@ class _UploadScreenState extends State<UploadScreen> {
                       hint: "Please enter the title of the video",
                       prefixIcon: const Icon(Icons.title),
                       controller: _controller,
+                      minLines: 1,
+                      maxLines: 2,
                       onChange: (title) {
                         _video = _video?.copyWith(title: title);
                       },
                       label: "Video Title",
                       showTitle: true,
                       validator: ValidatorBuilder.chain()
+                          .max(_maxLen)
                           .required()
-                          .max(50)
                           .min(6)
                           .build(),
                     ),

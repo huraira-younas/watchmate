@@ -42,13 +42,14 @@ class _SelectVideoState extends State<SelectVideo> {
       return;
     }
 
+    setState(() => _loading = true);
+
     final fileSize = await File(file).length();
     const twoGB = 2147400000;
     if (fileSize > twoGB) {
       showAppSnackBar("Can't select file over 2 GB");
     }
 
-    setState(() => _loading = true);
     final uint8list = await VideoThumbnail.thumbnailData(
       imageFormat: ImageFormat.JPEG,
       maxWidth: 1280,
@@ -119,7 +120,7 @@ class _SelectVideoState extends State<SelectVideo> {
           family: AppFonts.medium,
           text: "Preview",
         ),
-        6.h,
+        10.h,
         CustomCard(
           padding: 0,
           margin: 0,

@@ -1,6 +1,6 @@
 import 'package:watchmate_app/common/widgets/custom_video_player/custom_player.dart';
 import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
-import 'package:watchmate_app/features/player/widgets/build_title_tile.dart';
+import 'package:watchmate_app/features/player/widgets/build_chips.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
 import 'package:watchmate_app/features/player/widgets/room_chat.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
@@ -75,7 +75,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
     return BlocProvider.value(
       value: _playerBloc,
       child: Scaffold(
-        appBar: customAppBar(context: context, title: "Player"),
+        appBar: customAppBar(context: context, title: "Video Player"),
         body: Column(
           children: <Widget>[
             CustomVideoPlayer(
@@ -89,7 +89,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
               builder: (_, expand, _) {
                 return Column(
                   children: <Widget>[
-                    BuildTitleTile(video: widget.video, expand: !expand),
+                    BuildChips(video: widget.video, expand: !expand),
                     ValueListenableBuilder<bool>(
                       valueListenable: _expandedHeight,
                       builder: (_, expandedHeight, _) {
@@ -107,7 +107,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
               },
             ).expanded(),
           ],
-        ),
+        ).safeArea(t: false),
       ),
     );
   }

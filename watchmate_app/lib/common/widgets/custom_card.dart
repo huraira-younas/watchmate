@@ -4,11 +4,13 @@ class CustomCard extends StatelessWidget {
   final BoxConstraints? constraints;
   final double padding;
   final double margin;
+  final double radius;
   final Widget child;
   const CustomCard({
     required this.child,
     this.padding = 10.0,
     this.margin = 10.0,
+    this.radius = 10.0,
     this.constraints,
     super.key,
   });
@@ -18,14 +20,14 @@ class CustomCard extends StatelessWidget {
     final theme = Theme.of(context);
     return Container(
       constraints: constraints,
-      padding:  EdgeInsets.all(padding),
+      padding: EdgeInsets.all(padding),
       margin: EdgeInsets.all(margin),
       clipBehavior: Clip.antiAlias,
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: theme.highlightColor, width: 1),
         color: theme.cardColor.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(radius),
       ),
       child: child,
     );

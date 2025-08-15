@@ -67,8 +67,10 @@ class CustomTextField extends StatelessWidget {
           child: TextFormField(
             style: myStyle(size: AppConstants.subtitle, color: textColor),
             onFieldSubmitted: (_) => onSubmit?.call(),
-            onTapOutside: (_) => onSubmit?.call(),
             onSaved: (_) => onSubmit?.call(),
+            onTapOutside: (_) =>
+                (onSubmit ?? FocusManager.instance.primaryFocus?.unfocus)
+                    ?.call(),
             controller: controller,
             obscureText: obsecure,
             focusNode: focusNode,
