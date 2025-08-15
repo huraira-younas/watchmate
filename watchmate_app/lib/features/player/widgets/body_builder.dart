@@ -73,7 +73,7 @@ class _BodyBuilderState extends State<BodyBuilder> {
       itemBuilder: (_, idx) {
         final msg = messages[idx];
         final isMe = msg.userId == _userId;
-        final isOwner = _playerBloc.partyId == msg.userId;
+        final isOwner = widget.partyId == msg.userId;
 
         final reply = msg.reply;
         final replyToMe = msg.reply?.userId == _userId;

@@ -31,7 +31,6 @@ class RoomChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isImOwner = userId == partyId;
     final theme = context.theme;
 
     return AnimatedPadding(
@@ -46,6 +45,7 @@ class RoomChat extends StatelessWidget {
           buildWhen: (p, c) =>
               p.messages.length != c.messages.length || p.joined != c.joined,
           builder: (context, state) {
+            bool isImOwner = userId == state.partyId || partyId == null;
             final joined = state.joined;
             final isClosed = joined == -1;
 
@@ -68,9 +68,9 @@ class RoomChat extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 BodyBuilder(
+                                  partyId: state.partyId ?? partyId,
                                   messages: state.messages,
                                   videoId: videoId,
-                                  partyId: partyId,
                                   joined: joined,
                                 ).expanded(),
                                 if (joined > 1) const BottomBuilder(),

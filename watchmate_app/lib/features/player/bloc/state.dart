@@ -5,18 +5,21 @@ class PlayerState {
   final List<PartyMessageModel> messages;
   final PartyMessageModel? reply;
   final VideoState? videoState;
+  final String? partyId;
   final int joined;
 
   const PlayerState({
     this.messages = const [],
     this.joined = 1,
     this.videoState,
+    this.partyId,
     this.reply,
   });
 
   PlayerState copyWith({PartyMessageModel? reply}) => PlayerState(
     videoState: videoState,
     messages: messages,
+    partyId: partyId,
     joined: joined,
     reply: reply,
   );

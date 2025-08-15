@@ -9,8 +9,8 @@ sealed class PlayerEvent {
 }
 
 class CreateParty extends PlayerEvent {
-  final String userId;
   const CreateParty({required this.userId, super.onSuccess, super.onError});
+  final String userId;
 
   Map<String, String> toJson() => {"userId": userId, "partyId": userId};
 }
@@ -52,8 +52,8 @@ class JoinParty extends PlayerEvent {
   final String userId;
 
   const JoinParty({
-    required this.userId,
     required this.partyId,
+    required this.userId,
     super.onSuccess,
     super.onError,
   });

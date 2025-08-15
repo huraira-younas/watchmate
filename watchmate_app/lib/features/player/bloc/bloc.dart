@@ -121,7 +121,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     _socket.emit(_type, SocketEvents.video.videoState, event.toJson());
     partyId = event.partyId;
   }
-  
+
   void _onCloseParty(CloseParty event, Emitter<PlayerState> emit) {
     _socket.emit(_type, SocketEvents.video.closeParty, event.toJson());
     partyId = event.partyId;
@@ -153,18 +153,21 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         videoState: videoState,
         joined: event.count,
         messages: const [],
+        partyId: partyId,
       );
     } else if (event.isVideoState) {
       newState = PlayerState(
         videoState: VideoState.fromJson(event.data),
         joined: event.count,
         messages: messages,
+        partyId: partyId,
       );
     } else {
       newState = PlayerState(
         messages: [...messages, PartyMessageModel.fromJson(event.data)],
         videoState: videoState,
         joined: event.count,
+        partyId: partyId,
       );
     }
 
