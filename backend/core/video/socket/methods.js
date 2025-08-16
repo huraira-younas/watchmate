@@ -107,7 +107,7 @@ const joinParty = async ({ event, socket, io, data }) => {
   );
 };
 
-const sendMessage = async ({ event, socket, io, data }) => {
+const sendMessage = async ({ event, socket, data }) => {
   validateEvent(data, ["message", "partyId"]);
   const { partyId, message } = data;
 
@@ -117,7 +117,7 @@ const sendMessage = async ({ event, socket, io, data }) => {
 
   logger.info(`Message: ${message}`);
   socket.partyId = partyId;
-  io.to(partyId).emit(
+  socket.to(partyId).emit(
     event,
     new SocketResponse({
       message: "Recieved a message",
@@ -126,7 +126,7 @@ const sendMessage = async ({ event, socket, io, data }) => {
   );
 };
 
-const videoAction = async ({ event, socket, io, data }) => {
+const videoAction = async ({ event, socket, data }) => {
   validateEvent(data, ["videoState", "partyId"]);
   const { partyId, videoState } = data;
 
@@ -136,7 +136,7 @@ const videoAction = async ({ event, socket, io, data }) => {
 
   logger.info(`VideoState: ${JSON.stringify(videoState)}`);
   socket.partyId = partyId;
-  io.to(partyId).emit(
+  socket.to(partyId).emit(
     event,
     new SocketResponse({
       message: "Incoming new action",

@@ -16,7 +16,10 @@ class PlayerState {
     this.reply,
   });
 
-  PlayerState copyWith({PartyMessageModel? reply}) => PlayerState(
+  PlayerState copyWith({
+    required List<PartyMessageModel> messages,
+    required PartyMessageModel? reply,
+  }) => PlayerState(
     videoState: videoState,
     messages: messages,
     partyId: partyId,

@@ -111,13 +111,13 @@ class RoomChat extends StatelessWidget {
                           ).onTap(() => hide.value = !hide.value);
                         },
                       ),
-                      if (isImOwner)
+                      if (isImOwner && state.partyId != null)
                         const CustomChip(
                           text: "Close Party",
                           icon: Icons.close,
                         ).onGesture(
                           onTap: () => getIt<PlayerBloc>().add(
-                            CloseParty(partyId: partyId!, userId: userId),
+                            CloseParty(userId: userId),
                           ),
                         ),
                     ],

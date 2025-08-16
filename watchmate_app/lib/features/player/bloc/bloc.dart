@@ -123,8 +123,10 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _onCloseParty(CloseParty event, Emitter<PlayerState> emit) {
-    _socket.emit(_type, SocketEvents.video.closeParty, event.toJson());
-    partyId = event.partyId;
+    _socket.emit(_type, SocketEvents.video.closeParty, {
+      "userId": event.userId,
+      "partyId": partyId,
+    });
   }
 
   void _onJoinParty(JoinParty event, Emitter<PlayerState> emit) {
@@ -134,11 +136,15 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   void _onPartyMessage(PartyMessage event, Emitter<PlayerState> emit) {
+    final messages = state.messages;
+    final msg = event.message;
     partyId = event.partyId;
+
     if (event is SendMessage) {
       _socket.emit(_type, SocketEvents.video.partyMessage, event.toJson());
+      emit(state.copyWith(reply: null, messages: [...messages, msg]));
     } else if (event is ReplyMessage) {
-      emit(state.copyWith(reply: event.message));
+      emit(state.copyWith(reply: msg, messages: state.messages));
     }
   }
 

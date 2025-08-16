@@ -16,17 +16,8 @@ class CreateParty extends PlayerEvent {
 }
 
 class CloseParty extends PlayerEvent {
-  final String partyId;
   final String userId;
-
-  const CloseParty({
-    required this.partyId,
-    required this.userId,
-    super.onSuccess,
-    super.onError,
-  });
-
-  Map<String, String> toJson() => {"userId": userId, "partyId": partyId};
+  const CloseParty({required this.userId, super.onSuccess, super.onError});
 }
 
 class HandleParty extends PlayerEvent {

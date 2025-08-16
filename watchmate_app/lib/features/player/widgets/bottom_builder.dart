@@ -40,6 +40,7 @@ class _BottomBuilderState extends State<BottomBuilder> {
     );
 
     _controller.clear();
+    setState(() {});
   }
 
   @override

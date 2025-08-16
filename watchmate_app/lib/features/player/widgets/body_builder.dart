@@ -10,6 +10,7 @@ import 'package:watchmate_app/constants/app_assets.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/utils/share_service.dart';
 import 'package:watchmate_app/extensions/exports.dart';
+import 'package:watchmate_app/common/swipe_msg.dart';
 import 'package:watchmate_app/di/locator.dart';
 import 'package:flutter/material.dart';
 
@@ -52,7 +53,7 @@ class _BodyBuilderState extends State<BodyBuilder> {
             text: closed
                 ? "Create new watch party and share link with your friends to watch together"
                 : "Share link with your friends to watch together",
-            title: closed ? "Admin closed the party" : "Watch with friends",
+            title: closed ? "Party Closed" : "Watch with friends",
             icon: Icons.signpost,
             iconSize: 50,
           ),
@@ -78,66 +79,78 @@ class _BodyBuilderState extends State<BodyBuilder> {
         final reply = msg.reply;
         final replyToMe = msg.reply?.userId == _userId;
 
-        return Align(
-          alignment: Alignment.topLeft,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 8,
-            children: <Widget>[
-              ProfileAvt(
-                borderColor: Colors.amber,
-                url: msg.profileURL,
-                showBorder: isOwner,
-                size: 40,
-              ),
-              Column(
-                spacing: 4,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    spacing: 4,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      if (isOwner)
-                        Image.asset(AppAssets.icons.crownIcon, height: 14),
-                      MyText(
-                        text: isMe ? "You" : msg.name.capitalize,
-                        size: AppConstants.subtitle,
-                        family: AppFonts.bold,
-                      ),
-                    ],
-                  ),
-                  MyText(text: msg.message),
-                  if (msg.reply != null)
-                    CustomCard(
-                      margin: 0,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 4,
-                        children: <Widget>[
-                          MyText(
-                            text:
-                                "Replied to ${replyToMe ? "yourself" : reply!.name}",
-                            family: AppFonts.semibold,
-                            color: theme.hintColor,
-                            size: 10,
-                          ),
-                          MyText(
-                            color: theme.hintColor,
-                            text: reply!.message,
-                            size: 12,
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ).flexible(),
-            ],
-          ),
-        ).onGesture(
-          onDoubleTap: () => _playerBloc.add(
+        return SwipeMsg(
+          onSwipe: () => _playerBloc.add(
             ReplyMessage(message: msg, partyId: widget.partyId!),
+          ),
+          allowedDirection: isMe ? SwipeDirection.left : SwipeDirection.right,
+          child: Align(
+            alignment: isMe ? Alignment.topRight : Alignment.topLeft,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 8,
+              children: <Widget>[
+                if (!isMe)
+                  ProfileAvt(
+                    borderColor: Colors.amber,
+                    url: msg.profileURL,
+                    showBorder: isOwner,
+                    size: 40,
+                  ),
+                Column(
+                  spacing: 4,
+                  crossAxisAlignment: isMe
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      spacing: 4,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        if (isOwner)
+                          Image.asset(AppAssets.icons.crownIcon, height: 14),
+                        MyText(
+                          text: isMe ? "You" : msg.name.capitalize,
+                          size: AppConstants.subtitle,
+                          family: AppFonts.bold,
+                        ),
+                      ],
+                    ),
+                    if (msg.reply != null)
+                      CustomCard(
+                        margin: 0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 4,
+                          children: <Widget>[
+                            MyText(
+                              text:
+                                  "Replied to ${replyToMe ? "yourself" : reply!.name}",
+                              family: AppFonts.semibold,
+                              color: theme.hintColor,
+                              size: 10,
+                            ),
+                            MyText(
+                              color: theme.hintColor,
+                              text: reply!.message,
+                              size: 12,
+                            ),
+                          ],
+                        ),
+                      ),
+                    MyText(text: msg.message),
+                  ],
+                ).flexible(),
+                if (isMe)
+                  ProfileAvt(
+                    borderColor: Colors.amber,
+                    url: msg.profileURL,
+                    showBorder: isOwner,
+                    size: 40,
+                  ),
+              ],
+            ).padOnly(l: isMe ? 30 : 0, r: isMe ? 0 : 30),
           ),
         );
       },
