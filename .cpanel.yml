@@ -1,0 +1,25 @@
+# .cpanel.yml
+---
+deployment:
+  tasks:
+    # --- set deployment path to your subdomain document root ---
+    - export DEPLOYPATH=$HOME/senpai.hurairayounas.com
+
+    # --- ensure dir exists ---
+    - /bin/mkdir -p $DEPLOYPATH
+
+    # --- sync repo files to subdomain folder ---
+    - /bin/rsync -a --delete \
+        --exclude=".git" \
+        --exclude=".gitignore" \
+        --exclude=".cpanel.yml" \
+        ./ $DEPLOYPATH/
+
+    # --- go to deployment path ---
+    - cd $DEPLOYPATH
+
+    # --- install node dependencies ---
+    - /opt/cpanel/ea-nodejs20/bin/npm install --production
+
+    # --- restart passenger (required for node apps on cPanel) ---
+    - mkdir -p tmp && touch tmp/restart.txt
