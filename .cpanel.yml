@@ -3,7 +3,8 @@
 deployment:
   tasks:
     # --- set deployment path to your subdomain document root ---
-    - export DEPLOYPATH=$HOME/senpai.hurairayounas.com
+    # Replace 'yourcpanelusername' with your actual cPanel username
+    - export DEPLOYPATH=/home/hurairay/senpai.hurairayounas.com
 
     # --- ensure dir exists ---
     - /bin/mkdir -p $DEPLOYPATH
