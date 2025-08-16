@@ -117,6 +117,7 @@ Simply copy it and update with your own credentials:
 
 ```bash
 cp .env.example .env
+```
 
 ---
 
