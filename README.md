@@ -1,4 +1,8 @@
-# 🎬 WatchMate <img src="https://github.com/huraira-younas/watchmate/blob/master/watchmate_app/assets/images/icons/app_icon.png?raw=true" alt="WatchMate Logo" width="40"/>
+# 🎬 WatchMate
+
+<p align="center">
+  <img src="https://github.com/huraira-younas/watchmate/blob/master/watchmate_app/assets/images/icons/app_icon.png?raw=true" alt="WatchMate Logo" width="200"/>
+</p>
 
 **WatchMate** is a self-hosted watch party application that lets you **upload, stream, and sync videos with friends** — all while chatting in real time.  
 Built with modern technologies, it’s designed for **seamless video synchronization, private hosting, and community-driven streaming.**
