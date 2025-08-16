@@ -1,76 +1,137 @@
-# 🎬 WatchMate – Self-Hosted Movie Sync App
+# 🎬 WatchMate <img src="https://github.com/huraira-younas/watchmate/blob/master/watchmate_app/assets/images/icons/app_icon.png?raw=true" alt="WatchMate Logo" width="40"/>
 
-**WatchMate** is a self-hosted, real-time movie streaming and sync app designed for watching movies **together**, no matter the distance — perfect for long-distance couples, close friends, or remote movie nights.
-
-Inspired by **Rave**. Built with ❤️ using **Flutter** & **Node.js**.  
-**No ads. No distractions. Just movies. Together.**
+**WatchMate** is a self-hosted watch party application that lets you **upload, stream, and sync videos with friends** — all while chatting in real time.  
+Built with modern technologies, it’s designed for **seamless video synchronization, private hosting, and community-driven streaming.**
 
 ---
 
-## 🚀 Features
+## 🚀 Tech Stack
 
-- 🛠️ 100% **Self-Hosted** – You control the server and data
-- 🎥 **HLS Video Streaming** with `better_player`
-- 🔐 Secure Authentication (Login, Signup, OTP)
-- 🔄 **Real-time Sync** powered by WebSockets
-- 🎛️ Create & Join Private **Watch Rooms**
-- 💑 Couple-Friendly, Modern & Minimal UI
-
----
-
-## 🧰 Tech Stack
-
-| Layer            | Tech Stack                             |
-|------------------|----------------------------------------|
-| Frontend         | Flutter (Dart)                         |
-| Backend          | Node.js + Express                      |
-| Sync             | WebSocket (Socket.IO)                  |
-| Streaming        | HLS / M3U8 via `better_player`         |
-| State Management | BLoC / Cubit (Clean Architecture)      |
-| Auth             | Nodejs (can be swapped)                |
-| Database         | MySQL                                  |
+- **Frontend** → Flutter
+- **Backend** → Node.js
+- **Database** → MySQL
+- **Real-time Sync** → Socket.IO
+- **File Storage** → Cloudflare R2 (Can changed to AWS S3)
+- **Hosting** → supports self-hosting on your PC too
+- **Cache & Performance** → Redis
 
 ---
 
-## ⚙️ Installation (Development Mode)
+## ⚡ Features
 
-> Prerequisites: Flutter SDK, Node.js, MySQL installed and configured.
+### 📂 File Upload
+
+- **Local Upload** → Upload any video (up to **2GB**) to the server.
+- **Link Upload** → Paste a YouTube or direct video link, and the server downloads it for you.
+
+### 👀 Visibility
+
+- **Public** → Share videos with the entire platform.
+- **Private** → Restrict to yourself or those with a direct link.
+
+### 📺 Streaming
+
+- Videos are streamed directly from **Cloudflare R2**, with smooth playback.
+
+### 🤝 Watch Party
+
+- Share a link to instantly create a room.
+- Friends can join and watch together in real time.
+
+### ⏯ Synchronisation
+
+- Only the **leader** (host) controls playback: play, pause, seek, skip, change speed.
+- All viewers stay perfectly in sync.
+
+### 💬 Chat
+
+- **Inside Party** → Chat while watching, reply to messages, add reactions and share images.
+- **Outside Party** → Personal 1-on-1 chats.
+
+### 🛠 Controls
+
+- Leader can **kick users** or **end the party**.
+
+### 📑 Manage Videos
+
+- Edit or delete uploaded videos in **MyList**.
+- Switch visibility between public/private anytime.
+
+### 🌍 Public Library
+
+- Browse videos uploaded publicly by other users.
+
+### 📥 Unique Download Mode
+
+- Users can **pre-download** videos for offline sync playback.
+- Even on poor networks, playback runs locally while still staying in sync with the party.
+
+---
+
+## 📸 Screenshots (Coming Soon)
+
+---
+
+## 🏗 Setup & Installation
+
+### Prerequisites
+
+- Node.js v20+
+- Flutter SDK
+- MySQL v8+
+- Redis
+- cPanel hosting (or any Node.js supported server)
+- Cloudflare R2 or AWS S3 credentials
+
+### 1. Clone Repository
 
 ```bash
-# 1. Backend Setup
-cd backend
-npm install
-npm run dev
+git clone https://github.com/your-username/watchmate.git
+cd watchmate
+```
 
-# 2. Frontend Setup
-cd ../watchmate_app
+### 2. Server Setup
+
+```bash
+cd server
+npm install
+npm start
+```
+
+### 3. Flutter App Setup
+
+```bash
+cd app
 flutter pub get
 flutter run
 ```
 
----
+### 4. Environment Variables
 
-## 📸 Screenshots
+A `.env.example` file is provided in the repository.  
+Simply copy it and update with your own credentials:
 
-> Coming soon...
+```bash
+cp .env.example .env
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request for improvements, features, or fixes.
+Contributions are welcome! 🎉
+1. Fork the repo
+2. Create your feature branch (`git checkout -b feature/your-feature`)
+3. Commit changes (`git commit -m 'Add feature'`)
+4. Push to branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
 
 ---
 
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-## 🙌 Credits
-
-Built with passion by movie lovers, for movie lovers.  
-Special thanks to the open-source community & inspiration from Rave.
+## 📜 License
+This project is licensed under the **MIT License** – free to use, modify, and distribute.
 
 ---
+
+## 🌟 Support
+If you like this project, give it a ⭐ on GitHub to show your support!
+```
