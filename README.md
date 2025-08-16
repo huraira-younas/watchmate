@@ -139,4 +139,3 @@ This project is licensed under the **MIT License** – free to use, modify, and 
 
 ## 🌟 Support
 If you like this project, give it a ⭐ on GitHub to show your support!
-```
