@@ -1,7 +1,4 @@
-const {
-  addToHash,
-  getMemberFromHash,
-} = require("../../../../redis/redis_methods");
+const { addToHash, getTimeToLive } = require("../../../../redis/redis_methods");
 const { validateReq } = require("../../../../methods/utils");
 const expire = require("../../../../redis/redis_expire");
 const nodemailer = require("nodemailer");
@@ -9,7 +6,7 @@ const fs = require("fs-extra");
 const path = require("path");
 
 const MAIL_PATH = path.join(__dirname, "../mail_templates");
-const APPNAME = process.env.APP_NAME || "Ovadey";
+const APPNAME = process.env.APP_NAME || "WatchMate";
 let node_client = null;
 
 const _getSignature = async () => {
@@ -56,7 +53,7 @@ const sendEmailCode = async (data) => {
     .replace(/\$\{code\}/g, code);
 
   const msg = `Your verification code is: ${code}`;
-  await useNodeMailer(process.env.APP_NAME, {
+  await useNodeMailer(APPNAME, {
     html: emailHtml,
     subject: msg,
     text: msg,
@@ -81,7 +78,7 @@ const sendPassResetEmail = async (data) => {
     .replace(/\$\{help_center\}/g, help_center)
     .replace(/\$\{signature\}/g, signature);
 
-  await useNodeMailer(process.env.APP_NAME, {
+  await useNodeMailer(APPNAME, {
     text: "Your password has been reset",
     subject: `Reset Password`,
     html: emailHtml,
@@ -89,7 +86,26 @@ const sendPassResetEmail = async (data) => {
   });
 };
 
+const sendServerMail = async () => {
+  const env = process.env.NODE_ENV || "development";
+  const text = "Server is restarted";
+
+  const key = `${env}:${text}`;
+
+  const exists = await getTimeToLive(key);
+  if (exists > 0) return;
+
+  await addToHash(`${env}:${text}`, text, 2);
+  await useNodeMailer(APPNAME, {
+    subject: `${env[0].toUpperCase() + env.substring(1)}: ${text}`,
+    html: `<p>${`${env} ${APPNAME} ${Date.now()}`}</p>`,
+    to: "hurairayounas7@gmail.com",
+    text,
+  });
+};
+
 module.exports = {
   sendPassResetEmail,
+  sendServerMail,
   sendEmailCode,
 };

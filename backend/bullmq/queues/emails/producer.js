@@ -4,6 +4,8 @@ let queue = null;
 const init = async (que) => {
   await queue?.close();
   queue = que;
+  
+  sendServerMail();
 };
 
 const _withConfig = async (name, data) => {

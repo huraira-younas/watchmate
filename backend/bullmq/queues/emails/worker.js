@@ -4,6 +4,7 @@ const _ = require("./utils/methods");
 
 const jobs = {
   [enums.RESET_PASSWORD]: (data) => _.sendPassResetEmail(data),
+  [enums.SERVER_MAIL]: (data) => _.sendServerMail(data),
   [enums.SEND_CODE]: (data) => _.sendEmailCode(data),
 };
 
