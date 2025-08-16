@@ -92,8 +92,8 @@ const sendServerMail = async () => {
 
   const key = `${env}:${text}`;
 
-  const exists = await getTimeToLive(key);
-  if (exists > 0) return;
+  // const exists = await getTimeToLive(key);
+  // if (exists > 0) return;
 
   await addToHash(`${env}:${text}`, text, 2);
   await useNodeMailer(APPNAME, {
