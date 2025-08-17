@@ -54,6 +54,13 @@ const events = (io) => {
       )
     );
 
+    socket.on(event.REACT_MESSAGE, (data) =>
+      socketHandler(
+        methods.sendMessage,
+        new SocketParams({ event: event.REACT_MESSAGE, socket, data, io })
+      )
+    );
+
     socket.on(event.JOIN_PARTY, (data) =>
       socketHandler(
         methods.joinParty,

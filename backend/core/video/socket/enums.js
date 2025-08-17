@@ -2,6 +2,7 @@ const namespace = "video";
 
 const event = {
   PARTY_MESSAGE: `${namespace}:party_message`,
+  REACT_MESSAGE: `${namespace}:react_message`,
   CREATE_PARTY: `${namespace}:create_party`,
   VIDEO_ACTION: `${namespace}:video_action`,
   LEAVE_PARTY: `${namespace}:leave_party`,

@@ -20,16 +20,22 @@ class CloseParty extends PlayerEvent {
   const CloseParty({required this.userId, super.onSuccess, super.onError});
 }
 
+class CancelReply extends PlayerEvent {
+  const CancelReply({super.onSuccess, super.onError});
+}
+
 class HandleParty extends PlayerEvent {
   final Map<String, dynamic> data;
   final bool isVideoState;
   final bool isJoined;
+  final bool isReact;
   final bool reset;
   final int count;
 
   const HandleParty({
     this.isVideoState = false,
     this.isJoined = true,
+    this.isReact = false,
     required this.count,
     this.reset = false,
     required this.data,
@@ -75,6 +81,10 @@ class SendMessage extends PartyMessage {
 
 class ReplyMessage extends PartyMessage {
   const ReplyMessage({required super.message, required super.partyId});
+}
+
+class ReactMessage extends PartyMessage {
+  const ReactMessage({required super.message, required super.partyId});
 }
 
 class HandleVideoState extends PlayerEvent {

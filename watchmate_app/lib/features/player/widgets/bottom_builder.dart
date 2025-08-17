@@ -30,6 +30,7 @@ class _BottomBuilderState extends State<BottomBuilder> {
       SendMessage(
         partyId: partyId,
         message: PartyMessageModel(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
           profileURL: _user.profileURL ?? "",
           message: message,
           userId: _user.id,
@@ -64,23 +65,31 @@ class _BottomBuilderState extends State<BottomBuilder> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               if (reply != null)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 4,
+                Row(
                   children: <Widget>[
-                    MyText(
-                      text: "Replying to ${isMe ? "yourself" : reply.name}",
-                      family: AppFonts.semibold,
-                      color: theme.hintColor,
-                      size: 10,
-                    ),
-                    MyText(
-                      color: theme.hintColor,
-                      text: reply.message,
-                      size: 12,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 4,
+                      children: <Widget>[
+                        MyText(
+                          text: "Replying to ${isMe ? "yourself" : reply.name}",
+                          family: AppFonts.semibold,
+                          color: theme.hintColor,
+                          size: 10,
+                        ),
+                        MyText(
+                          color: theme.hintColor,
+                          text: reply.message,
+                          size: 12,
+                        ),
+                      ],
+                    ).expanded(),
+                    IconButton(
+                      onPressed: () => _playerBloc.add(const CancelReply()),
+                      icon: const Icon(Icons.close),
                     ),
                   ],
-                ).padOnly(l: 20, r: 20, t: 10),
+                ).padOnly(l: 20, t: 10),
               TextField(
                 maxLines: 3,
                 minLines: 1,

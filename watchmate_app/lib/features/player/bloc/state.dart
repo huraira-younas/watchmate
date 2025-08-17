@@ -5,10 +5,12 @@ class PlayerState {
   final List<PartyMessageModel> messages;
   final PartyMessageModel? reply;
   final VideoState? videoState;
+  final bool forceRebuild;
   final String? partyId;
   final int joined;
 
   const PlayerState({
+    this.forceRebuild = false,
     this.messages = const [],
     this.joined = 1,
     this.videoState,
@@ -19,7 +21,9 @@ class PlayerState {
   PlayerState copyWith({
     required List<PartyMessageModel> messages,
     required PartyMessageModel? reply,
+    bool forceRebuild = false,
   }) => PlayerState(
+    forceRebuild: forceRebuild,
     videoState: videoState,
     messages: messages,
     partyId: partyId,

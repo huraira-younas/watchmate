@@ -38,7 +38,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final partyId = "327253c5-1b57-413a-bc88-930e23029cd6";
+    final partyId = widget.partyId;
 
     return BlocProvider.value(
       value: _playerBloc,

@@ -1,14 +1,11 @@
-import 'package:watchmate_app/common/widgets/message_reaction_wrapper.dart';
 import 'package:watchmate_app/features/player/model/party_message_model.dart';
+import 'package:watchmate_app/common/widgets/message_reaction_wrapper.dart';
+import 'package:watchmate_app/features/player/model/reaction_model.dart';
+import 'package:watchmate_app/features/player/widgets/message_tile.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
-import 'package:watchmate_app/common/widgets/custom_card.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
-import 'package:watchmate_app/common/widgets/profile_avt.dart';
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
-import 'package:watchmate_app/constants/app_constants.dart';
-import 'package:watchmate_app/constants/app_assets.dart';
-import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/utils/share_service.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/common/swipe_msg.dart';
@@ -34,9 +31,46 @@ class BodyBuilder extends StatefulWidget {
 }
 
 class _BodyBuilderState extends State<BodyBuilder> {
-  final _userId = getIt<AuthBloc>().user!.id;
+  final _user = getIt<AuthBloc>().user!;
   late final _scroller = ScrollController();
   final _playerBloc = getIt<PlayerBloc>();
+
+  void _handleReaction(String emoji, PartyMessageModel msg) {
+    final reactions = [...msg.reactions];
+    final userId = _user.id;
+
+    final idx = reactions.indexWhere((e) => e.userId == userId);
+
+    if (idx != -1) {
+      if (reactions[idx].react == emoji) {
+        reactions.removeAt(idx);
+      } else {
+        reactions[idx] = Reaction(
+          profileURL: _user.profileURL ?? "",
+          name: _user.name,
+          userId: userId,
+          react: emoji,
+        );
+      }
+    } else {
+      reactions.add(
+        Reaction(
+          profileURL: _user.profileURL ?? "",
+          name: _user.name,
+          userId: userId,
+          react: emoji,
+        ),
+      );
+    }
+
+    final updatedMessage = msg.copyWith(reactions: reactions);
+    _playerBloc.add(
+      ReactMessage(
+        partyId: _playerBloc.partyId ?? widget.partyId!,
+        message: updatedMessage,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +108,8 @@ class _BodyBuilderState extends State<BodyBuilder> {
       controller: _scroller,
       itemBuilder: (_, idx) {
         final msg = messages[idx];
-        final isMe = msg.userId == _userId;
+        final isMe = msg.userId == _user.id;
         final isOwner = widget.partyId == msg.userId;
-
-        final reply = msg.reply;
-        final replyToMe = msg.reply?.userId == _userId;
 
         return SwipeMsg(
           onSwipe: () => _playerBloc.add(
@@ -86,74 +117,13 @@ class _BodyBuilderState extends State<BodyBuilder> {
           ),
           allowedDirection: isMe ? SwipeDirection.left : SwipeDirection.right,
           child: MessageReactionWrapper(
+            onSelect: (emoji) => _handleReaction(emoji, msg),
             isSender: isMe,
-            child: Align(
-              alignment: isMe ? Alignment.topRight : Alignment.topLeft,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 8,
-                children: <Widget>[
-                  if (!isMe)
-                    ProfileAvt(
-                      borderColor: Colors.amber,
-                      url: msg.profileURL,
-                      showBorder: isOwner,
-                      size: 40,
-                    ),
-                  Column(
-                    spacing: 4,
-                    crossAxisAlignment: isMe
-                        ? CrossAxisAlignment.end
-                        : CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        spacing: 4,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          if (isOwner)
-                            Image.asset(AppAssets.icons.crownIcon, height: 14),
-                          MyText(
-                            text: isMe ? "You" : msg.name.capitalize,
-                            size: AppConstants.subtitle,
-                            family: AppFonts.bold,
-                          ),
-                        ],
-                      ),
-                      if (msg.reply != null)
-                        CustomCard(
-                          margin: 0,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            spacing: 4,
-                            children: <Widget>[
-                              MyText(
-                                text:
-                                    "Replied to ${replyToMe ? "yourself" : reply!.name}",
-                                family: AppFonts.semibold,
-                                color: theme.hintColor,
-                                size: 10,
-                              ),
-                              MyText(
-                                color: theme.hintColor,
-                                text: reply!.message,
-                                size: 12,
-                              ),
-                            ],
-                          ),
-                        ),
-                      MyText(text: msg.message),
-                    ],
-                  ).flexible(),
-                  if (isMe)
-                    ProfileAvt(
-                      borderColor: Colors.amber,
-                      url: msg.profileURL,
-                      showBorder: isOwner,
-                      size: 40,
-                    ),
-                ],
-              ).padOnly(l: isMe ? 30 : 0, r: isMe ? 0 : 30),
+            child: MessageTile(
+              isOwner: isOwner,
+              userId: _user.id,
+              isMe: isMe,
+              msg: msg,
             ),
           ),
         );
@@ -178,15 +148,16 @@ class _BodyBuilderState extends State<BodyBuilder> {
   }
 
   Future<void> _createParty() async {
-    _playerBloc.add(CreateParty(userId: _userId));
-    ShareService.sharePartyLink(widget.videoId, _userId);
+    final userId = _user.id;
+    _playerBloc.add(CreateParty(userId: userId));
+    ShareService.sharePartyLink(widget.videoId, userId);
   }
 
   @override
   void initState() {
     super.initState();
     if (widget.partyId != null) {
-      _playerBloc.add(JoinParty(partyId: widget.partyId!, userId: _userId));
+      _playerBloc.add(JoinParty(partyId: widget.partyId!, userId: _user.id));
     }
   }
 }

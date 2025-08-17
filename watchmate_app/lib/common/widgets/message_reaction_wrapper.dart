@@ -2,10 +2,12 @@ import 'package:watchmate_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 
 class MessageReactionWrapper extends StatefulWidget {
+  final Function(String emoji) onSelect;
   final bool isSender;
   final Widget child;
 
   const MessageReactionWrapper({
+    required this.onSelect,
     required this.isSender,
     required this.child,
     super.key,
@@ -17,19 +19,33 @@ class MessageReactionWrapper extends StatefulWidget {
 
 class _MessageReactionWrapperState extends State<MessageReactionWrapper>
     with SingleTickerProviderStateMixin {
-  final GlobalKey _messageKey = GlobalKey();
+  late AnimationController _animationController;
+  final _messageKey = GlobalKey();
   OverlayEntry? _overlayEntry;
 
-  late final AnimationController _animationController = AnimationController(
-    duration: const Duration(milliseconds: 500),
-    vsync: this,
-  );
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    super.dispose();
+  }
 
   void _showReactionPopover() {
     if (_overlayEntry != null) return;
 
     final render = _messageKey.currentContext?.findRenderObject() as RenderBox;
     final offset = render.localToGlobal(Offset.zero);
+    final w = MediaQuery.sizeOf(context).width;
     final size = render.size;
 
     _overlayEntry = OverlayEntry(
@@ -57,11 +73,36 @@ class _MessageReactionWrapperState extends State<MessageReactionWrapper>
               animationController: _animationController,
               onEmojiSelected: (emoji) {
                 _removeReactionPopover();
+                widget.onSelect(emoji);
                 Logger.info(
                   message: 'User reacted with: $emoji',
                   tag: "REACTION",
                 );
               },
+            ),
+          ),
+          Positioned(
+            top: offset.dy,
+            left: widget.isSender ? null : offset.dx,
+            right: widget.isSender ? (w - (offset.dx + size.width)) : null,
+            child: Material(
+              color: Colors.transparent,
+              child: ScaleTransition(
+                scale: Tween<double>(begin: 1.0, end: 1.05).animate(
+                  CurvedAnimation(
+                    parent: _animationController,
+                    curve: Curves.easeOutBack,
+                  ),
+                ),
+                child: Container(
+                  width: w * 0.9,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: widget.child,
+                ),
+              ),
             ),
           ),
         ],
@@ -78,13 +119,6 @@ class _MessageReactionWrapperState extends State<MessageReactionWrapper>
       _overlayEntry?.remove();
       _overlayEntry = null;
     }
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _removeReactionPopover();
-    super.dispose();
   }
 
   @override

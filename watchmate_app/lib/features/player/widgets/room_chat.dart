@@ -43,7 +43,9 @@ class RoomChat extends StatelessWidget {
         constraints: BoxConstraints(minHeight: context.screenHeight * 0.3),
         child: BlocBuilder<PlayerBloc, PlayerState>(
           buildWhen: (p, c) =>
-              p.messages.length != c.messages.length || p.joined != c.joined,
+              p.joined != c.joined ||
+              p.messages.length != c.messages.length ||
+              c.forceRebuild,
           builder: (context, state) {
             bool isImOwner = userId == state.partyId || partyId == null;
             final joined = state.joined;

@@ -62,6 +62,7 @@ const leaveParty = async ({ event, socket, io, data }) => {
       data: {
         profileURL: user.profileURL ?? "",
         joined: party.joinee.length,
+        id: Date.now().toString(),
         message: `Left the party`,
         name: user.name,
         userId: user.id,
@@ -100,6 +101,7 @@ const joinParty = async ({ event, socket, io, data }) => {
         profileURL: user.profileURL ?? "",
         joined: party.joinee.length,
         message: `Joined the party`,
+        id: Date.now().toString(),
         name: user.name,
         userId: user.id,
       },

@@ -25,6 +25,10 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<CloseParty>(_onCloseParty);
     on<JoinParty>(_onJoinParty);
 
+    on<CancelReply>(
+      (ev, emit) => emit(state.copyWith(messages: state.messages, reply: null)),
+    );
+
     _joinNamespace(userId);
   }
 
@@ -55,6 +59,10 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     _eventSubs[SocketEvents.video.closeParty] = _socket
         .onEvent(type: _type, event: SocketEvents.video.closeParty)
         .listen((data) => _handleCloseParty(data));
+
+    _eventSubs[SocketEvents.video.reactMessage] = _socket
+        .onEvent(type: _type, event: SocketEvents.video.reactMessage)
+        .listen((data) => _handleMessage(data, isReact: true));
   }
 
   void _handleCloseParty(Map<String, dynamic> data) {
@@ -72,10 +80,10 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     add(HandleParty(isVideoState: true, count: state.joined, data: res));
   }
 
-  void _handleMessage(Map<String, dynamic> data) {
+  void _handleMessage(Map<String, dynamic> data, {bool isReact = false}) {
     final res = data['data'];
     if (res == null) return;
-    add(HandleParty(count: state.joined, data: res));
+    add(HandleParty(count: state.joined, data: res, isReact: isReact));
   }
 
   void _handleReconnect(String userId) {
@@ -144,7 +152,11 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       _socket.emit(_type, SocketEvents.video.partyMessage, event.toJson());
       emit(state.copyWith(reply: null, messages: [...messages, msg]));
     } else if (event is ReplyMessage) {
-      emit(state.copyWith(reply: msg, messages: state.messages));
+      emit(state.copyWith(reply: msg, messages: messages));
+    } else if (event is ReactMessage) {
+      _socket.emit(_type, SocketEvents.video.reactMessage, event.toJson());
+      final newMsgs = _handleReaction(msg);
+      emit(state.copyWith(forceRebuild: true, reply: null, messages: newMsgs));
     }
   }
 
@@ -153,8 +165,13 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     final messages = state.messages;
     final reply = state.reply;
     PlayerState newState;
-
-    if (event.reset) {
+    if (event.isReact) {
+      newState = state.copyWith(
+        messages: _handleReaction(PartyMessageModel.fromJson(event.data)),
+        forceRebuild: true,
+        reply: reply,
+      );
+    } else if (event.reset) {
       partyId = null;
       newState = PlayerState(
         videoState: videoState,
@@ -181,5 +198,14 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     }
 
     emit(newState);
+  }
+
+  List<PartyMessageModel> _handleReaction(PartyMessageModel message) {
+    final messages = state.messages;
+    final idx = messages.indexWhere((e) => e.id == message.id);
+    if (idx == -1) return messages;
+
+    messages[idx] = message;
+    return messages;
   }
 }
