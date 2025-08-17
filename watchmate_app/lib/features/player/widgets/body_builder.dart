@@ -1,3 +1,4 @@
+import 'package:watchmate_app/common/widgets/message_reaction_wrapper.dart';
 import 'package:watchmate_app/features/player/model/party_message_model.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/custom_card.dart';
@@ -84,73 +85,76 @@ class _BodyBuilderState extends State<BodyBuilder> {
             ReplyMessage(message: msg, partyId: widget.partyId!),
           ),
           allowedDirection: isMe ? SwipeDirection.left : SwipeDirection.right,
-          child: Align(
-            alignment: isMe ? Alignment.topRight : Alignment.topLeft,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 8,
-              children: <Widget>[
-                if (!isMe)
-                  ProfileAvt(
-                    borderColor: Colors.amber,
-                    url: msg.profileURL,
-                    showBorder: isOwner,
-                    size: 40,
-                  ),
-                Column(
-                  spacing: 4,
-                  crossAxisAlignment: isMe
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      spacing: 4,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        if (isOwner)
-                          Image.asset(AppAssets.icons.crownIcon, height: 14),
-                        MyText(
-                          text: isMe ? "You" : msg.name.capitalize,
-                          size: AppConstants.subtitle,
-                          family: AppFonts.bold,
-                        ),
-                      ],
+          child: MessageReactionWrapper(
+            isSender: isMe,
+            child: Align(
+              alignment: isMe ? Alignment.topRight : Alignment.topLeft,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 8,
+                children: <Widget>[
+                  if (!isMe)
+                    ProfileAvt(
+                      borderColor: Colors.amber,
+                      url: msg.profileURL,
+                      showBorder: isOwner,
+                      size: 40,
                     ),
-                    if (msg.reply != null)
-                      CustomCard(
-                        margin: 0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 4,
-                          children: <Widget>[
-                            MyText(
-                              text:
-                                  "Replied to ${replyToMe ? "yourself" : reply!.name}",
-                              family: AppFonts.semibold,
-                              color: theme.hintColor,
-                              size: 10,
-                            ),
-                            MyText(
-                              color: theme.hintColor,
-                              text: reply!.message,
-                              size: 12,
-                            ),
-                          ],
-                        ),
+                  Column(
+                    spacing: 4,
+                    crossAxisAlignment: isMe
+                        ? CrossAxisAlignment.end
+                        : CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        spacing: 4,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          if (isOwner)
+                            Image.asset(AppAssets.icons.crownIcon, height: 14),
+                          MyText(
+                            text: isMe ? "You" : msg.name.capitalize,
+                            size: AppConstants.subtitle,
+                            family: AppFonts.bold,
+                          ),
+                        ],
                       ),
-                    MyText(text: msg.message),
-                  ],
-                ).flexible(),
-                if (isMe)
-                  ProfileAvt(
-                    borderColor: Colors.amber,
-                    url: msg.profileURL,
-                    showBorder: isOwner,
-                    size: 40,
-                  ),
-              ],
-            ).padOnly(l: isMe ? 30 : 0, r: isMe ? 0 : 30),
+                      if (msg.reply != null)
+                        CustomCard(
+                          margin: 0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 4,
+                            children: <Widget>[
+                              MyText(
+                                text:
+                                    "Replied to ${replyToMe ? "yourself" : reply!.name}",
+                                family: AppFonts.semibold,
+                                color: theme.hintColor,
+                                size: 10,
+                              ),
+                              MyText(
+                                color: theme.hintColor,
+                                text: reply!.message,
+                                size: 12,
+                              ),
+                            ],
+                          ),
+                        ),
+                      MyText(text: msg.message),
+                    ],
+                  ).flexible(),
+                  if (isMe)
+                    ProfileAvt(
+                      borderColor: Colors.amber,
+                      url: msg.profileURL,
+                      showBorder: isOwner,
+                      size: 40,
+                    ),
+                ],
+              ).padOnly(l: isMe ? 30 : 0, r: isMe ? 0 : 30),
+            ),
           ),
         );
       },
