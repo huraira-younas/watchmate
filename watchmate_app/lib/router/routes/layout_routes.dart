@@ -28,7 +28,7 @@ abstract class LayoutRoutes {
     name: 'My List',
   );
 
-  static const downloads = AppRoute(
+  static const chats = AppRoute(
     icon: Icons.chat_rounded,
     page: ChatScreen(),
     path: '/chats',
@@ -42,5 +42,5 @@ abstract class LayoutRoutes {
     name: 'Profile',
   );
 
-  static const all = [home, myList, downloads, profile];
+  static const all = [home, myList, chats, profile];
 }
