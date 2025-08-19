@@ -1,5 +1,6 @@
+import 'package:watchmate_app/common/widgets/dialog_boxs.dart'
+    show confirmDialogue;
 import 'package:watchmate_app/common/widgets/custom_video_player/custom_player.dart';
-import 'package:watchmate_app/common/widgets/dialog_boxs.dart' show confirmDialogue;
 import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
 import 'package:watchmate_app/features/player/widgets/build_chips.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
@@ -7,7 +8,6 @@ import 'package:watchmate_app/features/player/widgets/room_chat.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
-import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
@@ -39,14 +39,17 @@ class _PlayerScreenState extends State<PlayerScreen> {
   late final String _uid;
 
   Future<void> _confirmPop() async {
-    HapticFeedback.mediumImpact();
-    final confirm = await confirmDialogue(
-      message: "Are you sure want to leave the watch party?",
-      title: "Leave Party",
-      context: context,
-    );
+    final partyId = _playerBloc.partyId;
+    if (partyId != null) {
+      final confirm = await confirmDialogue(
+        message: "Are you sure want to leave the watch party?",
+        title: "Leave Party",
+        context: context,
+      );
 
-    if (!confirm || !mounted) return;
+      if (!confirm || !mounted) return;
+    }
+
     Navigator.of(context).pop();
   }
 
@@ -56,7 +59,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
       value: _playerBloc,
       child: Scaffold(
         appBar: customAppBar(
-          onBackPress: _confirmPop,
+          onBackPress: () => Navigator.maybePop(context),
           title: "Video Player",
           context: context,
         ),
@@ -66,7 +69,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
               builder: (_, state) {
                 final partyId = state.partyId;
                 return PopScope(
-                  canPop: partyId == null,
+                  canPop: false,
                   onPopInvokedWithResult: (_, _) => _confirmPop(),
                   child: CustomVideoPlayer(
                     isOwner: partyId == null || partyId == _uid,
