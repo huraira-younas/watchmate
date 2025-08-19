@@ -31,10 +31,10 @@ class BuildChips extends StatelessWidget {
                         : Icons.private_connectivity_rounded,
                     text: video.visibility.name.capitalize,
                   ),
-                  const CustomChip(
-                    icon: Icons.thumb_up_alt_outlined,
-                    text: "1.2k",
-                  ),
+                  // const CustomChip(
+                  //   icon: Icons.thumb_up_alt_outlined,
+                  //   text: "1.2k",
+                  // ),
                   CustomChip(
                     onPressed: () => ShareService.shareVideoLink(video.id),
                     icon: Icons.share_outlined,
