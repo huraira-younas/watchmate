@@ -47,9 +47,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
         context: context,
       );
 
-      if (!confirm || !mounted) return;
+      if (confirm != true || !mounted) return;
     }
-
     Navigator.of(context).pop();
   }
 
@@ -59,7 +58,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
       value: _playerBloc,
       child: Scaffold(
         appBar: customAppBar(
-          onBackPress: () => Navigator.maybePop(context),
+          onBackPress: _confirmPop,
           title: "Video Player",
           context: context,
         ),
@@ -70,7 +69,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 final partyId = state.partyId;
                 return PopScope(
                   canPop: false,
-                  onPopInvokedWithResult: (_, _) => _confirmPop(),
+                  onPopInvokedWithResult: (bool didPop, _) {
+                    if (didPop) return;
+                    _confirmPop();
+                  },
                   child: CustomVideoPlayer(
                     isOwner: partyId == null || partyId == _uid,
                     tagPrefix: widget.tagPrefix,
