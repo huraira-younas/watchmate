@@ -6,6 +6,7 @@ import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:watchmate_app/utils/share_service.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/common/swipe_msg.dart';
@@ -74,6 +75,7 @@ class _BodyBuilderState extends State<BodyBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    final partyId = _playerBloc.partyId ?? widget.partyId;
     final messages = widget.messages;
     final joined = widget.joined;
     final theme = context.theme;
@@ -88,7 +90,11 @@ class _BodyBuilderState extends State<BodyBuilder> {
             text: closed
                 ? "Create new watch party and share link with your friends to watch together"
                 : "Share link with your friends to watch together",
-            title: closed ? "Party Closed" : "Watch with friends",
+            title: closed
+                ? "Party Closed"
+                : partyId == null
+                ? "Watch with friends"
+                : "Waiting for friends",
             icon: Icons.signpost,
             iconSize: 50,
           ),
@@ -149,6 +155,7 @@ class _BodyBuilderState extends State<BodyBuilder> {
 
   Future<void> _createParty() async {
     final userId = _user.id;
+    HapticFeedback.mediumImpact();
     _playerBloc.add(CreateParty(userId: userId));
     ShareService.sharePartyLink(widget.videoId, userId);
   }

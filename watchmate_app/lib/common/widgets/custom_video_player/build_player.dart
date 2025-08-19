@@ -54,6 +54,7 @@ class BuildPlayer extends StatelessWidget {
               customControls: CustomVideoControls(
                 controller: controller.videoPlayerController,
                 isOwner: closed || isOwner,
+                isFullScreen: false,
                 title: title,
                 seekPad: 0,
                 toggleScreen: () => Navigator.of(context).push(

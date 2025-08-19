@@ -94,9 +94,12 @@ class SocketNamespaceService {
     _emitQueue.remove(type);
     _stopPing(type);
 
-    _sockets.remove(type)
-      ?..disconnect()
-      ..dispose();
+    final socket = _sockets[type];
+    if (socket == null) return;
+
+    _sockets.remove(type);
+    socket.disconnect();
+    socket.dispose();
   }
 
   void disposeAll() {

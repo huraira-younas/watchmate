@@ -1,4 +1,5 @@
 import 'package:watchmate_app/common/widgets/custom_video_player/custom_player.dart';
+import 'package:watchmate_app/common/widgets/dialog_boxs.dart' show confirmDialogue;
 import 'package:watchmate_app/common/services/socket_service/socket_service.dart';
 import 'package:watchmate_app/features/player/widgets/build_chips.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
@@ -6,6 +7,7 @@ import 'package:watchmate_app/features/player/widgets/room_chat.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:watchmate_app/features/auth/bloc/bloc.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
@@ -36,21 +38,44 @@ class _PlayerScreenState extends State<PlayerScreen> {
   late final PlayerBloc _playerBloc;
   late final String _uid;
 
+  Future<void> _confirmPop() async {
+    HapticFeedback.mediumImpact();
+    final confirm = await confirmDialogue(
+      message: "Are you sure want to leave the watch party?",
+      title: "Leave Party",
+      context: context,
+    );
+
+    if (!confirm || !mounted) return;
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final partyId = widget.partyId;
-
     return BlocProvider.value(
       value: _playerBloc,
       child: Scaffold(
-        appBar: customAppBar(context: context, title: "Video Player"),
+        appBar: customAppBar(
+          onBackPress: _confirmPop,
+          title: "Video Player",
+          context: context,
+        ),
         body: Column(
           children: <Widget>[
-            CustomVideoPlayer(
-              isOwner: partyId == null || partyId == _uid,
-              tagPrefix: widget.tagPrefix,
-              video: widget.video,
-              partyId: partyId,
+            BlocBuilder<PlayerBloc, PlayerState>(
+              builder: (_, state) {
+                final partyId = state.partyId;
+                return PopScope(
+                  canPop: partyId == null,
+                  onPopInvokedWithResult: (_, _) => _confirmPop(),
+                  child: CustomVideoPlayer(
+                    isOwner: partyId == null || partyId == _uid,
+                    tagPrefix: widget.tagPrefix,
+                    video: widget.video,
+                    partyId: partyId,
+                  ),
+                );
+              },
             ),
             ValueListenableBuilder<bool>(
               valueListenable: _expanded,
@@ -64,8 +89,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         return RoomChat(
                           expandHeight: expandedHeight,
                           videoId: widget.video.id,
+                          partyId: widget.partyId,
                           onExpand: toggleExpand,
-                          partyId: partyId,
                           expand: expand,
                           userId: _uid,
                           hide: _hide,

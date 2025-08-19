@@ -4,6 +4,7 @@ import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/widgets/custom_card.dart';
 import 'package:watchmate_app/common/widgets/custom_chip.dart';
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
@@ -43,11 +44,12 @@ class RoomChat extends StatelessWidget {
         constraints: BoxConstraints(minHeight: context.screenHeight * 0.3),
         child: BlocBuilder<PlayerBloc, PlayerState>(
           buildWhen: (p, c) =>
-              p.joined != c.joined ||
               p.messages.length != c.messages.length ||
+              p.partyId != c.partyId ||
+              p.joined != c.joined ||
               c.forceRebuild,
           builder: (context, state) {
-            bool isImOwner = userId == state.partyId || partyId == null;
+            final isImOwner = userId == state.partyId || partyId == null;
             final joined = state.joined;
             final isClosed = joined == -1;
 
@@ -110,7 +112,10 @@ class RoomChat extends StatelessWidget {
                                 ? Icons.toggle_off_outlined
                                 : Icons.toggle_on,
                             text: !value ? "Hide" : "Unhide",
-                          ).onTap(() => hide.value = !hide.value);
+                          ).onTap(() {
+                            HapticFeedback.mediumImpact();
+                            hide.value = !hide.value;
+                          });
                         },
                       ),
                       if (isImOwner && state.partyId != null)
@@ -118,9 +123,10 @@ class RoomChat extends StatelessWidget {
                           text: "Close Party",
                           icon: Icons.close,
                         ).onGesture(
-                          onTap: () => getIt<PlayerBloc>().add(
-                            CloseParty(userId: userId),
-                          ),
+                          onTap: () {
+                            getIt<PlayerBloc>().add(CloseParty(userId: userId));
+                            HapticFeedback.mediumImpact();
+                          },
                         ),
                     ],
                   ),

@@ -61,6 +61,7 @@ class _FullScreenWrapperState extends State<FullScreenWrapper> {
                 controller: controller.videoPlayerController,
                 isOwner: widget.isOwner,
                 title: widget.title,
+                isFullScreen: true,
                 seekPad: 20,
               ),
             ),

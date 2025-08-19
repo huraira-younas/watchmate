@@ -1,4 +1,6 @@
+import 'package:watchmate_app/common/widgets/custom_appbar.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
+import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:video_player/video_player.dart';
@@ -8,11 +10,13 @@ import 'dart:async' show Timer;
 class CustomVideoControls extends StatefulWidget {
   final VideoPlayerController controller;
   final VoidCallback toggleScreen;
+  final bool isFullScreen;
   final double seekPad;
   final bool isOwner;
   final String title;
 
   const CustomVideoControls({
+    required this.isFullScreen,
     required this.toggleScreen,
     required this.controller,
     required this.seekPad,
@@ -121,6 +125,7 @@ class _CustomVideoControlsState extends State<CustomVideoControls> {
             opacity: _controlsVisible ? 1 : 0,
             child: _VideoControlsOverlay(
               onToggleScreen: widget.toggleScreen,
+              isFullScreen: widget.isFullScreen,
               formatDuration: _formatDuration,
               seekPad: widget.seekPad,
               isOwner: widget.isOwner,
@@ -156,6 +161,7 @@ class _VideoControlsOverlay extends StatelessWidget {
   final Function(Duration) onSeek;
   final VoidCallback onPlayPause;
   final VideoPlayerValue value;
+  final bool isFullScreen;
   final double seekPad;
   final String title;
   final bool isOwner;
@@ -163,6 +169,7 @@ class _VideoControlsOverlay extends StatelessWidget {
   const _VideoControlsOverlay({
     required this.onToggleScreen,
     required this.formatDuration,
+    this.isFullScreen = false,
     required this.onPlayPause,
     required this.controller,
     required this.seekPad,
@@ -180,13 +187,20 @@ class _VideoControlsOverlay extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          MyText(
-            overflow: TextOverflow.ellipsis,
-            family: AppFonts.bold,
-            color: Colors.white,
-            text: title,
-            maxLines: 1,
-          ).padAll(12).align(align: Alignment.topLeft),
+          Row(
+            children: <Widget>[
+              if (isFullScreen)
+                BackIcon(color: theme.iconTheme.color ?? Colors.black),
+              MyText(
+                overflow: TextOverflow.ellipsis,
+                size: AppConstants.title,
+                family: AppFonts.bold,
+                color: Colors.white,
+                text: title,
+                maxLines: 2,
+              ).padAll(12).align(align: Alignment.topLeft).expanded(),
+            ],
+          ),
 
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,

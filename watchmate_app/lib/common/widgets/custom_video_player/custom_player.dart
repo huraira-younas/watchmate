@@ -5,7 +5,6 @@ import 'package:watchmate_app/extensions/exports.dart';
 import 'package:watchmate_app/utils/logger.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:watchmate_app/di/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'build_player.dart';
@@ -34,14 +33,13 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   double? _aspectRatio;
 
   late final isOwner = widget.isOwner;
-  late String? partyId = widget.partyId;
   late final video = widget.video;
 
   Duration _lastPosition = Duration.zero;
   bool _lastIsPlaying = false;
 
   void _emitVideoState() {
-    partyId ??= getIt<PlayerBloc>().partyId;
+    final partyId = widget.partyId;
     if (!isOwner || partyId == null) {
       Logger.info(tag: "PLAYER", message: "Not leader or no partyId");
       return;
@@ -74,11 +72,12 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
     Logger.info(tag: "PLAYER", message: "State: ${state.toString()}");
 
     context.read<PlayerBloc>().add(
-      HandleVideoState(videoState: state, partyId: partyId!),
+      HandleVideoState(videoState: state, partyId: partyId),
     );
   }
 
   Future<void> _initPlayer() async {
+    final partyId = widget.partyId;
     Logger.info(tag: "PLAYER", message: "PartyId: $partyId");
     Logger.info(tag: "PLAYER", message: "Owner: $isOwner");
     final cleanUrl = video.videoURL.replaceAll('"', '');

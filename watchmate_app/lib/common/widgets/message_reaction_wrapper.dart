@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:watchmate_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 
@@ -46,6 +47,7 @@ class _MessageReactionWrapperState extends State<MessageReactionWrapper>
     final render = _messageKey.currentContext?.findRenderObject() as RenderBox;
     final offset = render.localToGlobal(Offset.zero);
     final w = MediaQuery.sizeOf(context).width;
+    HapticFeedback.mediumImpact();
     final size = render.size;
 
     _overlayEntry = OverlayEntry(
@@ -72,6 +74,7 @@ class _MessageReactionWrapperState extends State<MessageReactionWrapper>
             child: ReactionPopover(
               animationController: _animationController,
               onEmojiSelected: (emoji) {
+                HapticFeedback.mediumImpact();
                 _removeReactionPopover();
                 widget.onSelect(emoji);
                 Logger.info(

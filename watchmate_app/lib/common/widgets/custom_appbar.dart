@@ -1,4 +1,5 @@
-import 'package:flutter/services.dart' show SystemUiOverlayStyle;
+import 'package:flutter/services.dart'
+    show HapticFeedback, SystemUiOverlayStyle;
 import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/constants/app_fonts.dart';
@@ -74,7 +75,12 @@ class BackIcon extends StatelessWidget {
       ),
       child: MaterialButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        onPressed: onBackPress ?? () => Navigator.of(context).pop(),
+        onPressed:
+            onBackPress ??
+            () {
+              HapticFeedback.mediumImpact();
+              Navigator.of(context).pop();
+            },
         padding: EdgeInsets.zero,
         elevation: 8,
         child: Icon(icon ?? Icons.arrow_back_rounded, color: color),

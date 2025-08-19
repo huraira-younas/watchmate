@@ -1,5 +1,6 @@
 import 'package:watchmate_app/common/cubits/navigation_cubit.dart';
 import 'package:watchmate_app/router/routes/layout_routes.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:watchmate_app/extensions/exports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watchmate_app/di/locator.dart';
@@ -8,7 +9,10 @@ import 'package:flutter/material.dart';
 class CustomBottomNavBar extends StatelessWidget {
   const CustomBottomNavBar({super.key});
 
-  void _onTap(int index) => getIt<NavigationCubit>().navigateTo(index);
+  void _onTap(int index) {
+    getIt<NavigationCubit>().navigateTo(index);
+    HapticFeedback.mediumImpact();
+  }
 
   @override
   Widget build(BuildContext context) {
