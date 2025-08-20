@@ -190,7 +190,10 @@ class _VideoControlsOverlay extends StatelessWidget {
           Row(
             children: <Widget>[
               if (isFullScreen)
-                BackIcon(color: theme.iconTheme.color ?? Colors.black),
+                BackIcon(
+                  color: theme.iconTheme.color ?? Colors.black,
+                  onBackPress: onToggleScreen,
+                ),
               MyText(
                 overflow: TextOverflow.ellipsis,
                 size: AppConstants.title,

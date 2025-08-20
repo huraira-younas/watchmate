@@ -104,7 +104,10 @@ class _UploadScreenState extends State<UploadScreen> {
     });
 
     final title = path.basename(file);
-    final trimmed = title.substring(0, _maxLen);
+    final trimmed = title.length > _maxLen
+        ? title.substring(0, _maxLen)
+        : title;
+        
     _controller.text = trimmed;
     _video = video.copyWith(userId: _uid, title: trimmed);
   }

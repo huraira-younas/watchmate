@@ -30,44 +30,53 @@ class _FullScreenWrapperState extends State<FullScreenWrapper> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    final size = controller.videoPlayerController.value.size;
+    if (size.height > size.width) return;
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
   }
 
-  @override
-  void deactivate() {
-    super.deactivate();
+  void _handlePop() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitDown,
       DeviceOrientation.portraitUp,
     ]);
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Chewie(
-            controller: controller.copyWith(
-              customControls: CustomVideoControls(
-                toggleScreen: () => Navigator.of(context).pop(),
-                controller: controller.videoPlayerController,
-                isOwner: widget.isOwner,
-                title: widget.title,
-                isFullScreen: true,
-                seekPad: 20,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _handlePop();
+      },
+      child: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            Chewie(
+              controller: controller.copyWith(
+                customControls: CustomVideoControls(
+                  controller: controller.videoPlayerController,
+                  toggleScreen: _handlePop,
+                  isOwner: widget.isOwner,
+                  title: widget.title,
+                  isFullScreen: true,
+                  seekPad: 20,
+                ),
               ),
             ),
-          ),
-          const ChatOverlay(),
-        ],
+            const ChatOverlay(),
+          ],
+        ),
       ),
     );
   }
