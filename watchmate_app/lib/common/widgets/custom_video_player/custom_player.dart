@@ -32,7 +32,6 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   ChewieController? _chewieController;
   double? _aspectRatio;
 
-  late final isOwner = widget.isOwner;
   late final video = widget.video;
 
   Duration _lastPosition = Duration.zero;
@@ -40,7 +39,7 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
 
   void _emitVideoState() {
     final partyId = widget.partyId;
-    if (!isOwner || partyId == null) {
+    if (!widget.isOwner || partyId == null) {
       Logger.info(tag: "PLAYER", message: "Not leader or no partyId");
       return;
     }
@@ -79,7 +78,7 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   Future<void> _initPlayer() async {
     final partyId = widget.partyId;
     Logger.info(tag: "PLAYER", message: "PartyId: $partyId");
-    Logger.info(tag: "PLAYER", message: "Owner: $isOwner");
+    Logger.info(tag: "PLAYER", message: "Owner: $widget.isOwner");
     final cleanUrl = video.videoURL.replaceAll('"', '');
 
     Logger.info(tag: "PLAYING", message: Uri.parse(cleanUrl));
@@ -90,7 +89,7 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
     final size = _videoPlayerController.value.size;
     _aspectRatio = size.width / size.height;
 
-    if (isOwner) _videoPlayerController.addListener(_emitVideoState);
+    if (widget.isOwner) _videoPlayerController.addListener(_emitVideoState);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       aspectRatio: _aspectRatio ?? (16 / 9),
@@ -148,8 +147,8 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
               aspectRatio: _aspectRatio ?? (16 / 9),
               child: BuildPlayer(
                 controller: _chewieController!,
+                isOwner: widget.isOwner,
                 title: video.title,
-                isOwner: isOwner,
               ),
             ),
     ).hero("${widget.tagPrefix}:${video.thumbnailURL}");

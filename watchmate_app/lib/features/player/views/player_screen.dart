@@ -65,6 +65,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
         body: Column(
           children: <Widget>[
             BlocBuilder<PlayerBloc, PlayerState>(
+              buildWhen: (p, c) => p.partyId != c.partyId,
               builder: (_, state) {
                 final partyId = state.partyId;
                 return PopScope(
