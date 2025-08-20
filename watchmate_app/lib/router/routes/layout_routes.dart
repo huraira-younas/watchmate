@@ -42,5 +42,5 @@ abstract class LayoutRoutes {
     name: 'Profile',
   );
 
-  static const all = [home, myList, chats, profile];
+  static const all = [home, myList, profile];
 }

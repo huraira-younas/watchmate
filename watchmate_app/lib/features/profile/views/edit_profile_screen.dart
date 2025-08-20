@@ -1,3 +1,4 @@
+import 'package:watchmate_app/common/widgets/text_widget.dart';
 import 'package:watchmate_app/features/auth/model/user_model.dart';
 import 'package:watchmate_app/common/widgets/custom_button.dart';
 import 'package:watchmate_app/common/widgets/custom_appbar.dart';
@@ -62,6 +63,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           children: <Widget>[
             SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Stack(
                     clipBehavior: Clip.none,
@@ -111,6 +113,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       hint: "Email",
                     ),
                   ),
+                  const MyText(
+                    text: "Email can't be changed",
+                    color: Colors.amber,
+                    size: 11,
+                  ).padSym(h: 20, v: 4),
                 ],
               ),
             ).expanded(),

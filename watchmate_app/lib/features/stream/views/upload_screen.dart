@@ -49,7 +49,7 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 
   Future<String> _uploadThumbnail() async {
-    if (_video == null) return "";
+    if (_video == null || _thumbnail == null) return "";
 
     final res = await _api.upload(
       folder: "videos/${_video!.id}",

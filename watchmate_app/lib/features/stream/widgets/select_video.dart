@@ -52,7 +52,7 @@ class _SelectVideoState extends State<SelectVideo> {
 
     final uint8list = await VideoThumbnail.thumbnailData(
       imageFormat: ImageFormat.JPEG,
-      maxWidth: 1280,
+      timeMs: 15000,
       video: file,
       quality: 80,
     );
