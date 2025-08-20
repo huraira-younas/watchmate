@@ -97,8 +97,8 @@ class SocketNamespaceService {
     final socket = _sockets[type];
     if (socket == null) return;
 
+    if (socket.connected) socket.disconnect();
     _sockets.remove(type);
-    socket.disconnect();
     socket.dispose();
   }
 
