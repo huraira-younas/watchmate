@@ -65,17 +65,20 @@ class _PlayerScreenState extends State<PlayerScreen> {
         body: Column(
           children: <Widget>[
             BlocBuilder<PlayerBloc, PlayerState>(
-              buildWhen: (p, c) => p.partyId != c.partyId,
+              buildWhen: (p, c) {
+                return p.partyId != c.partyId || p.joined != c.joined;
+              },
               builder: (_, state) {
                 final partyId = state.partyId;
+                final isOnlyMe = state.joined == -1 || state.joined == 1;
                 return PopScope(
                   canPop: false,
-                  onPopInvokedWithResult: (bool didPop, _) {
+                  onPopInvokedWithResult: (didPop, _) {
                     if (didPop) return;
                     _confirmPop();
                   },
                   child: CustomVideoPlayer(
-                    isOwner: partyId == null || partyId == _uid,
+                    isOwner: partyId == null || partyId == _uid || isOnlyMe,
                     tagPrefix: widget.tagPrefix,
                     video: widget.video,
                     partyId: partyId,

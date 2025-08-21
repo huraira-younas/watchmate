@@ -195,8 +195,8 @@ class _VideoControlsOverlay extends StatelessWidget {
                   onBackPress: onToggleScreen,
                 ),
               MyText(
+                size: isFullScreen ? AppConstants.title : AppConstants.subtitle,
                 overflow: TextOverflow.ellipsis,
-                size: AppConstants.title,
                 family: AppFonts.bold,
                 color: Colors.white,
                 text: title,
