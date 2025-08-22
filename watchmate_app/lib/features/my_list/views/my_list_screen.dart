@@ -137,11 +137,12 @@ class _MyListScreenState extends State<MyListScreen>
             );
           },
         ),
-        BottomSheetItem(
-          onTap: () => confirmDelete(video.title, video.id),
-          icon: Icons.delete,
-          title: "Delete",
-        ),
+        if (_key != ListType.downloads)
+          BottomSheetItem(
+            onTap: () => confirmDelete(video.title, video.id),
+            icon: Icons.delete,
+            title: "Delete",
+          ),
       ],
     );
   }

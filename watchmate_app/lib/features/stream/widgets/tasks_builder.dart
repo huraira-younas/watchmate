@@ -1,7 +1,7 @@
-import 'package:watchmate_app/features/stream/bloc/upload_bloc/bloc.dart';
 import 'package:watchmate_app/features/stream/bloc/link_bloc/bloc.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
+import 'package:watchmate_app/common/blocs/transfer_bloc/bloc.dart';
 import 'package:watchmate_app/common/widgets/custom_checkbox.dart';
 import 'package:watchmate_app/common/widgets/cache_image.dart';
 import 'package:watchmate_app/common/widgets/text_widget.dart';
@@ -117,7 +117,7 @@ class _BuildUploadTasks extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = context.theme.hintColor;
 
-    return BlocBuilder<UploaderBloc, UploaderState>(
+    return BlocBuilder<TransferBloc, TransferState>(
       builder: (context, state) {
         return ListView(
           physics: const NeverScrollableScrollPhysics(),
@@ -129,8 +129,8 @@ class _BuildUploadTasks extends StatelessWidget {
               tasks: state.active,
               trailingBuilder: (task) => IconButton(
                 icon: const Icon(Icons.close),
-                onPressed: () => context.read<UploaderBloc>().add(
-                  CancelUpload(taskId: task.id),
+                onPressed: () => context.read<TransferBloc>().add(
+                  CancelTransfer(taskId: task.id),
                 ),
               ),
               subtitleBuilder: (task) {
@@ -144,8 +144,8 @@ class _BuildUploadTasks extends StatelessWidget {
                   MyText(text: "Waiting", color: color, size: 11),
               trailingBuilder: (task) => IconButton(
                 icon: const Icon(Icons.close),
-                onPressed: () => context.read<UploaderBloc>().add(
-                  CancelUpload(taskId: task.id),
+                onPressed: () => context.read<TransferBloc>().add(
+                  CancelTransfer(taskId: task.id),
                 ),
               ),
             ),
@@ -192,9 +192,9 @@ class _ProgressBuilder extends StatelessWidget {
 }
 
 class _TaskSection extends StatelessWidget {
-  final Widget Function(UploadItem task)? subtitleBuilder;
-  final Widget Function(UploadItem task) trailingBuilder;
-  final List<UploadItem> tasks;
+  final Widget Function(TransferItem task)? subtitleBuilder;
+  final Widget Function(TransferItem task) trailingBuilder;
+  final List<TransferItem> tasks;
   final Color color;
 
   const _TaskSection({

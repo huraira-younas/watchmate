@@ -1,7 +1,7 @@
+import 'package:watchmate_app/common/blocs/transfer_bloc/bloc.dart';
 import 'package:watchmate_app/features/stream/widgets/platform_selection.dart';
 import 'package:watchmate_app/common/services/api_service/dio_client.dart';
 import 'package:watchmate_app/common/services/api_service/api_routes.dart';
-import 'package:watchmate_app/features/stream/bloc/upload_bloc/bloc.dart';
 import 'package:watchmate_app/features/stream/widgets/select_video.dart';
 import 'package:watchmate_app/features/stream/widgets/build_title.dart';
 import 'package:watchmate_app/common/models/video_model/exports.dart';
@@ -29,7 +29,7 @@ class UploadScreen extends StatefulWidget {
 }
 
 class _UploadScreenState extends State<UploadScreen> {
-  final _uploader = getIt<UploaderBloc>();
+  final _uploader = getIt<TransferBloc>();
   final _uid = getIt<AuthBloc>().user!.id;
   final _api = ApiService();
 
@@ -74,8 +74,9 @@ class _UploadScreenState extends State<UploadScreen> {
     try {
       final thumbnail = await _uploadThumbnail();
       _uploader.add(
-        AddUpload(
+        AddTransfer(
           uploadUrl: NetworkUtils.baseUrl + ApiRoutes.file.upload,
+          type: TransferType.upload,
           file: _pickedFile!,
           video: _video!.copyWith(
             thumbnailURL: thumbnail,
@@ -107,7 +108,7 @@ class _UploadScreenState extends State<UploadScreen> {
     final trimmed = title.length > _maxLen
         ? title.substring(0, _maxLen)
         : title;
-        
+
     _controller.text = trimmed;
     _video = video.copyWith(userId: _uid, title: trimmed);
   }

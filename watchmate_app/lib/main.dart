@@ -1,4 +1,3 @@
-import 'package:watchmate_app/features/stream/bloc/upload_bloc/bloc.dart';
 import 'package:watchmate_app/features/stream/bloc/link_bloc/bloc.dart';
 import 'package:watchmate_app/common/blocs/transfer_bloc/bloc.dart';
 import 'package:watchmate_app/common/cubits/navigation_cubit.dart';
@@ -30,7 +29,6 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<NavigationCubit>()),
-        BlocProvider(create: (_) => getIt<UploaderBloc>()),
         BlocProvider(create: (_) => getIt<TransferBloc>()),
         BlocProvider(create: (_) => getIt<ThemeCubit>()),
         BlocProvider(create: (_) => getIt<VideoCubit>()),
