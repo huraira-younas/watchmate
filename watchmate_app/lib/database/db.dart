@@ -21,7 +21,8 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // ---- Writes ----
-  Future<void> upsert(VideosTableCompanion entry) async {
+  Future<void> upsert(Map<String, dynamic> json) async {
+    final entry = VideosTableData.fromJson(json);
     await into(videosTable).insertOnConflictUpdate(entry);
   }
 
