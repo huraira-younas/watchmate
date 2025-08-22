@@ -1,6 +1,4 @@
-import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:rxdart/rxdart.dart' show BehaviorSubject;
 import 'package:watchmate_app/utils/network_utils.dart';
 import 'package:watchmate_app/utils/logger.dart';
@@ -46,14 +44,11 @@ class SocketNamespaceService {
       ..connect()
       ..onConnect((_) {
         Logger.info(tag: 'SOCKET:$namespace', message: 'Connected');
-        if (kDebugMode) showAppSnackBar("Socket $namespace connected");
         _flush(type);
         _startPing(type, pingInterval);
       })
       ..onDisconnect((_) {
         Logger.warn(tag: 'SOCKET:$namespace', message: 'Disconnected');
-        if (kDebugMode) showAppSnackBar("Socket $namespace disconnected");
-
         _stopPing(type);
       })
       ..onReconnect((_) {

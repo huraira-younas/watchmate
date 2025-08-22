@@ -1,4 +1,5 @@
 import 'package:watchmate_app/common/models/video_model/downloaded_video.dart';
+import 'package:watchmate_app/features/player/widgets/download_chip.dart';
 import 'package:watchmate_app/common/widgets/custom_chip.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
 import 'package:watchmate_app/utils/share_service.dart';
@@ -31,19 +32,12 @@ class BuildChips extends StatelessWidget {
                         : Icons.private_connectivity_rounded,
                     text: video.visibility.name.capitalize,
                   ),
-                  // const CustomChip(
-                  //   icon: Icons.thumb_up_alt_outlined,
-                  //   text: "1.2k",
-                  // ),
                   CustomChip(
                     onPressed: () => ShareService.shareVideoLink(video.id),
                     icon: Icons.share_outlined,
                     text: "Share",
                   ),
-                  const CustomChip(
-                    icon: Icons.download_outlined,
-                    text: "Download",
-                  ),
+                  DownloadChip(video: video),
                 ],
               ).padSym(h: AppConstants.padding - 6, v: 20),
             ],

@@ -1,6 +1,7 @@
 import 'package:path_provider/path_provider.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:drift/drift.dart';
+import 'dart:io' show File;
 
 import 'tables/videos.dart';
 part 'db.g.dart';
@@ -26,21 +27,52 @@ class AppDatabase extends _$AppDatabase {
     await into(videosTable).insertOnConflictUpdate(entry);
   }
 
-  Future<int> deleteById(String videoId) {
+  Future<int> deleteVideo({
+    required String localPath,
+    required String videoId,
+  }) {
+    File(localPath).deleteSync();
     return (delete(videosTable)..where((t) => t.id.equals(videoId))).go();
   }
 
   // ---- Reads ----
-  Future<bool> isDownloaded(String videoId) async {
-    final row = await (select(
-      videosTable,
-    )..where((t) => t.id.equals(videoId))).getSingleOrNull();
-    return row != null;
-  }
-
   Future<VideosTableData?> getById(String videoId) {
     return (select(
       videosTable,
     )..where((t) => t.id.equals(videoId))).getSingleOrNull();
+  }
+
+  Stream<VideosTableData?> watchById(String videoId) {
+    return (select(
+      videosTable,
+    )..where((t) => t.id.equals(videoId))).watchSingleOrNull();
+  }
+
+  Future<Map<String, dynamic>> paginateVideos({
+    DateTime? cursor,
+    int limit = 20,
+  }) async {
+    final query = select(videosTable);
+
+    if (cursor != null) {
+      query.where((t) => t.createdAt.isSmallerThanValue(cursor));
+    }
+
+    query.orderBy([(t) => OrderingTerm.desc(t.createdAt)]);
+    query.limit(limit + 1);
+
+    final results = await query.get();
+    if (results.isEmpty) {
+      return {"hasMore": false, "cursor": null, "result": []};
+    }
+
+    final hasMore = results.length > limit;
+    final trimmed = results.take(limit).toList();
+
+    return {
+      "cursor": hasMore ? results[limit].createdAt.toIso8601String() : null,
+      "result": trimmed.map((e) => e.toJson()).toList(),
+      "hasMore": hasMore,
+    };
   }
 }

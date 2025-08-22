@@ -26,8 +26,20 @@ class DownloadedVideo extends BaseVideo {
   });
 
   factory DownloadedVideo.fromJson(Map<String, dynamic> json) {
+    final createdAtRaw = json['createdAt'];
+    late final DateTime createdAt;
+
+    if (createdAtRaw is int) {
+      createdAt = DateTime.fromMillisecondsSinceEpoch(createdAtRaw);
+    } else if (createdAtRaw is String) {
+      createdAt = DateTime.tryParse(createdAtRaw) ?? DateTime.now();
+    } else if (createdAtRaw is DateTime) {
+      createdAt = createdAtRaw;
+    } else {
+      createdAt = DateTime.now();
+    }
+
     return DownloadedVideo(
-      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       deleted: json['deleted'] == 1 || json['deleted'] == true,
       duration: Duration(seconds: json['duration'] ?? 0),
       height: (json['height'] as num? ?? 0).toDouble(),
@@ -39,6 +51,7 @@ class DownloadedVideo extends BaseVideo {
       videoURL: json['videoURL'],
       size: json['size'] ?? 0,
       userId: json['userId'],
+      createdAt: createdAt,
       title: json['title'],
       id: json['id'],
     );

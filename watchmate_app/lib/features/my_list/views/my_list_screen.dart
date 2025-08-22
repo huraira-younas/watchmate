@@ -2,9 +2,11 @@ import 'package:watchmate_app/common/widgets/dialog_boxs.dart'
     show confirmDialogue;
 import 'package:watchmate_app/common/widgets/skeletons/video_card_skeleton.dart';
 import 'package:watchmate_app/features/my_list/widgets/video_card_preview.dart';
+import 'package:watchmate_app/common/models/video_model/downloaded_video.dart';
 import 'package:watchmate_app/features/my_list/widgets/custom_list_tabs.dart';
 import 'package:watchmate_app/common/widgets/custom_bottom_sheet.dart';
 import 'package:watchmate_app/common/widgets/custom_label_widget.dart';
+import 'package:watchmate_app/common/blocs/transfer_bloc/bloc.dart';
 import 'package:watchmate_app/common/widgets/app_snackbar.dart';
 import 'package:watchmate_app/features/my_list/bloc/bloc.dart';
 import 'package:watchmate_app/constants/app_constants.dart';
@@ -26,6 +28,7 @@ class MyListScreen extends StatefulWidget {
 class _MyListScreenState extends State<MyListScreen>
     with AutomaticKeepAliveClientMixin {
   final _uid = getIt<AuthBloc>().user!.id;
+  final _transfer = getIt<TransferBloc>();
   final _listBloc = getIt<ListBloc>();
 
   ListType _key = ListType.public;
@@ -78,6 +81,71 @@ class _MyListScreenState extends State<MyListScreen>
     );
   }
 
+  void _handleBottomSheet(DownloadedVideo video) async {
+    final isDownloading = _transfer.state.active.any(
+      (e) => e.video.id == video.id,
+    );
+
+    final local = (await _transfer.db.getById(video.id));
+    final isDownloaded = local != null;
+    if (!mounted) return;
+
+    final msg = "Are you sure want to delete ${video.title} from downloads?";
+    showCustomBottomSheet(
+      context: context,
+      items: <BottomSheetItem>[
+        BottomSheetItem(
+          onTap: () => ShareService.shareVideoLink(video.id),
+          icon: Icons.share,
+          title: "Share",
+        ),
+        BottomSheetItem(
+          title: isDownloaded
+              ? "Remove from downloads"
+              : isDownloading
+              ? "Downloading..."
+              : "Download",
+          icon: isDownloaded
+              ? Icons.remove_circle_outline
+              : isDownloading
+              ? Icons.downloading_outlined
+              : Icons.download,
+          onTap: () async {
+            if (isDownloaded) {
+              final confirm = await confirmDialogue(
+                title: "Delete Download",
+                context: context,
+                message: msg,
+              );
+              if (confirm) {
+                await _transfer.db.deleteVideo(
+                  localPath: local.localPath,
+                  videoId: video.id,
+                );
+              }
+              return;
+            }
+
+            if (isDownloading) return;
+            _transfer.add(
+              AddTransfer(
+                type: TransferType.download,
+                uploadUrl: video.videoURL,
+                file: video.videoURL,
+                video: video,
+              ),
+            );
+          },
+        ),
+        BottomSheetItem(
+          onTap: () => confirmDelete(video.title, video.id),
+          icon: Icons.delete,
+          title: "Delete",
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -87,16 +155,21 @@ class _MyListScreenState extends State<MyListScreen>
         CustomListTabs(current: _key, onChange: changeType),
         RefreshIndicator(
           onRefresh: _fetchList,
-          child: BlocBuilder<ListBloc, Map<ListType, ListState>>(
+          child: BlocConsumer<ListBloc, Map<ListType, ListState>>(
+            listenWhen: (p, c) => c[_key] != p[_key],
+            listener: (_, state) {
+              final st = state[_key];
+              if (st == null) return;
+
+              final error = st.error;
+              if (error != null) showAppSnackBar(error.message);
+            },
             buildWhen: (p, c) => c[_key] != p[_key],
-            builder: (context, state) {
+            builder: (_, state) {
               final st = state[_key];
               if (st == null) return const SizedBox.shrink();
 
               final loading = st.loading;
-              final error = st.error;
-
-              if (error != null) showAppSnackBar(error.message);
               if (loading) return const VideoCardSkeleton().fadeIn();
 
               final pagination = st.pagination;
@@ -117,29 +190,8 @@ class _MyListScreenState extends State<MyListScreen>
                 itemBuilder: (context, idx) {
                   final video = pagination.videos[idx];
                   return VideoCardPreview(
+                    onMenuTap: () => _handleBottomSheet(video),
                     video: video,
-                    onMenuTap: () {
-                      showCustomBottomSheet(
-                        context: context,
-                        items: <BottomSheetItem>[
-                          BottomSheetItem(
-                            onTap: () => ShareService.shareVideoLink(video.id),
-                            icon: Icons.share,
-                            title: "Share",
-                          ),
-                          BottomSheetItem(
-                            icon: Icons.download,
-                            title: "Download",
-                            onTap: () {},
-                          ),
-                          BottomSheetItem(
-                            onTap: () => confirmDelete(video.title, video.id),
-                            icon: Icons.delete,
-                            title: "Delete",
-                          ),
-                        ],
-                      );
-                    },
                   );
                 },
               );

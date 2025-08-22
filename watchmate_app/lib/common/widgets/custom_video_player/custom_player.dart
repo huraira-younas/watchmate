@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:watchmate_app/common/models/video_model/downloaded_video.dart';
+import 'package:watchmate_app/database/db.dart';
+import 'package:watchmate_app/di/locator.dart';
 import 'package:watchmate_app/features/player/model/video_state_model.dart';
 import 'package:watchmate_app/features/player/bloc/bloc.dart';
 import 'package:watchmate_app/extensions/exports.dart';
@@ -30,6 +34,7 @@ class CustomVideoPlayer extends StatefulWidget {
 class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   late VideoPlayerController _videoPlayerController;
   ChewieController? _chewieController;
+  final _db = getIt<AppDatabase>();
   double? _aspectRatio;
 
   late final video = widget.video;
@@ -80,11 +85,17 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
     Logger.info(tag: "PLAYER", message: "PartyId: $partyId");
     Logger.info(tag: "PLAYER", message: "Owner: $widget.isOwner");
     final cleanUrl = video.videoURL.replaceAll('"', '');
+    final local = await _db.getById(video.id);
 
-    Logger.info(tag: "PLAYING", message: Uri.parse(cleanUrl));
-    _videoPlayerController = VideoPlayerController.networkUrl(
-      Uri.parse(cleanUrl),
+    Logger.info(
+      tag: "PLAYING ${local == null ? "NETWORK" : "LOCAL"}",
+      message: local?.localPath ?? Uri.parse(cleanUrl),
     );
+
+    _videoPlayerController = local != null
+        ? VideoPlayerController.file(File(local.localPath))
+        : VideoPlayerController.networkUrl(Uri.parse(cleanUrl));
+
     await _videoPlayerController.initialize();
     final size = _videoPlayerController.value.size;
     _aspectRatio = size.width / size.height;

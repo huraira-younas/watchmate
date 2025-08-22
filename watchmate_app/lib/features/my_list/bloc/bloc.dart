@@ -1,18 +1,21 @@
+import 'package:watchmate_app/common/models/video_model/downloaded_video.dart';
 import 'package:watchmate_app/common/models/video_model/paginated_videos.dart';
 import 'package:watchmate_app/common/repositories/video_repository.dart';
 import 'package:watchmate_app/common/models/custom_state_model.dart';
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:watchmate_app/database/db.dart';
 
 part 'event.dart';
 part 'state.dart';
 
-enum ListType { public, private }
+enum ListType { public, private, downloads }
 
 class ListBloc extends Bloc<ListEvent, Map<ListType, ListState>> {
   final VideoRepository _repo;
+  final AppDatabase _db;
 
-  ListBloc(this._repo) : super({}) {
+  ListBloc(this._repo, this._db) : super({}) {
     on<FetchVideos>(_onFetchVideos);
     on<DeleteVideo>(_onDeleteVideo);
   }
@@ -30,17 +33,31 @@ class ListBloc extends Bloc<ListEvent, Map<ListType, ListState>> {
       if (!refresh && pagination.videos.isNotEmpty && !hasMore) return;
 
       _emit(pagination: pagination, loading: true, emit: emit, type: type);
+      final cursor = !refresh && hasMore
+          ? pagination.videos.last.createdAt
+          : null;
 
-      final payload = await _repo.getAll({
-        "isHome": false,
-        "userId": event.userId,
-        "visibility": type.name,
-        "cursor": !refresh && hasMore
-            ? pagination.videos.last.createdAt.toIso8601String()
-            : null,
-      });
+      PaginatedVideos newPage;
+      if (type == ListType.downloads) {
+        final payload = await _db.paginateVideos(cursor: cursor);
+        final result = payload['result'] as List<dynamic>;
+        
+        newPage = PaginatedVideos(
+          videos: result.map((e) => DownloadedVideo.fromJson(e)).toList(),
+          hasMore: payload['hasMore'] ?? false,
+          cursor: payload['cursor'],
+        );
 
-      final page = refresh ? payload : pagination.mergeNextPage(payload);
+      } else {
+        newPage = await _repo.getAll({
+          "cursor": cursor?.toIso8601String(),
+          "visibility": type.name,
+          "userId": event.userId,
+          "isHome": false,
+        });
+      }
+
+      final page = refresh ? newPage : pagination.mergeNextPage(newPage);
       _emit(emit: emit, pagination: page, type: type);
     } catch (e) {
       final err = CustomState(message: e.toString(), title: "Error");

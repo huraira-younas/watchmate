@@ -6,10 +6,12 @@ class CustomChip extends StatelessWidget {
     required this.icon,
     required this.text,
     this.onPressed,
+    this.leading,
     super.key,
   });
 
   final VoidCallback? onPressed;
+  final Widget? leading;
   final IconData icon;
   final String text;
 
@@ -33,7 +35,11 @@ class CustomChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(icon, color: theme.primaryColor, size: 18),
+          SizedBox(
+            height: 20,
+            width: 20,
+            child: leading ?? Icon(icon, color: theme.primaryColor, size: 18),
+          ),
           const SizedBox(width: 6),
           MyText(text: text, size: 12),
         ],

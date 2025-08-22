@@ -17,12 +17,12 @@ class TransferBloc extends Bloc<TransferEvent, TransferState> {
   String? _userId;
 
   late final VideoRepository _repo;
-  late final AppDatabase _db;
+  late final AppDatabase db;
 
   final FileDownloader _downloader = FileDownloader();
   StreamSubscription<TaskUpdate>? _subscription;
 
-  TransferBloc(this._repo, this._db) : super(const TransferState()) {
+  TransferBloc(this._repo, this.db) : super(const TransferState()) {
     on<TransferProgress>(_onTransferProgress);
     on<CancelTransfer>(_onCancelTransfer);
     on<StartTransfer>(_onStartTransfer);
@@ -188,6 +188,7 @@ class TransferBloc extends Bloc<TransferEvent, TransferState> {
         task = DownloadTask(
           updates: Updates.statusAndProgress,
           displayName: item.video.title,
+          filename: item.video.title,
           url: item.video.videoURL,
           directory: 'videos',
           allowPause: true,
@@ -236,15 +237,20 @@ class TransferBloc extends Bloc<TransferEvent, TransferState> {
   }) async {
     final taskId = task.taskId;
     final index = state.active.indexWhere((u) => u.id == taskId);
-    if (index == -1) return;
+    if (index == -1) {
+      Logger.warn(tag: "Transfer", message: "Task $taskId not found");
+      return;
+    }
 
     final uploadItem = state.active[index];
     final video = uploadItem.video;
-    if (url != null && completed) {
-      if (uploadItem.type == TransferType.upload) {
+    if (completed) {
+      if (url != null && uploadItem.type == TransferType.upload) {
+        Logger.info(tag: "Transfer", message: "Adding to cloud database");
         await _repo.addVideo(video.copyWith(videoURL: url).toJson());
       } else {
-        await _db.upsert({
+        Logger.info(tag: "Transfer", message: "Adding to local database");
+        await db.upsert({
           ...video.toJson(),
           "localPath": await task.filePath(),
         });
