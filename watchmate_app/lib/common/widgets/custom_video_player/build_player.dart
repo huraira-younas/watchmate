@@ -28,8 +28,8 @@ class BuildPlayer extends StatelessWidget {
 
         final videoPlayer = controller.videoPlayerController;
         final currentPos = videoPlayer.value.position;
-        final diff = (videoState.position - currentPos).inMilliseconds.abs();
 
+        final diff = (videoState.position - currentPos).inMilliseconds.abs();
         if (diff > 5000) {
           videoPlayer.seekTo(videoState.position);
         }
@@ -51,6 +51,7 @@ class BuildPlayer extends StatelessWidget {
           final closed = state.joined == -1;
           return Chewie(
             controller: controller.copyWith(
+              autoPlay: state.videoState?.isPlaying ?? false,
               customControls: CustomVideoControls(
                 controller: controller.videoPlayerController,
                 isOwner: closed || isOwner,

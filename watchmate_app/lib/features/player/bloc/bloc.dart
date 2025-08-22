@@ -129,6 +129,13 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   void _onHandleVideoState(HandleVideoState event, Emitter<PlayerState> emit) {
     _socket.emit(_type, SocketEvents.video.videoState, event.toJson());
     partyId = event.partyId;
+    emit(
+      state.copyWith(
+        videoState: event.videoState,
+        messages: state.messages,
+        reply: state.reply,
+      ),
+    );
   }
 
   void _onCloseParty(CloseParty event, Emitter<PlayerState> emit) {

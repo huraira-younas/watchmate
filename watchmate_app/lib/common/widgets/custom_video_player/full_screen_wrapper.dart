@@ -64,6 +64,7 @@ class _FullScreenWrapperState extends State<FullScreenWrapper> {
           children: <Widget>[
             Chewie(
               controller: controller.copyWith(
+                autoPlay: controller.isPlaying,
                 customControls: CustomVideoControls(
                   controller: controller.videoPlayerController,
                   toggleScreen: _handlePop,

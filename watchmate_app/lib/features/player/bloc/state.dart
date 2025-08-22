@@ -22,9 +22,10 @@ class PlayerState {
     required List<PartyMessageModel> messages,
     required PartyMessageModel? reply,
     bool forceRebuild = false,
+    VideoState? videoState,
   }) => PlayerState(
+    videoState: videoState ?? this.videoState,
     forceRebuild: forceRebuild,
-    videoState: videoState,
     messages: messages,
     partyId: partyId,
     joined: joined,
