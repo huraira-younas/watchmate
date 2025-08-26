@@ -8,11 +8,11 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-val keystoreProperties = Properties()
-val keystorePropertiesFile = rootProject.file("key.properties")
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-}
+// val keystoreProperties = Properties()
+// val keystorePropertiesFile = rootProject.file("key.properties")
+// if (keystorePropertiesFile.exists()) {
+//     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+// }
 
 android {
     compileSdk = flutter.compileSdkVersion
@@ -36,18 +36,19 @@ android {
         minSdk = flutter.minSdkVersion
     }
 
-    signingConfigs {
-        create("release") {
-            storePassword = keystoreProperties.getProperty("storePassword")
-            storeFile = file(keystoreProperties.getProperty("storeFile"))
-            keyPassword = keystoreProperties.getProperty("keyPassword")
-            keyAlias = keystoreProperties.getProperty("keyAlias")
-        }
-    }
+    // signingConfigs {
+    //     create("release") {
+    //         storePassword = keystoreProperties.getProperty("storePassword")
+    //         storeFile = file(keystoreProperties.getProperty("storeFile"))
+    //         keyPassword = keystoreProperties.getProperty("keyPassword")
+    //         keyAlias = keystoreProperties.getProperty("keyAlias")
+    //     }
+    // }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            // signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 }
